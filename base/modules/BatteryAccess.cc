@@ -7,8 +7,8 @@
 
 #include "BatteryAccess.h"
 
-BatteryAccess::BatteryAccess():
-	BaseModule(),
+BatteryAccess::BatteryAccess(unsigned stacksize):
+	BaseModule(stacksize),
 	battery(NULL)
 {}
 

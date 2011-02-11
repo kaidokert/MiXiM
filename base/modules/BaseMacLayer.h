@@ -91,6 +91,8 @@ protected:
 
 public:
     //Module_Class_Members( BaseMacLayer, BaseLayer, 0 );
+    BaseMacLayer(unsigned stacksize = 0) : BaseLayer(stacksize)
+    {}
 
     /** @brief Initialization of the module and some variables*/
     virtual void initialize(int);

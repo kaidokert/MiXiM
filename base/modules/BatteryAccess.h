@@ -60,7 +60,7 @@ protected:
 	void drawEnergy(double amount, int account);
 
 public:
-	BatteryAccess();
+	explicit BatteryAccess(unsigned stacksize = 0);
 };
 
 #endif /* BATTERYACCESS_H_ */

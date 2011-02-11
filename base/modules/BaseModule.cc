@@ -22,8 +22,8 @@
 #include "BaseUtility.h"
 #include <cassert>
 
-BaseModule::BaseModule():
-	cSimpleModule(),
+BaseModule::BaseModule(unsigned stacksize):
+	cSimpleModule(stacksize),
 	utility(NULL)
 {}
 

@@ -63,6 +63,8 @@ protected:
 
 public:
 	//Module_Class_Members(BaseApplLayer, BaseLayer, 0);
+	explicit BaseApplLayer(unsigned stacksize = 0) : BaseLayer(stacksize)
+	{}
 
 	/** @brief Initialization of the module and some variables*/
 	virtual void initialize(int);

@@ -73,6 +73,9 @@ public:
     /** @brief Called when the simulation has finished.*/
 	virtual void finish();
 	virtual ~BaseLayer();
+    
+    explicit BaseLayer(unsigned stacksize = 0) : BatteryAccess(stacksize)
+    {}
 
 protected:
     /**

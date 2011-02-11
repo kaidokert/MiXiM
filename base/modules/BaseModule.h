@@ -128,7 +128,7 @@ protected:
 
 
   public:
-    BaseModule();
+    explicit BaseModule(unsigned stacksize = 0);
 
     /** @brief Basic initialization for all modules */
     virtual void initialize(int);
