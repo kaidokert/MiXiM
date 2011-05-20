@@ -1,25 +1,24 @@
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+// 
 
-<@setoutput path=targetMainFile />
-${bannerComment}
-
-<#if nedPackageName!="">package ${nedPackageName};</#if>
-
-<#if protocolName=="802.11">
-<#assign hostType="Host80211">
-import org.mixim.modules.node.${hostType};
-<#elseif protocolName=="CSMA 802.15.4">
-<#assign hostType="Host802154">
-<#else>
-<#assign hostType="HostBasic">
-import org.mixim.modules.node.${hostType};
-</#if>
-
-
+package org.mixim.examples.bmac;
 
 import org.mixim.base.connectionManager.ConnectionManager;
 import org.mixim.base.modules.BaseWorldUtility;
 
-network ${targetTypeName}
+network BMAC
 {
     parameters:
         double playgroundSizeX @unit(m); // x size of the area the nodes are in (in meters)
@@ -40,8 +39,10 @@ network ${targetTypeName}
                 playgroundSizeZ = playgroundSizeZ;
                 @display("p=30,0;i=misc/globe");
         }
-		node[numNodes]: ${hostType} {}
+        node[numNodes]: BaseNode {
+            parameters:
+                @display("p=170,50;i=device/wifilaptop");
+        }
     connections allowunconnected:
 
 }
-
