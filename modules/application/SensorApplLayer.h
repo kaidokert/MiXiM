@@ -30,6 +30,7 @@
 #include "ApplPkt_m.h"
 #include "BaseApplLayer.h"
 #include "BaseWorldUtility.h"
+#include <time.h>
 
 using namespace std;
 
@@ -97,6 +98,7 @@ protected:
   bool stats;
   bool trace;
   bool debug;
+  bool recordSimulationDuration;
   bool broadcastPackets;
   map < int, cStdDev > latencies;
   cStdDev latency;
@@ -106,6 +108,7 @@ protected:
   int hostID;
   int headerLength;
   BaseWorldUtility* world;
+  time_t simulationStartTime;
 
 protected:
     // gates

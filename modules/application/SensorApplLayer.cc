@@ -48,11 +48,15 @@ void SensorApplLayer::initialize(int stage) {
 		// application configuration
 		const char *traffic = par("trafficType");
 		destAddr = par("destAddr");
+		recordSimulationDuration = par("recordSimulationDuration");
 		nbPacketsSent = 0;
 		nbPacketsReceived = 0;
 		firstPacketGeneration = -1;
 		lastPacketReception = -2;
 
+		if(recordSimulationDuration) {
+			time(&simulationStartTime);
+		}
 		initializeDistribution(traffic);
 
 		delayTimer = new cMessage("appDelay", SEND_DATA_TIMER);
@@ -278,6 +282,11 @@ void SensorApplLayer::finish() {
 		recordScalar("nbPacketsSent", nbPacketsSent);
 		recordScalar("nbPacketsReceived", nbPacketsReceived);
 		latency.record();
+	}
+	if(recordSimulationDuration) {
+		time_t simulationEndTime;
+		time(&simulationEndTime);
+		recordScalar("simulationDuration", difftime(simulationEndTime, simulationStartTime));
 	}
 	BaseModule::finish();
 }
