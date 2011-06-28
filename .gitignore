@@ -9,7 +9,6 @@
 .settings
 .tstamp
 env.sh
-makefrag
 makefrag.vc
 **/Makefile
 Makefile.vc
