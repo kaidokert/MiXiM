@@ -51,14 +51,16 @@ protected:
 
 public:
     Move()
-    	: startPos()
+    	: cObject()
+    	, startPos()
     	, lastPos(0.0,0.0,DBL_MAX)
     	, startTime()
     	, direction()
     	, speed(0.0)
     {}
     Move(const Move& mSrc)
-    	: startPos(mSrc.startPos)
+    	: cObject(mSrc)
+		, startPos(mSrc.startPos)
     	, lastPos(mSrc.lastPos)
     	, startTime(mSrc.startTime)
     	, direction(mSrc.direction)
