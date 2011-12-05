@@ -37,12 +37,12 @@ void StateVisualize::initialize(int stage)
     }
 }
 
-void StateVisualize::handleMessage( cMessage* m)
+void StateVisualize::handleMessage( cMessage* /*m*/)
 {
     error("StateVisualize::handleMessage called");
 }
 
-void StateVisualize::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj)
+void StateVisualize::receiveSignal(cComponent */*source*/, simsignal_t signalID, cObject *obj)
 {
     Enter_Method("receiveBBItem(%s)", obj->info().c_str());
     if(signalID == StateChanger::catHostState) {

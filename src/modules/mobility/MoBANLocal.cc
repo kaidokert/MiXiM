@@ -149,7 +149,7 @@ void MoBANLocal::makeMove()
 * This function is called once something is written to the signaling system of this node. If the written item has specific category dedicated for the
 * type that MoBAN coordinator writes, the item will be read and the corresponding variables are set.
 */
-void MoBANLocal::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj)
+void MoBANLocal::receiveSignal(cComponent */*source*/, simsignal_t signalID, cObject *obj)
 {
     if(signalID == catBBMoBANMsgSignal)
     {

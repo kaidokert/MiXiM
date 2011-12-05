@@ -50,7 +50,7 @@ void StateView::handleMessage( cMessage* m)
     delete m;
 }
 
-void StateView::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj)
+void StateView::receiveSignal(cComponent */*source*/, simsignal_t /*signalID*/, cObject *obj)
 {
     Enter_Method("receiveBBItem(%s)", obj->info().c_str());
     const TestHostState *s = dynamic_cast<const TestHostState *>(obj);

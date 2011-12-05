@@ -32,7 +32,7 @@ class YetAnother : public TestParam
 {
  public:    
     YetAnother() : TestParam() { }
-    const char* getDesc() {
+    const char* getDesc() const {
         return "YetAnother";
     }
 };

@@ -357,7 +357,7 @@ void BaseMobilityTest::testComplexCIO()
 	}
 }
 
-Coord BaseMobilityTest::getCoord(double x, double y, double z) {
+Coord BaseMobilityTest::getCoord(double x, double y, double z) const{
 	if(use2D) {
 		return Coord(x, y);
 	} else {

@@ -9,12 +9,19 @@
 
 #include <cassert>
 
+#ifdef MIXIM_INET
+#include <INETDefs.h>
+#define ERFC(x) erfc(x)
+#else
+#include "FWMath.h"
+#define ERFC(x) FWMath::erfc(x)
+#endif
+
 #include "DeciderResult80211.h"
 #include "Mac80211Pkt_m.h"
 #include "Consts80211.h"
 #include "Mapping.h"
 #include "AirFrame_m.h"
-#include "FWMath.h"
 
 Decider80211::Decider80211(	DeciderToPhyInterface* phy,
 							double threshold,
@@ -66,7 +73,7 @@ simtime_t Decider80211::processNewSignal(AirFrame* frame) {
 	return ( signal.getReceptionEnd());
 }
 
-double Decider80211::calcChannelSenseRSSI(simtime_t_cref start, simtime_t_cref end) {
+double Decider80211::calcChannelSenseRSSI(simtime_t_cref start, simtime_t_cref end) const {
 	Mapping* rssiMap = calculateRSSIMapping(start, end);
 
 	Argument min(DimensionSet::timeFreqDomain);
@@ -145,10 +152,10 @@ bool Decider80211::packetOk(double snirMin, int lengthMPDU, double bitrate)
     }
     //if CCK modulation (modeled with 16-QAM)
     else if (bitrate == 5.5E+6) {
-        berMPDU = 2.0 * (1.0 - 1.0 / sqrt(pow(2.0, 4))) * FWMath::erfc(sqrt(2.0*snirMin * BANDWIDTH / bitrate));
+        berMPDU = 2.0 * (1.0 - 1.0 / sqrt(pow(2.0, 4))) * ERFC(sqrt(2.0*snirMin * BANDWIDTH / bitrate));
     }
     else {                       // CCK, modelled with 256-QAM
-        berMPDU = 2.0 * (1.0 - 1.0 / sqrt(pow(2.0, 8))) * FWMath::erfc(sqrt(2.0*snirMin * BANDWIDTH / bitrate));
+        berMPDU = 2.0 * (1.0 - 1.0 / sqrt(pow(2.0, 8))) * ERFC(sqrt(2.0*snirMin * BANDWIDTH / bitrate));
     }
 
     //probability of no bit error in the PLCP header

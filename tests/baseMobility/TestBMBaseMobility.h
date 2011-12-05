@@ -85,7 +85,7 @@ protected:
 	void assertRightBorderHandling();
 	
 	void getNextTestMove();
-	Coord getCoord(double x, double y, double z);
+	Coord getCoord(double x, double y, double z) const;
 	
 	void calcTestReflection(Coord from, Coord collission, Coord reflected);
 

@@ -35,7 +35,7 @@ void TestBMBaseMobility::initialize(int stage){
 
 }
 
-Coord TestBMBaseMobility::getCoord(double x, double y, double z) {
+Coord TestBMBaseMobility::getCoord(double x, double y, double z) const {
 	if(use2D) {
 		return Coord(x, y);
 	} else {

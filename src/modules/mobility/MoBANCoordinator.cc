@@ -441,10 +441,11 @@ bool MoBANCoordinator::readPostureSpecificationFile() {
 	for (posture = postures.begin(); posture != postures.end(); posture++)
 	{
 		str = (*posture)->getAttribute("postureID");
-		postureID = strtol(str, 0, 0);
-		if ( postureID < 0 || postureID >= numPostures)
+		const long lPostureID = strtol(str, 0, 0);
+		if ( lPostureID < 0 || static_cast<unsigned int>(lPostureID) >= numPostures)
 			error ("Posture ID in input posture specification file is out of the range.");
 
+		postureID = static_cast<unsigned int>(lPostureID);
 		postureList.push_back(new Posture(postureID, numNodes));
 
 		str = (*posture)->getAttribute("name");

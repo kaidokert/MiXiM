@@ -52,7 +52,7 @@ protected:
 	
 	void testInitialisation();
 	
-	Coord getCoord(double x, double y, double z);
+	Coord getCoord(double x, double y, double z) const;
 	
 	void assertTrue(std::string msg, bool value) {
 		if (!value) {
