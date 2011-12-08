@@ -32,13 +32,13 @@
 class MIXIM_API BaseWorldUtility : public cSimpleModule
 {
 protected:
-	/**
-	 * @brief Size of the area the nodes are in (in meters)
-	 *
-	 * Note: The playground is in the range [0, playground size].
-	 * Meaning the upper borders (at pg-size) as well as the lower
-	 * borders (at 0) are part of the playground.
-	 **/
+    /**
+     * @brief Size of the area the nodes are in (in meters)
+     *
+     * Note: The playground is in the range [0, playground size].
+     * Meaning the upper borders (at pg-size) as well as the lower
+     * borders (at 0) are part of the playground.
+    **/
     Coord playgroundSize;
 
     /** @brief Should the playground be treatend as a torus?*/
@@ -55,7 +55,7 @@ protected:
 
 public:
     /** @brief Speed of light in meters per second. */
-	static const double speedOfLight;
+    static const double speedOfLight;
 
 protected:
     /**
@@ -75,8 +75,8 @@ public:
      * @brief Returns the playgroundSize
      *
      * Note: The playground is in the range [0, playground size].
-	 * Meaning the upper borders (at pg-size) as well as the lower
-	 * borders (at 0) are part of the playground.
+     * Meaning the upper borders (at pg-size) as well as the lower
+     * borders (at 0) are part of the playground.
      **/
     const Coord* getPgs(){
     	initializeIfNecessary();
@@ -89,8 +89,8 @@ public:
     	return useTorusFlag;
     };
 
-	/** @brief Random position somewhere in the playground */
-	virtual Coord getRandomPosition();
+    /** @brief Random position somewhere in the playground */
+    virtual Coord getRandomPosition();
 
     /** @brief Returns true if the world is 2-dimensional */
     bool use2D()

@@ -23,6 +23,7 @@
 #include "BaseMobility.h"
 
 #include <sstream>
+#include <cassert>
 
 #include "FWMath.h"
 #include "BorderMsg_m.h"
@@ -33,24 +34,34 @@ Define_Module(BaseMobility);
 
 const simsignalwrap_t BaseMobility::mobilityStateChangedSignal = simsignalwrap_t(MIXIM_SIGNAL_MOBILITY_CHANGE_NAME);
 
-BaseMobility::BaseMobility():
-		BatteryAccess(),
-		move(),
-		playgroundScaleX(1),
-		playgroundScaleY(1),
-		origDisplayWidth(0),
-		origDisplayHeight(0),
-		origIconSize(0)
+BaseMobility::BaseMobility()
+	: BatteryAccess()
+	, world(NULL)
+	, move()
+	, updateInterval(0)
+	, moveMsg(NULL)
+	, coreDebug(false)
+	, scaleNodeByDepth(false)
+	, playgroundScaleX(1)
+	, playgroundScaleY(1)
+	, origDisplayWidth(0)
+	, origDisplayHeight(0)
+	, origIconSize(0)
 {}
 
-BaseMobility::BaseMobility(unsigned stacksize):
-		BatteryAccess(stacksize),
-		move(),
-		playgroundScaleX(1),
-		playgroundScaleY(1),
-		origDisplayWidth(0),
-		origDisplayHeight(0),
-		origIconSize(0)
+BaseMobility::BaseMobility(unsigned stacksize)
+	: BatteryAccess(stacksize)
+	, world(NULL)
+	, move()
+	, updateInterval(0)
+	, moveMsg(NULL)
+	, coreDebug(false)
+	, scaleNodeByDepth(false)
+	, playgroundScaleX(1)
+	, playgroundScaleY(1)
+	, origDisplayWidth(0)
+	, origDisplayHeight(0)
+	, origIconSize(0)
 {}
 
 void BaseMobility::initialize(int stage)

@@ -57,6 +57,14 @@
  */
 class MIXIM_API MoBANLocal : public BaseMobility
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	MoBANLocal(const MoBANLocal&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	MoBANLocal& operator=(const MoBANLocal&);
+
   protected:
 
     /** @brief Reference point of the node in the current posture. It is gotten from the MoBAN coordinator through signaling system */
@@ -85,6 +93,18 @@ class MIXIM_API MoBANLocal : public BaseMobility
     Coord stepTarget;
 
   public:
+    MoBANLocal()
+    	: BaseMobility()
+    	, referencePoint()
+    	, radius(0)
+    	, speed(0)
+    	, stepSize()
+    	, numSteps(0)
+    	, step(0)
+    	, targetPos()
+    	, stepTarget()
+    {}
+
     /** @brief Variable to keep the category of the information that the coordinator publishes. */
     const static simsignalwrap_t catBBMoBANMsgSignal;
 

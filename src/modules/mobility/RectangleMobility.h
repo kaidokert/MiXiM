@@ -32,6 +32,14 @@
  */
 class MIXIM_API RectangleMobility : public BaseMobility
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	RectangleMobility(const RectangleMobility&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	RectangleMobility& operator=(const RectangleMobility&);
+
   protected:
     // configuration
     double x1, y1, x2, y2; ///< rectangle bounds
@@ -44,7 +52,13 @@ class MIXIM_API RectangleMobility : public BaseMobility
     Coord targetPos;
 
   public:
-    //Module_Class_Members( RectangleMobility, BaseMobility, 0 );
+    RectangleMobility()
+    	: BaseMobility()
+    	, x1(0), y1(0), x2(0), y2(0)
+    	, d(0)
+    	, corner1(0), corner2(0), corner3(0), corner4(0)
+    	, targetPos(0)
+    {}
 
     /** @brief Initializes mobility model parameters. */
     virtual void initialize(int);

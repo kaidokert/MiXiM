@@ -136,6 +136,16 @@ class MIXIM_API BaseMobility : public BatteryAccess
 
     /** @brief The original size of the icon of the node.*/
     double origIconSize;
+
+  private:
+    /** @brief Copy constructor is not allowed.
+     */
+    BaseMobility(const BaseMobility&);
+    /** @brief Assignment operator is not allowed.
+     */
+    BaseMobility& operator=(const BaseMobility&);
+
+
   public:
 
     BaseMobility();

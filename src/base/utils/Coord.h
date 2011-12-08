@@ -103,7 +103,7 @@ public:
     /**
      * @brief Multiplies this coordinate vector by a real number.
      */
-    Coord operator*=(double f) {
+    Coord& operator*=(double f) {
         x *= f;
         y *= f;
         z *= f;
@@ -113,7 +113,7 @@ public:
     /**
      * @brief Divides this coordinate vector by a real number.
      */
-    Coord operator/=(double f) {
+    Coord& operator/=(double f) {
         x /= f;
         y /= f;
         z /= f;
@@ -123,7 +123,7 @@ public:
     /**
      * @brief Adds coordinate vector 'a' to this.
      */
-    Coord operator+=(const Coord& a) {
+    Coord& operator+=(const Coord& a) {
         x += a.x;
         y += a.y;
         z += a.z;
@@ -135,7 +135,7 @@ public:
      *
      * This operator can change the dimension of the coordinate.
      */
-    Coord operator=(const Coord& a) {
+    Coord& operator=(const Coord& a) {
         x = a.x;
         y = a.y;
         z = a.z;
@@ -145,7 +145,7 @@ public:
     /**
      * @brief Subtracts coordinate vector 'a' from this.
      */
-    Coord operator-=(const Coord& a) {
+    Coord& operator-=(const Coord& a) {
         x -= a.x;
         y -= a.y;
         z -= a.z;

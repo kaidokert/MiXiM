@@ -54,10 +54,13 @@
  * transition matrix.
 */
 PostureTransition::PostureTransition(int numPosture)
-{
-	numPos = numPosture;
-	defaultMatrixID = 0; // if no default matrix found, the first one will be supposed as the default matrix.
-}
+	: numPos(numPosture)
+	, defaultMatrixID(0)
+	, matrixList()
+	, areaTypeList()
+	, timeDomainList()
+	, combinationList()
+{ }
 
 /**
  * This function initiates a new instance of markov matrix with the given matrix. Note that it copies the matrix into the created matrix.

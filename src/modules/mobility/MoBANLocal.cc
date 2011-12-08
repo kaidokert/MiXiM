@@ -43,6 +43,7 @@
 
 #include "FWMath.h"
 #include "MoBANBBItem.h"
+#include "FindModule.h"
 
 Define_Module(MoBANLocal);
 
@@ -164,7 +165,7 @@ void MoBANLocal::receiveSignal(cComponent */*source*/, simsignal_t signalID, cOb
 
     	move.setStart(insideWorld(stepTarget+referencePoint),simTime());
 
-        EV<<"Node "<< getParentModule()->getIndex() <<" received new reference point."<<endl;
+        EV<<"Node "<< FindModule<>::findHost(this)->getIndex() <<" received new reference point."<<endl;
         EV<< "New speed:" << speed <<" , new radius: "<< radius <<endl;
 
     }

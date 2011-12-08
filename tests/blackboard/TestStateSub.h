@@ -31,10 +31,21 @@
 class TestStateSub : public BaseModule
 {
 private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	TestStateSub(const TestStateSub&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	TestStateSub& operator=(const TestStateSub&);
+
+private:
     cModule *host;
 
 public:
-    //Module_Class_Members(TestStateSub, BaseModule, 0);
+    TestStateSub()
+    	: BaseModule()
+    	, host(NULL)
+    {}
     virtual void initialize(int stage);
     virtual void handleMessage( cMessage* );
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj);

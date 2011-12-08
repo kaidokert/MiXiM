@@ -47,7 +47,16 @@ protected:
 	Coord targetPos;
 
 public:
-	//Module_Class_Members( TractorMobility, BaseMobility, 0 );
+	TractorMobility()
+		: BaseMobility()
+		, x1(0), y1(0), x2(0), y2(0)
+		, dx(0), dy(0)
+		, rows(0)
+		, row_length(0), row_width(0)
+		, path_length(0)
+		, position(0)
+		, targetPos()
+	{}
 
 	/** @brief Initializes mobility model parameters. */
 	virtual void initialize(int);

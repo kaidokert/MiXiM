@@ -86,6 +86,14 @@
  */
 class MIXIM_API MoBANCoordinator: public cSimpleModule
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	MoBANCoordinator(const MoBANCoordinator&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	MoBANCoordinator& operator=(const MoBANCoordinator&);
+
   protected:
 	/** @brief Debug switch for all other modules*/
     bool debug;
@@ -165,6 +173,13 @@ class MIXIM_API MoBANCoordinator: public cSimpleModule
     	Coord targetPos;
     	double speed;
     	simtime_t duration;
+
+    	pattern()
+    		: postureID(0)
+    		, targetPos()
+    		, speed(0)
+    		, duration()
+    	{}
     }Pattern;
 
 
@@ -197,6 +212,38 @@ class MIXIM_API MoBANCoordinator: public cSimpleModule
     PostureTransition* transitions;
 
   public:
+    MoBANCoordinator()
+    	: cSimpleModule()
+    	, debug(false)
+    	, world(NULL)
+    	, network(NULL)
+    	, updateInterval()
+    	, MoveMsg(NULL)
+    	, numNodes(0)
+    	, speed(0)
+    	, index(0)
+    	, logfile(NULL)
+    	, numPostures(0)
+    	, postureList()
+    	, currentPosture(NULL)
+    	, duration()
+    	, minDuration()
+    	, maxDuration()
+    	, nodeIndex(NULL)
+    	, logicalCenter()
+    	, step(0)
+    	, numSteps(0)
+    	, targetPos()
+    	, stepTarget()
+    	, stepSize()
+    	, useMobilityPattern(false)
+    	, mobilityPattern(NULL)
+    	, patternLength(0)
+    	, currentPattern(0)
+    	, markovMatrix(NULL)
+    	, postureSelStrategy(UNIFORM_RANDOM)
+    	, transitions(NULL)
+    {}
 
     /** @brief Initializes the MoBAN mobility model.*/
     virtual void initialize(int);

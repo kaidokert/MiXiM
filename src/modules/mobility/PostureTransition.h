@@ -71,9 +71,17 @@ protected:
 	int defaultMatrixID;
 
     /** @brief Data type for one instance of Markov transition matrix. */
-    typedef struct{
+    typedef struct tTransMatrix {
     	std::string name;
     	double** matrix;
+
+    	tTransMatrix() : name(), matrix(NULL) {}
+    	tTransMatrix(const tTransMatrix& o) : name(o.name), matrix(o.matrix) {}
+    	tTransMatrix& operator=(const tTransMatrix& o) {
+    		name   = o.name;
+    		matrix = o.matrix;
+    		return *this;
+    	}
     }TransMatrix;
 
     /** @brief Data type for a list of Markov transition matrices. */
@@ -83,15 +91,19 @@ protected:
     TransMatrixList matrixList;
 
     /** @brief Data type for one instance of the area (space) boundary. */
-    typedef struct{
+    typedef struct tAreaBound {
     	Coord low;
     	Coord high;
+
+    	tAreaBound() : low(), high() {}
     }AreaBound;
 
     /** @brief Data type for one instance of area type. */
-    typedef struct{
+    typedef struct tAreaType {
      	std::string name;
       	std::vector<AreaBound*> boundries;
+
+      	tAreaType() : name(), boundries() {}
     }AreaType;
 
     /** @brief Data type for the list of area types. */
@@ -101,15 +113,19 @@ protected:
     AreaTypeList areaTypeList;
 
     /** @brief Data type for one instance of the time boundary. */
-    typedef struct{
+    typedef struct tTimeBound {
 		simtime_t low;
 		simtime_t high;
+
+		tTimeBound() : low(), high() {}
     }TimeBound;
 
     /** @brief Data type for one instance of time domain. */
-    typedef struct{
+    typedef struct tTimeDomainType {
        	std::string name;
        	std::vector<TimeBound*> boundries;
+
+       	tTimeDomainType() : name(), boundries() {}
     }TimeDomainType;
 
     /** @brief Data type for the list of time domains. */

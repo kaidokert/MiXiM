@@ -31,10 +31,21 @@
 class StateView : public BaseModule
 {
 private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	StateView(const StateView&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	StateView& operator=(const StateView&);
+
+private:
     cModule *host;
 
 public:
-    //Module_Class_Members(StateView, BaseModule, 0);
+    StateView()
+    	: BaseModule()
+    	, host(NULL)
+    {}
     virtual ~StateView();
     virtual void initialize(int);
     virtual void handleMessage( cMessage* );

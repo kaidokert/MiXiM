@@ -43,6 +43,13 @@
 
 class MIXIM_API BBMoBANMessage : public cObject {
  public:
+	BBMoBANMessage()
+		: cObject()
+		, position()
+		, speed(0)
+		, radius(0)
+	{}
+
 	Coord  position;
 	double speed;
 	double radius;

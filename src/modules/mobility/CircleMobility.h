@@ -31,6 +31,14 @@
  */
 class MIXIM_API CircleMobility : public BaseMobility
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	CircleMobility(const CircleMobility&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	CircleMobility& operator=(const CircleMobility&);
+
   protected:
     // configuration
     Coord center;
@@ -44,7 +52,14 @@ class MIXIM_API CircleMobility : public BaseMobility
     Coord targetPos;
 
   public:
-    //Module_Class_Members( CircleMobility, BaseMobility, 0 );
+    CircleMobility()
+    	: BaseMobility()
+    	, center()
+    	, r(0)
+    	, omega(0)
+    	, angle(0)
+    	, targetPos()
+    {}
 
     /** @brief Initializes mobility model parameters.*/
     virtual void initialize(int);

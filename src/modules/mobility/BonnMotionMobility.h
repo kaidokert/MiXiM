@@ -32,6 +32,14 @@
  */
 class MIXIM_API BonnMotionMobility : public LineSegmentsMobilityBase
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	BonnMotionMobility(const BonnMotionMobility&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	BonnMotionMobility& operator=(const BonnMotionMobility&);
+
   protected:
     // state
     const BonnMotionFile::Line *vecp;
@@ -39,6 +47,13 @@ class MIXIM_API BonnMotionMobility : public LineSegmentsMobilityBase
     bool     bIs3D;
 
   public:
+    BonnMotionMobility()
+    	: LineSegmentsMobilityBase()
+    	, vecp(NULL)
+    	, vecpos(0)
+    	, bIs3D(false)
+    {}
+
     //Module_Class_Members(BonnMotionMobility, LineSegmentsMobilityBase, 0);
     ~BonnMotionMobility();
 

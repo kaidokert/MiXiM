@@ -39,6 +39,10 @@ class MIXIM_API BonnMotionFile
     typedef std::list<Line> LineList;
     LineList lines;
   public:
+    BonnMotionFile()
+    	: lines()
+    {}
+
     const Line *getLine(int nodeId) const;
 };
 
@@ -58,7 +62,9 @@ class MIXIM_API BonnMotionFileCache
     BMFileMap cache;
     static BonnMotionFileCache *inst;
     void parseFile(const char *filename, BonnMotionFile& bmFile);
-    BonnMotionFileCache() {}
+    BonnMotionFileCache()
+    	: cache()
+    {}
     virtual ~BonnMotionFileCache() {}
 
   public:

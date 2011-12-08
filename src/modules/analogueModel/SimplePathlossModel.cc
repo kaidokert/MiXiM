@@ -5,14 +5,20 @@
 #define splmEV (ev.isDisabled()||!debug) ? ev : ev << "PhyLayer(SimplePathlossModel): "
 
 SimplePathlossConstMapping::SimplePathlossConstMapping(const DimensionSet& dimensions,
-													   SimplePathlossModel* model,
-													   const double distFactor) :
-	SimpleConstMapping(dimensions),
-	distFactor(distFactor),
-	model(model),
-	hasFrequency(dimensions.hasDimension(Dimension::frequency))
-{
-}
+                                                       SimplePathlossModel* model,
+                                                       const double distFactor)
+	: SimpleConstMapping(dimensions)
+	, distFactor(distFactor)
+	, model(model)
+	, hasFrequency(dimensions.hasDimension(Dimension::frequency))
+{ }
+
+SimplePathlossConstMapping::SimplePathlossConstMapping(const SimplePathlossConstMapping& o)
+	: SimpleConstMapping(o)
+	, distFactor(o.distFactor)
+	, model(o.model)
+	, hasFrequency(o.hasFrequency)
+{ }
 
 double SimplePathlossConstMapping::getValue(const Argument& pos) const
 {

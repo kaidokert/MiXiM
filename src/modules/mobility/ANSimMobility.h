@@ -32,6 +32,14 @@
  */
 class MIXIM_API ANSimMobility : public LineSegmentsMobilityBase
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	ANSimMobility(const ANSimMobility&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	ANSimMobility& operator=(const ANSimMobility&);
+
   protected:
     // config
     int nodeId; ///< we'll have to compare this to the \<node_id> elements
@@ -40,6 +48,12 @@ class MIXIM_API ANSimMobility : public LineSegmentsMobilityBase
     cXMLElement *nextPosChange; ///< points to the next \<position_change> element
 
   public:
+    ANSimMobility()
+    	: LineSegmentsMobilityBase()
+    	, nodeId(-1)
+    	, nextPosChange(NULL)
+    {}
+
     /** @brief Initializes mobility model parameters.*/
     virtual void initialize(int);
 

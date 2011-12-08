@@ -67,7 +67,7 @@ void MoBANCoordinator::initialize(int stage) {
 		world = FindModule<BaseWorldUtility*>::findGlobalModule();
 		if (world == NULL)
 			error("Could not find BaseWorldUtility module");
-		network = getParentModule();
+		network = FindModule<>::findNetwork(this);
 
 		//preparing output mobility pattern log file
 		char log_file_name[70];

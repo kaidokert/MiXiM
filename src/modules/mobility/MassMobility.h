@@ -36,6 +36,14 @@
  */
 class MIXIM_API MassMobility : public BaseMobility
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	MassMobility(const MassMobility&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	MassMobility& operator=(const MassMobility&);
+
   protected:
     // config (see NED file for explanation)
     cPar *changeInterval;
@@ -49,6 +57,16 @@ class MIXIM_API MassMobility : public BaseMobility
     Coord targetPos;
 
   public:
+    MassMobility()
+    	: BaseMobility()
+    	, changeInterval(NULL)
+    	, changeAngleBy(NULL)
+    	, currentSpeed(0)
+    	, currentAngle(0)
+    	, step()
+    	, targetPos()
+    {}
+
     /** @brief The kind field of messages
      *
      * that are used internally by this class have one of these values

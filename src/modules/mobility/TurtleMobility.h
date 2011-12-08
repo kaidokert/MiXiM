@@ -34,6 +34,14 @@
  */
 class MIXIM_API TurtleMobility : public LineSegmentsMobilityBase
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	TurtleMobility(const TurtleMobility&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	TurtleMobility& operator=(const TurtleMobility&);
+
   protected:
     // config
     cXMLElement *turtleScript;
@@ -45,6 +53,14 @@ class MIXIM_API TurtleMobility : public LineSegmentsMobilityBase
     std::stack<long> loopVars; // for <repeat>
 
   public:
+    TurtleMobility()
+    	: LineSegmentsMobilityBase()
+    	, turtleScript(NULL)
+    	, nextStatement(NULL)
+    	, angle(0)
+    	, borderPolicy(REFLECT)
+    	, loopVars()
+    {}
 
     /** @brief Initializes mobility model parameters.*/
     virtual void initialize(int);

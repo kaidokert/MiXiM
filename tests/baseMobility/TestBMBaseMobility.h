@@ -49,7 +49,25 @@ protected:
 
 public:	
 	
-	//Module_Class_Members( TestBMBaseMobility , BaseMobility , 0 );
+	TestBMBaseMobility()
+		: BaseMobility()
+		, testsPassed(false)
+		, testStage(0)
+		, expectedBorderTime()
+    	, expectedBorderMove()
+    	, policy()
+		, stepTarget()
+		, targetPos()
+		, step()
+		, angle(0)
+		, expStepTarget()
+		, expTargetPos()
+		, expStep()
+		, expAngle(0)
+		, ignoreNext(0)
+		, use2D(false)
+		, pgsX(0), pgsY(0), pgsZ(0)
+	{}
 	
 	/** @brief Initializes mobility model parameters.*/
     virtual void initialize(int);

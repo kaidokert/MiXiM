@@ -31,25 +31,25 @@ using std::vector;
 // bit rate (850 kbps)
 const int IEEE802154A::mandatory_bitrate = 850000;
 // mandatory data symbol length (1.025 ms)
-const double IEEE802154A::mandatory_symbol = 0.00000102364; //102564
+const_simtime_t IEEE802154A::mandatory_symbol = 0.00000102364; //102564
 // 0.5 * mandatory_symbol (0.5 ms)
-const double IEEE802154A::mandatory_timeShift = 0.00000051282;
+const_simtime_t IEEE802154A::mandatory_timeShift = 0.00000051282;
 // mandatory pulse duration ( = 1 / bandwidth = 2 ns)
-const double IEEE802154A::mandatory_pulse = 0.000000002003203125;
+const_simtime_t IEEE802154A::mandatory_pulse = 0.000000002003203125;
 // burst duration (32 ns)
-const double IEEE802154A::mandatory_burst = 0.00000003205;
+const_simtime_t IEEE802154A::mandatory_burst = 0.00000003205;
 // number of consecutive pulses forming a burst
 const int IEEE802154A::mandatory_pulses_per_burst = 16;
 // Center frequency of band 3 in UWB lower band (500 MHz wide channel)
 const double IEEE802154A::mandatory_centerFreq = 4498; // MHz
 // default sync preamble length
-const double IEEE802154A::mandatory_preambleLength = 0.0000715; // Tpre=71.5 µs
+const_simtime_t IEEE802154A::mandatory_preambleLength = 0.0000715; // Tpre=71.5 µs
 // Normalized pulse envelope peak
 const double IEEE802154A::maxPulse = 1;
 // Duration of a sync preamble symbol
-const double IEEE802154A::Tpsym = 0.001 * 0.001 * 0.001 * 993.6; // 993.6 ns
+const_simtime_t IEEE802154A::Tpsym = 0.001 * 0.001 * 0.001 * 993.6; // 993.6 ns
 
-const double IEEE802154A::tFirstSyncPulseMax = IEEE802154A::mandatory_pulse/2;
+const_simtime_t IEEE802154A::tFirstSyncPulseMax = IEEE802154A::mandatory_pulse/2;
 
 // Ci values
 const short IEEE802154A::C31[8][31] = {
@@ -90,7 +90,7 @@ double IEEE802154A::signalStart = 0;
 
 int IEEE802154A::psduLength = 0;
 
-//const double IEEE802154A::MaxFrameDuration = IEEE802154A::MaxPSDULength*IEEE802154A::mandatory_symbol + IEEE802154A::mandatory_preambleLength;
+//const_simtime_t IEEE802154A::MaxFrameDuration = IEEE802154A::MaxPSDULength*IEEE802154A::mandatory_symbol + IEEE802154A::mandatory_preambleLength;
 
 const IEEE802154A::config IEEE802154A::cfg_mandatory_16M = {
 		3,					// channel

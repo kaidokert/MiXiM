@@ -34,6 +34,14 @@
  */
 class MIXIM_API LineSegmentsMobilityBase : public BaseMobility
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	LineSegmentsMobilityBase(const LineSegmentsMobilityBase&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	LineSegmentsMobilityBase& operator=(const LineSegmentsMobilityBase&);
+
   protected:
     /** @name parameters to handle the movement of the host*/
     /*@{*/
@@ -47,6 +55,13 @@ class MIXIM_API LineSegmentsMobilityBase : public BaseMobility
     Coord stepTarget;
 
   protected:
+    LineSegmentsMobilityBase()
+    	: BaseMobility()
+    	, stepSize()
+    	, targetTime()
+    	, targetPos()
+    	, stepTarget()
+    {}
 
     /** @brief Called upon arrival of a self messages*/
     virtual void handleSelfMsg(cMessage *msg);

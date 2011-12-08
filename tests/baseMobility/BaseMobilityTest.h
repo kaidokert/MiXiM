@@ -10,8 +10,6 @@
 class BaseMobilityTest : public BaseMobility
 {
 	
-	
-	
 protected:
 	double xMax, yMax, zMax;
 	double xMin, yMin, zMin;
@@ -21,7 +19,18 @@ protected:
 	bool allTestsPassed;
 	
 public:
-	//Module_Class_Members( BaseMobilityTest , BaseMobility , 0 );
+	BaseMobilityTest()
+		: BaseMobility()
+		, xMax(0), yMax(0), zMax(0)
+		, xMin(0), yMin(0), zMin(0)
+		, use2D(false)
+		, allTestsPassed(false)
+		, pointOutside()
+		, bHand()
+		, bPol()
+		, bPolStr()
+		, bHandStr()
+	{}
 	
 	virtual void initialize(int);
 	virtual void finish();

@@ -91,9 +91,13 @@ public:
 
 	/** @brief Construct a posture object with the given ID and number of nodes, respectively */
 	Posture(unsigned int , unsigned int );
+	Posture(const Posture&);
+	Posture& operator=(const Posture&);
+	void swap(Posture&);
+	virtual ~Posture();
 
 	/** @brief Set the given name for the posture. */
-	bool setPostureName(char *);
+	bool setPostureName(const char *);
 
 	/** @brief Set the minimum and maximum value for the speed range of the whole WBAN (global movement) in this posture. */
 	bool setPostureSpeed(double, double);
@@ -114,20 +118,20 @@ public:
 	bool setAlphaSD(unsigned int , unsigned int , double);
 
 	/** @brief Check if this posture is mobile by checking the maximum possible speed. */
-	bool isMobile();
+	bool isMobile() const;
 
 
 	/** @brief Returns the unique Id (index) of this posture. */
-	int getPostureID();
+	int getPostureID() const;
 
 	/** @brief Returns posture name. */
-	char* getPostureName();
+	const char* getPostureName() const;
 
 	/** @brief Returns maximum value of the speed range of this posture. */
-	double getMaxSpeed();
+	double getMaxSpeed() const;
 
 	/** @brief Returns minimum value of the speed range of this posture. */
-	double getMinSpeed();
+	double getMinSpeed() const;
 
 	/** @brief Returns the singular movement radius of a node in this posture. */
 	double getRadius(unsigned int) const;

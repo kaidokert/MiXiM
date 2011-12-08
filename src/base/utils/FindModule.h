@@ -60,6 +60,11 @@ class FindModule
 			}
 			return node;
 		}
+		static cModule* findNetwork(cModule *const m) {
+			cModule* node = findHost(m);
+
+			return node ? node->getParentModule() : node;
+		}
 		// the constness version
 		static const cModule* findHost(const cModule *const m) {
 			const cModule* parent = m != NULL ? m->getParentModule() : NULL;
@@ -72,6 +77,11 @@ class FindModule
 			}
 			return node;
 		}
+		static const cModule* findNetwork(const cModule *const m) {
+			const cModule* node = findHost(m);
+
+			return node ? node->getParentModule() : node;
+		}
 };
 
 /**
@@ -83,11 +93,20 @@ class AccessModuleWrap
 {
 	public:
 		typedef T wrapType;
-    private:
+	private:
 		T* pModule;
+		/** @brief Copy constructor is not allowed.
+		 */
+		AccessModuleWrap(const AccessModuleWrap<T>&);
+		/** @brief Assignment operator is not allowed.
+		 */
+		AccessModuleWrap<T>& operator=(const AccessModuleWrap<T>&);
+
 	public:
 		AccessModuleWrap() : pModule(NULL)
 		{}
+
+		virtual ~AccessModuleWrap() {};
 
 		T* get(cModule *const from = NULL)
 		{

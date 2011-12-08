@@ -19,7 +19,7 @@
 #include "BonnMotionMobility.h"
 #include "BonnMotionFileCache.h"
 #include "FWMath.h"
-
+#include "FindModule.h"
 
 Define_Module(BonnMotionMobility);
 
@@ -34,7 +34,7 @@ void BonnMotionMobility::initialize(int stage)
     {
         int nodeId = par("nodeId");
         if (nodeId == -1)
-            nodeId = getParentModule()->getIndex();
+            nodeId = FindModule<>::findHost(this)->getIndex();
 
         const char*           fname  = par("traceFile");
         const BonnMotionFile *bmFile = BonnMotionFileCache::getInstance()->getFile(fname);

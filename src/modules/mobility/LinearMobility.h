@@ -35,6 +35,14 @@
  */
 class MIXIM_API LinearMobility : public BaseMobility
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	LinearMobility(const LinearMobility&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	LinearMobility& operator=(const LinearMobility&);
+
   protected:
     double angle;          ///< angle of linear motion
     double acceleration;   ///< acceleration of linear motion
@@ -43,7 +51,12 @@ class MIXIM_API LinearMobility : public BaseMobility
     Coord stepTarget;
 
   public:
-    //Module_Class_Members( LinearMobility, BaseMobility, 0 );
+    LinearMobility()
+    	: BaseMobility()
+    	, angle(0)
+    	, acceleration(0)
+    	, stepTarget()
+    {}
 
     /** @brief Initializes mobility model parameters.*/
     virtual void initialize(int);

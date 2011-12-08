@@ -35,6 +35,14 @@
 
 class StateChanger : public BaseModule
 {
+private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	StateChanger(const StateChanger&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	StateChanger& operator=(const StateChanger&);
+
 public:
     const static simsignalwrap_t catHostState;
     const static simsignalwrap_t catTestParam;
@@ -46,7 +54,14 @@ private:
     YetAnother tp;
 
 public:
-    //Module_Class_Members(StateChanger, BaseModule, 0);
+    StateChanger()
+    	: BaseModule()
+    	, change_timer(NULL)
+    	, state_counter(0)
+    	, hs()
+    	, tp()
+    {}
+
     virtual void initialize(int);
     virtual void finish();
     virtual void handleMessage(cMessage*);

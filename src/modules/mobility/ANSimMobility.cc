@@ -18,7 +18,7 @@
 
 #include "ANSimMobility.h"
 #include "FWMath.h"
-
+#include "FindModule.h"
 
 Define_Module(ANSimMobility);
 
@@ -44,7 +44,7 @@ void ANSimMobility::initialize(int stage)
     {
         nodeId = par("nodeId");
         if (nodeId == -1)
-            nodeId = getParentModule()->getIndex();
+            nodeId = FindModule<>::findHost(this)->getIndex();
 
         // get script: param should point to <simulation> element
         cXMLElement *rootElem = par("ansimTrace");

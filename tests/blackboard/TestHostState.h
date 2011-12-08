@@ -41,7 +41,10 @@ private:
     States state;
 
 public:
-
+    TestHostState()
+    	: cObject()
+    	, state(DEAD)
+    {}
     States getState() const { return state; }
     void setState(States s) { state = s; }
 };

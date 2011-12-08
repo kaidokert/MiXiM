@@ -38,6 +38,14 @@
  */
 class MIXIM_API ConstSpeedMobility : public BaseMobility
 {
+  private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	ConstSpeedMobility(const ConstSpeedMobility&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	ConstSpeedMobility& operator=(const ConstSpeedMobility&);
+
   protected:
     /** @name parameters to handle the movement of the host*/
     /*@{*/
@@ -55,7 +63,14 @@ class MIXIM_API ConstSpeedMobility : public BaseMobility
     //    double lastStep;
 
   public:
-    //Module_Class_Members( ConstSpeedMobility, BaseMobility, 0 );
+    ConstSpeedMobility()
+    	: BaseMobility()
+    	, stepSize()
+    	, numSteps(0)
+    	, step(0)
+    	, targetPos()
+    	, stepTarget()
+    {}
 
     /** @brief Initializes mobility model parameters.*/
     virtual void initialize(int);

@@ -31,10 +31,21 @@
 class StateVisualize : public BaseModule
 {
 private:
+	/** @brief Copy constructor is not allowed.
+	 */
+	StateVisualize(const StateVisualize&);
+	/** @brief Assignment operator is not allowed.
+	 */
+	StateVisualize& operator=(const StateVisualize&);
+
+private:
     cModule *host;
 
 public:
-    //Module_Class_Members(StateVisualize, BaseModule, 0);
+    StateVisualize()
+    	: BaseModule()
+    	, host(NULL)
+    {}
     virtual ~StateVisualize();
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage*);

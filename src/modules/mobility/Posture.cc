@@ -45,10 +45,18 @@
 #include "Posture.h"
 
 Posture::Posture(unsigned int ID, unsigned int num)
+	: numNodes(num)
+	, postureID(ID)
+	, nodePs(NULL)
+	, posture_name()
+	, alphaMean(NULL)
+	, alphaSD(NULL)
+	, nodeRadius(NULL)
+	, nodeSpeed(NULL)
+	, postureMaxSpeed(0)
+	, postureMinSpeed(0)
 {
-	postureID = ID;
-	numNodes = num;
-
+	posture_name[0] = 0;
 	nodePs = new Coord[numNodes];
 	nodeRadius = new double[numNodes];
 	nodeSpeed =  new double[numNodes];
@@ -62,6 +70,76 @@ Posture::Posture(unsigned int ID, unsigned int num)
 		alphaSD[i] = new double[numNodes];
 }
 
+Posture::Posture(const Posture& o)
+	: numNodes(o.numNodes)
+	, postureID(o.postureID)
+	, nodePs(NULL)
+	, posture_name()
+	, alphaMean(NULL)
+	, alphaSD(NULL)
+	, nodeRadius(NULL)
+	, nodeSpeed(NULL)
+	, postureMaxSpeed(o.postureMaxSpeed)
+	, postureMinSpeed(o.postureMinSpeed)
+{
+	strcpy(posture_name, o.posture_name);
+	nodePs     = new Coord[numNodes];
+	nodeRadius = new double[numNodes];
+	nodeSpeed  = new double[numNodes];
+
+	for (unsigned j=0; j < numNodes; ++j) {
+		nodePs[j]     = o.nodePs[j];
+		nodeRadius[j] = o.nodeRadius[j];
+		nodeSpeed[j]  = o.nodeSpeed[j];
+	}
+
+	alphaMean = new double*[numNodes];
+	alphaSD   = new double*[numNodes];
+	for (unsigned int i=0;i<numNodes;++i) {
+		alphaMean[i] = new double[numNodes];
+		alphaSD[i]   = new double[numNodes];
+		for (unsigned j=0; j < numNodes; ++j) {
+			alphaMean[i][j] = o.alphaMean[i][j];
+			alphaSD[i][j]   = o.alphaSD[i][j];
+		}
+	}
+}
+
+Posture& Posture::operator=(const Posture& copy)
+{
+	Posture tmp(copy);
+	swap(tmp);
+	return *this;
+}
+
+void Posture::swap(Posture& o)
+{
+	std::swap(numNodes,        o.numNodes);
+	std::swap(postureID,       o.postureID);
+	std::swap(nodePs,          o.nodePs);
+	std::swap(posture_name,    o.posture_name);
+	std::swap(alphaMean,       o.alphaMean);
+	std::swap(alphaSD,         o.alphaSD);
+	std::swap(nodeRadius,      o.nodeRadius);
+	std::swap(nodeSpeed,       o.nodeSpeed);
+	std::swap(postureMaxSpeed, o.postureMaxSpeed);
+	std::swap(postureMinSpeed, o.postureMinSpeed);
+}
+
+Posture::~Posture()
+{
+	delete[] nodePs;
+	delete[] nodeRadius;
+	delete[] nodeSpeed;
+
+	for (unsigned int i=0;i<numNodes;++i) {
+		delete[] alphaMean[i];
+		delete[] alphaSD[i];
+	}
+	delete[] alphaMean;
+	delete[] alphaSD;
+}
+
 bool Posture::setPs(unsigned int i , Coord ps)
 {
 	if (i<numNodes){
@@ -71,9 +149,9 @@ bool Posture::setPs(unsigned int i , Coord ps)
 	return false;
 }
 
-bool Posture::setPostureName(char *str)
+bool Posture::setPostureName(const char *str)
 {
-	strcpy(posture_name,str);
+	strncpy(posture_name, str, sizeof(posture_name));
 	return true;
 }
 
@@ -164,27 +242,27 @@ double Posture::getSpeed(unsigned int i) const
 	return -1;
 }
 
-char* Posture::getPostureName()
+const char* Posture::getPostureName() const
 {
 	return posture_name;
 }
 
-int Posture::getPostureID()
+int Posture::getPostureID() const
 {
 	return postureID;
 }
 
-double Posture::getMaxSpeed()
+double Posture::getMaxSpeed() const
 {
 	return postureMaxSpeed;
 }
 
-double Posture::getMinSpeed()
+double Posture::getMinSpeed() const
 {
 	return postureMinSpeed;
 }
 
-bool Posture::isMobile()
+bool Posture::isMobile() const
 {
 	return postureMaxSpeed > 0;
 }
