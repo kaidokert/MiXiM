@@ -4,9 +4,9 @@ package org.mixim.base.modules;
 moduleinterface IMobility
 {
     parameters:
-        double x; // x coordinate of the nodes' position (-1 = random)
-        double y; // y coordinate of the nodes' position (-1 = random)
-        double z; // z coordinate of the nodes' position (-1 = random)
+        double initialX @unit(m); // initial x coordinate of the nodes' position (1m/0 = random)
+        double initialY @unit(m); // initial y coordinate of the nodes' position (1m/0 = random)
+        double initialZ @unit(m); // initial z coordinate of the nodes' position (1m/0 = random)
         @display("i=block/cogwheel");
 }
 

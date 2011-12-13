@@ -57,9 +57,9 @@ simple MoBANCoordinator extends BaseMobility
 {
     parameters:
     	@class(MoBANCoordinator);
-    	x = 20;
-    	y = 20;
-    	z = 0;
+    	initialX = 20m;
+    	initialY = 20m;
+    	initialZ = 0m;
         bool debug = default(false); // debug switch
        
         double updateInterval @unit(s); // Time interval to update the nodes position (seconds).

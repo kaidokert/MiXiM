@@ -1,15 +1,14 @@
 package org.mixim.tests.baseMobility;
 
-simple BaseMobilityTest
+import org.mixim.base.modules.BaseMobility;
 
+simple BaseMobilityTest extends BaseMobility
 {
     parameters:
+        @class(BaseMobilityTest);
         double borderPolicy;	// border policy to use
-        double x;				// starting point of the host
-        double y;
-        double z;
-        double outX;			// point outside playground
-        double outY;
-        double outZ;
+        double outX @unit(m);			// point outside playground
+        double outY @unit(m);
+        double outZ @unit(m);
 
 }

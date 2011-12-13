@@ -1637,7 +1637,7 @@ protected:
 
 	void checkTestItFromTo(std::string msg, ConstMappingIterator* it,
 						   ConstMapping* f, Argument from, Argument to, Argument step,
-						   std::map<double, std::map<simtime_t, Argument> >& a){
+						   std::map<double, std::map<simtime_t, Argument> >& /*a*/){
 
 		for(double i = from.getArgValue(Dimension("frequency"));
 			i <= to.getArgValue(Dimension("frequency"));

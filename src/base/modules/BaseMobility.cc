@@ -24,6 +24,7 @@
 
 #include <sstream>
 #include <cassert>
+#include <limits>
 
 #include "FWMath.h"
 #include "BorderMsg_m.h"
@@ -34,10 +35,17 @@ Define_Module(BaseMobility);
 
 const simsignalwrap_t BaseMobility::mobilityStateChangedSignal = simsignalwrap_t(MIXIM_SIGNAL_MOBILITY_CHANGE_NAME);
 
+template<typename _Tp>
+static inline bool isFiniteNumber(register _Tp value) {
+    return value < std::numeric_limits<_Tp>::infinity() && value > -std::numeric_limits<_Tp>::infinity() && value != std::numeric_limits<_Tp>::quiet_NaN();
+}
+
 BaseMobility::BaseMobility()
 	: BatteryAccess()
 	, world(NULL)
 	, move()
+	, constraintAreaMin(Coord::ZERO)
+	, constraintAreaMax(Coord::ZERO)
 	, updateInterval(0)
 	, moveMsg(NULL)
 	, coreDebug(false)
@@ -53,6 +61,8 @@ BaseMobility::BaseMobility(unsigned stacksize)
 	: BatteryAccess(stacksize)
 	, world(NULL)
 	, move()
+	, constraintAreaMin()
+	, constraintAreaMax()
 	, updateInterval(0)
 	, moveMsg(NULL)
 	, coreDebug(false)
@@ -83,36 +93,69 @@ void BaseMobility::initialize(int stage)
 
         coreEV << "initializing BaseUtility stage " << stage << endl; // for node position
 
+        const bool use2D = world->use2D();
+
         if (hasPar("updateInterval")) {
         	updateInterval = par("updateInterval");
         } else {
             updateInterval = 0;
         }
 
-		// initialize Move parameter
-        bool use2D = world->use2D();
+        if (hasPar("constraintAreaMinX") && hasPar("constraintAreaMinY") && hasPar("constraintAreaMinZ")) {
+        	double x = par("constraintAreaMinX");
+        	double y = par("constraintAreaMinY");
+        	double z = par("constraintAreaMinZ");
+
+			if (isFiniteNumber(x))
+				constraintAreaMin.x = x;
+			if (isFiniteNumber(y))
+				constraintAreaMin.y = y;
+			if (!use2D && isFiniteNumber(z))
+				constraintAreaMin.z = z;
+        }
+    	constraintAreaMin = constraintAreaMin.max(Coord::ZERO);
+        constraintAreaMax = *world->getPgs();
+        if (hasPar("constraintAreaMaxX") && hasPar("constraintAreaMaxY") && hasPar("constraintAreaMaxZ")) {
+        	double x = par("constraintAreaMaxX");
+        	double y = par("constraintAreaMaxY");
+        	double z = par("constraintAreaMaxZ");
+
+			if (isFiniteNumber(x) && x < constraintAreaMax.x)
+				constraintAreaMax.x = x;
+			if (isFiniteNumber(y) && y < constraintAreaMax.y)
+				constraintAreaMax.y = y;
+			if (!use2D && isFiniteNumber(z) && z < constraintAreaMax.z)
+				constraintAreaMax.z = z;
+        }
 
         //initalize position with random values
-        Coord pos = world->getRandomPosition();
+        Coord pos = Coord::ZERO;
 
-        //read coordinates from parameters if available
-        double x = hasPar("x") ? par("x").doubleValue() : -1;
-        double y = hasPar("y") ? par("y").doubleValue() : -1;
-        double z = hasPar("z") ? par("z").doubleValue() : -1;
+        if (hasPar("initFromDisplayString") && par("initFromDisplayString").boolValue() && findHost()) {
+        	const cDisplayString& sDisp = findHost()->getDisplayString();
 
-        //set position with values from parameters if available
-        if(x > -1) pos.x = x;
-        if(y > -1) pos.y = y;
-        if(!use2D && z > -1) pos.z = z;
+			std::istringstream(sDisp.getTagArg("p", 0)) >> pos.x;
+			std::istringstream(sDisp.getTagArg("p", 1)) >> pos.y;
+        }
+        else {
+			//read coordinates from parameters if available
+			double x = hasPar("x") ? par("x").doubleValue() : par("initialX").doubleValue();
+			double y = hasPar("y") ? par("y").doubleValue() : par("initialY").doubleValue();
+			double z = hasPar("z") ? par("z").doubleValue() : par("initialZ").doubleValue();
 
+			pos = getRandomPosition();
+
+			//set position with values from parameters if available
+			if (isFiniteNumber(x))
+				pos.x = x;
+			if (isFiniteNumber(y))
+				pos.y = y;
+			if (!use2D && isFiniteNumber(z))
+				pos.z = z;
+        }
         // set start-position and start-time (i.e. current simulation-time) of the Move
         move.setStart(pos);
 		coreEV << "start pos: " << move.getStartPos().info() << endl;
-
-        //check whether position is within the playground
-        if (!move.getStartPos().isInBoundary(Coord::ZERO, world->getPgs())) {
-            error("node position specified in omnetpp.ini exceeds playgroundsize");
-        }
 
         // set speed and direction of the Move
         move.setSpeed(0);
@@ -160,6 +203,15 @@ void BaseMobility::initialize(int stage)
 			// choose a appropriate icon size (only if a icon is specified)
 			origIconSize = iconSizeTagToSize(disp.getTagArg("is", 0));
 		}
+
+        if (!isFiniteNumber(move.getStartPos().x) || !isFiniteNumber(move.getStartPos().y) || !isFiniteNumber(move.getStartPos().z))
+            throw cRuntimeError("mobility position is not a finite number after initialize %s",
+                  move.getStartPos().info().c_str());
+        if (!move.getStartPos().isInBoundary(constraintAreaMin, constraintAreaMax))
+            throw cRuntimeError("mobility position %s is outside the constraint area (%s - %s)",
+                  move.getStartPos().info().c_str(),
+                  constraintAreaMin.info().c_str(),
+                  constraintAreaMax.info().c_str());
 
         // print new host position on the screen and update bb info
         updatePosition();
@@ -279,7 +331,7 @@ void BaseMobility::handleBorderMsg(cMessage * msg)
 
 
 void BaseMobility::updatePosition() {
-    EV << "updatePosition: " << move.info() << endl;
+    coreEV << "updatePosition: " << move.info() << endl;
 
     //publish the the new move
     emit(mobilityStateChangedSignal, this);
@@ -413,8 +465,6 @@ void BaseMobility::reflectIfOutside(BorderHandling wo, Coord& stepTarget,
     }
 }
 
-
-
 void BaseMobility::wrapIfOutside(BorderHandling wo,
 								 Coord& stepTarget, Coord& targetPos) {
     switch( wo ) {
@@ -443,13 +493,10 @@ void BaseMobility::wrapIfOutside(BorderHandling wo,
     }
 }
 
-
 void BaseMobility::placeRandomlyIfOutside( Coord& targetPos )
 {
-    targetPos = world->getRandomPosition();
+	targetPos = getRandomPosition();
 }
-
-
 
 BaseMobility::BorderHandling BaseMobility::checkIfOutside( Coord targetPos,
 														   Coord& borderStep )
@@ -554,8 +601,6 @@ BaseMobility::BorderHandling BaseMobility::checkIfOutside( Coord targetPos,
 
     return outside;
 }
-
-
 
 void BaseMobility::goToBorder(BorderPolicy policy, BorderHandling wo,
 							  Coord& borderStep, Coord& borderStart)
@@ -685,8 +730,6 @@ void BaseMobility::goToBorder(BorderPolicy policy, BorderHandling wo,
     	   << " borderStart: " << borderStart.info()
     	   << " factor: " << factor << endl;
 }
-
-
 
 bool BaseMobility::handleIfOutside(BorderPolicy policy, Coord& stepTarget,
 								   Coord& targetPos, Coord& step,

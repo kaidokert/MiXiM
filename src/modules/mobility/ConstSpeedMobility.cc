@@ -46,8 +46,10 @@ void ConstSpeedMobility::initialize(int stage)
 		step = -1;
 		stepSize = Coord(0,0,0);
 
-		debugEV << "Initialize: move speed: " << move.getSpeed() << " (" << par("speed").doubleValue() << ")"
-           << " pos: " << move.info() << endl;
+		if (move.getSpeed() > 0) {
+			debugEV << "Initialize: move speed: " << move.getSpeed() << " (" << par("speed").doubleValue() << ")"
+			        << " pos: " << move.info() << endl;
+		}
     }
     else if( stage == 1 ){
     	stepTarget = move.getStartPos();
@@ -64,14 +66,14 @@ void ConstSpeedMobility::setTargetPosition()
 	debugEV << "start setTargetPosistion: " << move.info() << endl;
 
     do{
-	targetPos = getRandomPosition();
+		targetPos = getRandomPosition();
 
-	double distance = move.getStartPos().distance(targetPos);
-	simtime_t totalTime = distance / move.getSpeed();
-	numSteps = FWMath::round(totalTime / updateInterval);
+		double distance = move.getStartPos().distance(targetPos);
+		simtime_t totalTime = distance / move.getSpeed();
+		numSteps = FWMath::round(totalTime / updateInterval);
 
-	debugEV << "new targetPos: " << targetPos.info() << " distance=" << distance
-	   << " totalTime=" << totalTime << " numSteps=" << numSteps << endl;
+		debugEV << "new targetPos: " << targetPos.info() << " distance=" << distance
+		   << " totalTime=" << totalTime << " numSteps=" << numSteps << endl;
     }
     while( numSteps == 0 );
 
@@ -124,7 +126,7 @@ void ConstSpeedMobility::makeMove()
 
     }
     else{
-	error("step cannot be bigger than numSteps");
+    	error("step cannot be bigger than numSteps");
     }
 
     //    fixIfHostGetsOutside();

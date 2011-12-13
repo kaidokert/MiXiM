@@ -1,7 +1,9 @@
 package org.mixim.tests.baseMobility;
 
-simple TestBMBaseMobility
+import org.mixim.base.modules.BaseMobility;
+
+simple TestBMBaseMobility extends BaseMobility
 {
     parameters:
-        bool coreDebug = default(false); // debug switch for the core framework
+        @class(TestBMBaseMobility);
 }

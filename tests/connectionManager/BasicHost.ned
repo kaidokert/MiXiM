@@ -25,7 +25,7 @@
 
 package org.mixim.tests.connectionManager;
 
-import org.mixim.base.modules.BaseMobility;
+import org.mixim.modules.mobility.StationaryMobility;
 
 
 // The BasicHost is a compound module that implements a very
@@ -44,7 +44,7 @@ module BasicHost
         input radioIn;
 
     submodules:
-        mobility: BaseMobility {
+        mobility: StationaryMobility {
             parameters:
                 @display("p=130,130;i=cogwheel2");
         }

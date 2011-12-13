@@ -212,8 +212,8 @@ public:
     /**
      * @brief Checks if this coordinate is inside a specified rectangle.
      *
-     * @param lowerBound The upper bound of the rectangle.
-     * @param upperBound The lower bound of the rectangle.
+     * @param lowerBound The lower bound of the rectangle.
+     * @param upperBound The upper bound of the rectangle.
      */
      bool isInBoundary(const Coord& lowerBound, const Coord& upperBound) const {
         return  lowerBound.x <= x && x <= upperBound.x &&
@@ -224,7 +224,7 @@ public:
     /**
      * @brief Returns the minimal coordinates.
      */
-    Coord min(const Coord& a) {
+    Coord min(const Coord& a) const {
         return Coord(this->x < a.x ? this->x : a.x,
                      this->y < a.y ? this->y : a.y,
                      this->z < a.z ? this->z : a.z);
@@ -233,7 +233,7 @@ public:
     /**
      * @brief Returns the maximal coordinates.
      */
-    Coord max(const Coord& a) {
+    Coord max(const Coord& a) const {
         return Coord(this->x > a.x ? this->x : a.x,
                      this->y > a.y ? this->y : a.y,
                      this->z > a.z ? this->z : a.z);

@@ -353,7 +353,7 @@ void MoBANCoordinator::publishToNodes() {
 		Refmove.radius = currentPosture->getRadius(i);
 		Refmove.speed = currentPosture->getSpeed(i);
 
-		emit(MoBANLocal::catBBMoBANMsgSignal, &Refmove);
+		network->getSubmodule("node", i)->emit(MoBANLocal::catBBMoBANMsgSignal, &Refmove);
 	}
 }
 
@@ -494,9 +494,10 @@ bool MoBANCoordinator::readPostureSpecificationFile() {
 	/* Report the obtained specification of the postures. */
 	for (unsigned int i = 0; i < numPostures; ++i) {
 		EV<< "Information for the posture:"<<i<<" is"<<endl;
-		for (unsigned int j=0;j<numNodes;++j)
-		EV << "Node "<<j<< " position: "<<postureList[i]->getPs(j).info()<<
-		" and radius:"<<postureList[i]->getRadius(j)<<" and speed:"<<postureList[i]->getSpeed(j)<<endl;
+		for (unsigned int j=0;j<numNodes;++j) {
+			EV << "Node "<<j<< " position: "<<postureList[i]->getPs(j).info()<<
+					" and radius:"<<postureList[i]->getRadius(j)<<" and speed:"<< postureList[i]->getSpeed(j) << endl;
+		}
 	}
 
 	return true;

@@ -108,6 +108,9 @@ class MIXIM_API BaseMobility : public BatteryAccess
     /** @brief Stores the current position and move pattern of the host*/
     Move move;
 
+    /** @brief 3 dimensional position and size of the constraint area (in meters). */
+    Coord constraintAreaMin, constraintAreaMax;
+
     /** @brief Store the category of HostMove */
     const static simsignalwrap_t mobilityStateChangedSignal;
 
@@ -261,7 +264,17 @@ class MIXIM_API BaseMobility : public BatteryAccess
     double playgroundSizeZ() const  {return world->getPgs()->z;}
 
 	/** @brief Random position somewhere in the playground. DEPRECATED: Use BaseWorldUtility::getRandomPosition() instead */
-	Coord getRandomPosition() { return world->getRandomPosition();}
+	Coord getRandomPosition() {
+		return Coord( (constraintAreaMin.x < constraintAreaMax.x)
+	                  ? uniform(constraintAreaMin.x, constraintAreaMax.x)
+	                  : constraintAreaMin.x
+		            , (constraintAreaMin.y < constraintAreaMax.y)
+		              ? uniform(constraintAreaMin.y, constraintAreaMax.y)
+		              : constraintAreaMin.y
+		            , (constraintAreaMin.z < constraintAreaMax.z)
+		              ? uniform(constraintAreaMin.z, constraintAreaMax.z)
+		              : constraintAreaMin.z );
+	}
 
     /**
      * @name Border handling
