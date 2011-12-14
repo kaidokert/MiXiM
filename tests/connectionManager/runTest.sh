@@ -46,6 +46,7 @@ diff -I '^Assigned runID=' \
      -I '^OMNeT++ Discrete Event Simulation' \
      -I '^Version: ' \
      -I '^     Speed:' \
+     -I '^Setting up network' \
      -I '^** Event #' \
      -w exp-output out.tmp >diff.log 2>/dev/null
 

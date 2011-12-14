@@ -26,7 +26,10 @@
 
 package org.mixim.tests.blackboard;
 
-simple TestStateSub
+import org.mixim.tests.TestObject;
 
+simple TestStateSub extends TestObject
 {
+    parameters:
+        @class(TestStateSub);
 }

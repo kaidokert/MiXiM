@@ -26,7 +26,10 @@
 
 package org.mixim.tests.blackboard;
 
-simple StateView
+import org.mixim.tests.TestObject;
 
+simple StateView extends TestObject
 {
+    parameters:
+        @class(StateView);
 }

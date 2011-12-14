@@ -2,11 +2,12 @@
 
 lPATH='.'
 LIBSREF=( )
-lINETPath='../../../inet/src'
-for lP in '../../src' \
-          '../../src/base' \
-          '../../src/modules' \
-          "$lINETPath"; do
+lINETPath='../../../inet'
+lMiXiMPath='../..'
+for lP in "${lMiXiMPath}/src" \
+          "${lMiXiMPath}/src/base" \
+          "${lMiXiMPath}/src/modules" \
+          "${lINETPath}/src"; do
     for pr in 'mixim' 'inet'; do
         if [ -d "$lP" ] && [ -f "${lP}/lib${pr}$(basename $lP).so" -o -f "${lP}/lib${pr}$(basename $lP).dll" ]; then
             lPATH="${lP}:$lPATH"
@@ -19,8 +20,8 @@ for lP in '../../src' \
 done
 PATH="${PATH}:${lPATH}" #needed for windows
 LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${lPATH}"
-NEDPATH="../../src:.."
-[ -d "$lINETPath" ] && NEDPATH="${NEDPATH}:$lINETPath"
+NEDPATH="${lMiXiMPath}/src:.."
+[ -d "${lINETPath}/src" ] && NEDPATH="${NEDPATH}:${lINETPath}/src"
 export PATH
 export NEDPATH
 export LD_LIBRARY_PATH
@@ -36,4 +37,7 @@ if [ ! -e ${lSingle} -a ! -e ${lSingle}.exe ]; then
 fi
 
 rm -f results/convergecast-*
-./${lSingle} -u Cmdenv -c convergecast "${LIBSREF[@]}"
+echo 'Run all ConverCast...'
+./${lSingle} -u Cmdenv -c convergecast "${LIBSREF[@]}" >  outcon.tmp 2>errcon.tmp
+
+[ ! -s errcon.tmp ] && \rm -f errcon.tmp >/dev/null 2>&1

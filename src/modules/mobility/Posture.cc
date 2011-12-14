@@ -117,7 +117,7 @@ void Posture::swap(Posture& o)
 	std::swap(numNodes,        o.numNodes);
 	std::swap(postureID,       o.postureID);
 	std::swap(nodePs,          o.nodePs);
-	std::swap(posture_name,    o.posture_name);
+	memcpy(posture_name, o.posture_name, sizeof(posture_name));
 	std::swap(alphaMean,       o.alphaMean);
 	std::swap(alphaSD,         o.alphaSD);
 	std::swap(nodeRadius,      o.nodeRadius);
@@ -151,7 +151,7 @@ bool Posture::setPs(unsigned int i , Coord ps)
 
 bool Posture::setPostureName(const char *str)
 {
-	strncpy(posture_name, str, sizeof(posture_name));
+	strncpy(posture_name, str, sizeof(posture_name)/sizeof(posture_name[0]));
 	return true;
 }
 

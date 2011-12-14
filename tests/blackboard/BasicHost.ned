@@ -2,7 +2,9 @@
 
 package org.mixim.tests.blackboard;
 
-module BasicHost
+import org.mixim.tests.TestNode;
+
+module BasicHost extends TestNode
 {
     parameters:
         // parameters for the framework

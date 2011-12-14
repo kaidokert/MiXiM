@@ -22,11 +22,12 @@
 //*              last modified:   $Date: 2004/02/09 13:59:33 $
 //*              by:              $Author: omfw-willkomm $
 //***************************************************************************
-
-
 package org.mixim.tests.blackboard;
 
-simple StateChanger
+import org.mixim.tests.TestObject;
 
+simple StateChanger extends TestObject
 {
+    parameters:
+        @class(StateChanger);
 }

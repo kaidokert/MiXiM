@@ -32,13 +32,14 @@
 
 package org.mixim.tests.baseMobility;
 
-module TestHost
+import org.mixim.tests.TestNode;
 
+// Test host for mobility tests.
+module TestHost extends TestNode
 {
     parameters:
         double numHosts; 		// total number of hosts in the network
         double borderPolicy; 	// this hosts border policy
-
 
     submodules:
         mobility: BaseMobilityTest {

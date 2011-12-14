@@ -12,12 +12,12 @@ Assigned runID=General-0-20100616-13:39:23-4960
 Setting up network `sim'...
 Initializing...
 Initializing module sim, stage 0
+Initializing module sim.world, stage 0
 Initializing module sim.node[0], stage 0
 Initializing module sim.node[0].statechanger, stage 0
 Initializing module sim.node[0].statevisualize, stage 0
 Initializing module sim.node[0].stateview, stage 0
 Initializing module sim.node[0].testparam, stage 0
-Initializing module sim.world, stage 0
 Initializing module sim.node[0].statechanger, stage 1
 StateVisualize::receiveBBItem Host state changed to SLEEP
 StateView::receiveBBItem Host state changed to SLEEP

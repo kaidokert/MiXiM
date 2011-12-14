@@ -1,6 +1,10 @@
 package org.mixim.tests.baseMobility;
 
-module CrashHost
+import org.mixim.tests.TestNode;
+
+// Test host for mobility tests, the host will be used to move it
+// outside of borders.
+module CrashHost extends TestNode
 {
     parameters:
         double numHosts; 		// total number of hosts in the network

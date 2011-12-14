@@ -26,7 +26,10 @@
 
 package org.mixim.tests.blackboard;
 
-simple StateVisualize
+import org.mixim.tests.TestObject;
 
+simple StateVisualize extends TestObject
 {
+    parameters:
+        @class(StateVisualize);
 }

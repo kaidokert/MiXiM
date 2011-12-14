@@ -1,7 +1,7 @@
 //***************************************************************************
-// * file:        ConstSpeedMobility.cc
+// * file:        StationaryMobility.cc
 // *
-// * author:      Steffen Sroka
+// * author:      Michael Lindig
 // *
 // * copyright:   (C) 2004 Telecommunication Networks Group (TKN) at
 // *              Technische Universitaet Berlin, Germany.
@@ -23,15 +23,12 @@ package org.mixim.modules.mobility;
 import org.mixim.base.modules.BaseMobility;
 
 //
-// Controls all movement related things of a host
+// Defines a static mobility pattern (means only a position, no movement).
 //
 // StationaryMobility is a synonym for BaseMobility.
 //
-// @see ConnectionManager
-// @author Steffen Sroka, Marc Loebbers, Daniel Willkomm
+// @author Michael Lindig
 //
 simple StationaryMobility extends BaseMobility
 {
-    parameters:
-        bool debug = default(false); // debug switch
 }

@@ -26,20 +26,14 @@
 
 package org.mixim.tests.blackboard;
 
-import org.mixim.base.modules.BaseWorldUtility;
+import org.mixim.tests.WorldOnlyTestNetwork;
 
-
-module Network
+// Test network for blackboard (emit/subscribe) tests.
+network sim extends WorldOnlyTestNetwork
 {
     parameters:
-        // parametes for the framework
-        double playgroundSizeX @unit(m);
-        double playgroundSizeY @unit(m);
-        double playgroundSizeZ @unit(m);
-        double numHosts;
-
-
         @display("bgb=$playgroundSizeX,$playgroundSizeY,white,,;bgp=0,0");
+
     submodules:
         node[numHosts]: BasicHost {
             parameters:
@@ -47,24 +41,7 @@ module Network
                 @display("p=50,50;i=node");
 
         }
-        world: BaseWorldUtility {
-            parameters:
-                playgroundSizeX = playgroundSizeX;
-                playgroundSizeY = playgroundSizeY;
-                playgroundSizeZ = playgroundSizeZ;
-
-        }
     connections allowunconnected:
     // all connections and gates are to be generated dynamically
-
-}
-
-
-
-
-network sim extends Network
-{
-    parameters:
-        numHosts @prompt("Number of hosts:") = default(2);
 
 }
