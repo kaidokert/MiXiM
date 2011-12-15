@@ -28,11 +28,14 @@ export LD_LIBRARY_PATH
 
 lCombined='miximexamples'
 lSingle='ieee802154Narrow'
+lIsComb=0
 if [ ! -e ${lSingle} -a ! -e ${lSingle}.exe ]; then
     if [ -e ../${lCombined}.exe ]; then
         ln -s ../${lCombined}.exe ${lSingle}.exe
+        lIsComb=1
     elif [ -e ../${lCombined} ]; then
         ln -s ../${lCombined}     ${lSingle}
+        lIsComb=1
     fi
 fi
 
@@ -48,4 +51,5 @@ opp_runall ./${lSingle} -c Test1-D -u Cmdenv -r 0..19 "${LIBSREF[@]}" $1 >>  out
 echo 'Run all Test1-E...'
 opp_runall ./${lSingle} -c Test1-E -u Cmdenv -r 0..19 "${LIBSREF[@]}" $1 >>  out1.tmp 2>> err1.tmp
 
+[ x$lIsComb = x1 ] && rm -f ${lSingle} ${lSingle}.exe >/dev/null 2>&1
 [ ! -s err1.tmp ] && \rm -f err1.tmp >/dev/null 2>&1

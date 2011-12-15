@@ -11,6 +11,9 @@
 #define ccEV (ev.isDisabled()||!coreDebug) ? ev : ev << getName() << ": "
 #endif
 
+static const NicEntryDirect cEmptyNicDirect(false);
+static const NicEntryDebug  cEmptyNicDebug(false);
+
 BaseConnectionManager::BaseConnectionManager()
   : cSimpleModule()
   , nics()
@@ -144,9 +147,9 @@ BaseConnectionManager::GridCoord BaseConnectionManager
     return GridCoord(c, findDistance);
 }
 
-void BaseConnectionManager::updateConnections(int nicID,
-											  const Coord* oldPos,
-											  const Coord* newPos)
+void BaseConnectionManager::updateConnections(int          nicID,
+                                              const Coord* oldPos,
+                                              const Coord* newPos)
 {
 	GridCoord oldCell = getCellForCoordinate(*oldPos);
     GridCoord newCell = getCellForCoordinate(*newPos);
@@ -175,7 +178,7 @@ void BaseConnectionManager::registerNicExt(int nicID)
 
 void BaseConnectionManager::checkGrid(BaseConnectionManager::GridCoord& oldCell,
                                       BaseConnectionManager::GridCoord& newCell,
-                                      int id)
+                                      int                               id)
 
 {
 
@@ -233,8 +236,8 @@ int BaseConnectionManager::wrapIfTorus(int value, int max) const {
 	}
 }
 
-void BaseConnectionManager::fillUnionWithNeighbors(CoordSet& gridUnion,
-												   const GridCoord& cell) const
+void BaseConnectionManager::fillUnionWithNeighbors(CoordSet&        gridUnion,
+                                                   const GridCoord& cell) const
 {
 	for(int iz = (int)cell.z - 1; iz <= (int)cell.z + 1; iz++) {
 		int cz = wrapIfTorus(iz, gridDim.z);
@@ -300,9 +303,9 @@ void BaseConnectionManager::updateNicConnections(NicEntries& nmap, BaseConnectio
     }
 }
 
-bool BaseConnectionManager::registerNic(cModule* nic,
-										ChannelAccess* chAccess,
-										const Coord* nicPos)
+bool BaseConnectionManager::registerNic(cModule*       nic,
+                                        ChannelAccess* chAccess,
+                                        const Coord*   nicPos)
 {
 	assert(nic != 0);
 
@@ -388,11 +391,12 @@ bool BaseConnectionManager::unregisterNic(cModule* nicModule)
 void BaseConnectionManager::updateNicPos(int nicID, const Coord* newPos)
 {
 	NicEntries::iterator ItNic = nics.find(nicID);
-	if (ItNic == nics.end())
-		error("No nic with this ID (%d) is registered with this ConnectionManager.", nicID);
-
-    Coord oldPos = ItNic->second->pos;
-    ItNic->second->pos = newPos;
+	if (ItNic == nics.end()) {
+		opp_warning("No nic with this ID (%d) is registered with this ConnectionManager, no position update done.", nicID);
+		return;
+	}
+	Coord oldPos = ItNic->second->pos;
+	ItNic->second->pos = newPos;
 
 	updateConnections(nicID, &oldPos, newPos);
 }
@@ -400,20 +404,24 @@ void BaseConnectionManager::updateNicPos(int nicID, const Coord* newPos)
 const NicEntry::GateList& BaseConnectionManager::getGateList(int nicID) const
 {
 	NicEntries::const_iterator ItNic = nics.find(nicID);
-	if (ItNic == nics.end())
-		error("No nic with this ID (%d) is registered with this ConnectionManager.", nicID);
+	if (ItNic == nics.end()) {
+		opp_warning("No nic with this ID (%d) is registered with this ConnectionManager, return empty GateList", nicID);
+		if(sendDirect)
+			return cEmptyNicDirect.getGateList();
+		return cEmptyNicDebug.getGateList();
+	}
 
-    return ItNic->second->getGateList();
+	return ItNic->second->getGateList();
 }
 
 const cGate* BaseConnectionManager::getOutGateTo(const NicEntry* nic,
-												 const NicEntry* targetNic) const
+                                                 const NicEntry* targetNic) const
 {
 	NicEntries::const_iterator ItNic = nics.find(nic->nicId);
 	if (ItNic == nics.end())
-		error("No nic with this ID (%d) is registered with this ConnectionManager.", nic->nicId);
+		error("No nic with this id (%d) is registered with this ConnectionManager.", nic->nicId);
 
-    return ItNic->second->getOutGateTo(targetNic);
+	return ItNic->second->getOutGateTo(targetNic);
 }
 
 BaseConnectionManager::~BaseConnectionManager()

@@ -28,11 +28,14 @@ export LD_LIBRARY_PATH
 
 lCombined='miximexamples'
 lSingle='ieee802154a'
+lIsComb=0
 if [ ! -e ${lSingle} -a ! -e ${lSingle}.exe ]; then
     if [ -e ../${lCombined}.exe ]; then
         ln -s ../${lCombined}.exe ${lSingle}.exe
+        lIsComb=1
     elif [ -e ../${lCombined} ]; then
         ln -s ../${lCombined}     ${lSingle}
+        lIsComb=1
     fi
 fi
 
@@ -40,4 +43,5 @@ rm -f results/BERDistance*
 echo 'Run all BERDistance...'
 ./${lSingle} -u Cmdenv -c BERDistance -u Cmdenv "${LIBSREF[@]}" "$@" >  outber.tmp 2>errber.tmp
 
+[ x$lIsComb = x1 ] && rm -f ${lSingle} ${lSingle}.exe >/dev/null 2>&1
 [ ! -s errber.tmp ] && \rm -f errber.tmp >/dev/null 2>&1
