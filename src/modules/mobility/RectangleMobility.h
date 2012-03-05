@@ -57,7 +57,7 @@ class MIXIM_API RectangleMobility : public BaseMobility
     	, x1(0), y1(0), x2(0), y2(0)
     	, d(0)
     	, corner1(0), corner2(0), corner3(0), corner4(0)
-    	, targetPos(0)
+    	, targetPos()
     {}
 
     /** @brief Initializes mobility model parameters. */

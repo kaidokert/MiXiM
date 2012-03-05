@@ -61,10 +61,6 @@ public:
     Coord( const Coord& pos )
         : cObject(pos), x(pos.x), y(pos.y), z(pos.z) {}
 
-    /** @brief Initializes coordinate from other coordinate.*/
-    Coord( const Coord* pos )
-        : cObject(*pos), x(pos->x), y(pos->y), z(pos->z) {}
-
     /** @brief Returns a string with the value of the coordinate.*/
     std::string info() const {
         std::stringstream os;

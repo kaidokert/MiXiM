@@ -324,7 +324,7 @@ bool MoBANCoordinator::isInsideWorld(const Coord& tPos) const {
 		absolutePosition.y += dRadius;
 		absolutePosition.z += dRadius;
 
-		if (!absolutePosition.isInBoundary(Coord::ZERO, world->getPgs()))
+		if (!absolutePosition.isInBoundary(Coord::ZERO, *world->getPgs()))
 			return false;
 	}
 
