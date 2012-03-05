@@ -66,7 +66,7 @@ void csma::initialize(int stage) {
 		macMaxCSMABackoffs = par("macMaxCSMABackoffs");
 		macMaxFrameRetries = par("macMaxFrameRetries");
 		macAckWaitDuration = par("macAckWaitDuration").doubleValue();
-		aUnitBackoffPeriod = par("aUnitBackoffPeriod");
+		aUnitBackoffPeriod = par("aUnitBackoffPeriod").doubleValue();
 		ccaDetectionTime = par("ccaDetectionTime").doubleValue();
 		rxSetupTime = par("rxSetupTime").doubleValue();
 		aTurnaroundTime = par("aTurnaroundTime").doubleValue();
