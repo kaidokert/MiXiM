@@ -3,16 +3,20 @@
 
 <cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage2">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="org.omnetpp.cdt.gnu.toolchain.debug.193819325">
-			<storageModule externalCElementFile="org.omnetpp.cdt.gnu.toolchain.debug.193819325_org.eclipse.cdt.core.settings" id="org.omnetpp.cdt.gnu.toolchain.debug.193819325" name="gcc-debug"/>
-			<storageModule externalCElementFile="org.omnetpp.cdt.gnu.toolchain.debug.193819325_cdtBuildSystem" version="4.0.0"/>
-			<storageModule externalCElementFile="org.omnetpp.cdt.gnu.toolchain.debug.193819325_org.eclipse.cdt.core.externalSettings"/>
+		<cconfiguration id="org.omnetpp.cdt.gnu.config.debug.947891798">
+			<storageModule externalCElementFile="org.omnetpp.cdt.gnu.config.debug.947891798_org.eclipse.cdt.core.settings" id="org.omnetpp.cdt.gnu.config.debug.947891798" name="gcc-debug"/>
+			<storageModule externalCElementFile="org.omnetpp.cdt.gnu.config.debug.947891798_cdtBuildSystem" version="4.0.0"/>
+			<storageModule externalCElementFile="org.omnetpp.cdt.gnu.config.debug.947891798_org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="org.omnetpp.cdt.gnu.config.release.160423914">
+			<storageModule externalCElementFile="org.omnetpp.cdt.gnu.config.release.160423914_org.eclipse.cdt.core.settings" id="org.omnetpp.cdt.gnu.config.release.160423914" name="gcc-release"/>
+			<storageModule externalCElementFile="org.omnetpp.cdt.gnu.config.release.160423914_cdtBuildSystem" version="4.0.0"/>
+			<storageModule externalCElementFile="org.omnetpp.cdt.gnu.config.release.160423914_org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="mixim.org.omnetpp.cdt.omnetppProjectType.1157253030" name="mixim"/>
+		<project id="mixim.org.omnetpp.cdt.omnetppProjectType.1843035214" name="MiXiM" projectType="org.omnetpp.cdt.omnetppProjectType"/>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
 		<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
@@ -61,10 +65,7 @@
 				<parser enabled="false"/>
 			</buildOutputProvider>
 		</profile>
-		<scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.toolchain.debug.193819325">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.omnetpp.cdt.OmnetppGCCPerProjectProfile"/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.release.233601168">
+		<scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.release.160423914">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.omnetpp.cdt.OmnetppGCCPerProjectProfile"/>
 			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
 				<buildOutputProvider>
@@ -113,7 +114,7 @@
 				</buildOutputProvider>
 			</profile>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.debug.1424764399">
+		<scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.debug.947891798">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.omnetpp.cdt.OmnetppGCCPerProjectProfile"/>
 			<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
 				<buildOutputProvider>
@@ -162,11 +163,15 @@
 				</buildOutputProvider>
 			</profile>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.debug.193819325">
+		<scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.release.160423914">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.omnetpp.cdt.OmnetppGCCPerProjectProfile"/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.release.193819325">
+		<scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.debug.947891798">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.omnetpp.cdt.OmnetppGCCPerProjectProfile"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/mixim"/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
