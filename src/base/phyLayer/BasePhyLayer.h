@@ -270,13 +270,13 @@ protected:
 	 * of the returned Decider.
 	 *
 	 * This method is used by the BasePhyLayer during
-	 * Initialization to load the Decider which has been
+	 * Initialization to load the decider which has been
 	 * specified in the config.xml file.
 	 *
 	 * This method has to be overridden if you want to be
-	 * able to load your own Decider.
+	 * able to load your own decider.
 	 *
-	 * @return Instance of the Decider with the specified name.
+	 * @return Instance of the decider with the specified name.
 	 */
 	virtual Decider* getDeciderFromName(const std::string& name, ParameterMap& params);
 

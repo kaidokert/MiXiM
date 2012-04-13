@@ -57,7 +57,7 @@ void SimTracer::initialize(int stage)
     world = FindModule<BaseWorldUtility*>::findGlobalModule();
     //world = check_and_cast<BaseWorldUtility*>(cSimulation::getActiveSimulation()->getModuleByPath("sim.world"));
     if (world) {
-        world->subscribe(BaseLayer::catPacketSignal, this);
+        world->subscribe(BaseLayer::catPacketSignal.initialize(), this);
     }
     else {
       error("No BaseWorldUtility module found, please check your ned configuration.");

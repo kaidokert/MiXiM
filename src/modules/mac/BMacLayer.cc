@@ -34,7 +34,8 @@ void BMacLayer::initialize(int stage)
 {
 	BaseMacLayer::initialize(stage);
 
-    if (stage == 0) {
+	if (stage == 0) {
+		BaseLayer::catDroppedPacketSignal.initialize();
 
 		queueLength   = hasPar("queueLength")   ? par("queueLength")   : 10;
 		animation     = hasPar("animation")     ? par("animation")     : true;
@@ -67,9 +68,8 @@ void BMacLayer::initialize(int stage)
 		droppedPacket.setReason(DroppedPacket::NONE);
 		nicId = getNic()->getId();
 		WATCH(macState);
-    }
-
-    else if(stage == 1) {
+	}
+	else if(stage == 1) {
 
 		wakeup = new cMessage("wakeup");
 		wakeup->setKind(BMAC_WAKE_UP);
@@ -108,7 +108,7 @@ void BMacLayer::initialize(int stage)
 		resend_data->setSchedulingPriority(100);
 
 		scheduleAt(0.0, start_bmac);
-    }
+	}
 }
 
 BMacLayer::~BMacLayer()

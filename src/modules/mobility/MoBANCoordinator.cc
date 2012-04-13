@@ -55,6 +55,8 @@ Define_Module(MoBANCoordinator);
 void MoBANCoordinator::initialize(int stage) {
 
 	if (stage == 0) {
+		MoBANLocal::catBBMoBANMsgSignal.initialize();
+
 		hasPar("debug") ? debug = par("debug").boolValue() : debug = false;
 
 		useMobilityPattern = par("useMobilityPattern").boolValue();

@@ -50,6 +50,8 @@ Define_Module(UWBIRMac);
 void UWBIRMac::initialize(int stage) {
 	BaseMacLayer::initialize(stage);
 	if (stage == 0) {
+		BaseLayer::catDroppedPacketSignal.initialize();
+
 		debug = par("debug").boolValue();
 		stats = par("stats").boolValue();
 		trace = par("trace").boolValue();

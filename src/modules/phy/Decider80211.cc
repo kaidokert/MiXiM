@@ -5,7 +5,7 @@
  *      Author: karl wessel
  */
 
-#include "Decider80211.h"
+#include "./Decider80211.h"
 
 #include <cassert>
 
@@ -18,8 +18,8 @@
 #endif
 
 #include "DeciderResult80211.h"
-#include "Mac80211Pkt_m.h"
-#include "Consts80211.h"
+#include "messages/Mac80211Pkt_m.h"
+#include "utility/Consts80211.h"
 #include "Mapping.h"
 #include "AirFrame_m.h"
 
@@ -88,8 +88,8 @@ DeciderResult* Decider80211::createResult(const AirFrame* frame) const
 	start = start + RED_PHY_HEADER_DURATION; //its ok if the phy header is received only
 											 //partly - TODO: maybe solve this nicer
 
-    Argument argMin(getLowerBandFrequency(start));
-    Argument argMax(getUpperBandFrequency(end));
+	Argument argMin(getLowerBandFrequency(start));
+	Argument argMax(getUpperBandFrequency(end));
 
 	Mapping::argument_value_t snirMin = MappingUtils::findMin(*snrMap, argMin, argMax, Argument::MappedZero /* the value if no minimum will be found */);
 

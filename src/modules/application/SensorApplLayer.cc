@@ -42,6 +42,7 @@ Define_Module(SensorApplLayer);
 void SensorApplLayer::initialize(int stage) {
     BaseLayer::initialize(stage);
 	if (stage == 0) {
+		BaseLayer::catPacketSignal.initialize();
 
 		debugEV<< "in initialize() stage 0...";
 		debug = par("debug");

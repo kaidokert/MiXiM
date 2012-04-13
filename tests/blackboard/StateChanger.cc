@@ -41,8 +41,8 @@ void StateChanger::initialize(int stage)
     else if(stage == 1) {
         hs.setState(TestHostState::SLEEP);
         tp.setState(TestParam::BLUE);
-        emit(catHostState, &hs);
-        emit(catTestParam, &tp);
+        emit(catHostState.initialize(), &hs);
+        emit(catTestParam.initialize(), &tp);
     }
 }
 

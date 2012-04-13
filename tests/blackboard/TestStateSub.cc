@@ -33,7 +33,7 @@ void TestStateSub::initialize(int stage)
 {
     BaseModule::initialize(stage);
     if(stage == 0) {
-        findHost()->subscribe(StateChanger::catTestParam, this);
+        findHost()->subscribe(StateChanger::catTestParam.initialize(), this);
     } else if(stage == 1) {
         scheduleAt(simTime() + 6.0, new cMessage("unsubscribe memo"));
     }

@@ -16,11 +16,11 @@
  ***************************************************************************
  * part of:     framework implementation developed by tkn
  **************************************************************************/
-#include "Mac80211.h"
+#include "mac/Mac80211.h"
 
 #include "PhyToMacControlInfo.h"
 #include "FWMath.h"
-#include "Decider80211.h"
+#include "phy/Decider80211.h"
 #include "DeciderResult80211.h"
 #include "BaseConnectionManager.h"
 #include "MacToPhyInterface.h"

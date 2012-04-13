@@ -34,7 +34,7 @@ void StateView::initialize(int stage)
 {
     BaseModule::initialize(stage);
     if(stage == 0) {
-        findHost()->subscribe(StateChanger::catHostState, this);
+        findHost()->subscribe(StateChanger::catHostState.initialize(), this);
     } else if(stage == 1) {
         scheduleAt(simTime() + 5.0, new cMessage("unsubscribe memo"));
     }

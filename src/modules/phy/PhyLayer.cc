@@ -7,7 +7,7 @@
 
 #include "PhyLayer.h"
 
-#include "Decider80211.h"
+#include "./Decider80211.h"
 #include "Decider802154Narrow.h"
 #include "SimplePathlossModel.h"
 #include "BreakpointPathlossModel.h"

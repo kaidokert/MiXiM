@@ -47,11 +47,26 @@ public:
 	  , sSignalName(pCpy.sSignalName)
 	{}
 
+	/** This function works like the cast operator but does a little bit more checks
+	 *  if we access the variable after a network rebuild!
+	 *
+	 *  This function should be used in the initialize methods of all modules where
+	 *  the signal will be used (emit, subscribe).
+	 */
+	simsignal_t initialize() const {
+		if (sSignalName != NULL && (ssChangeSignal != SIMSIGNAL_NULL)) {
+			const char *const sRegSigName = cComponent::getSignalName(ssChangeSignal);
+			if (sRegSigName == NULL || strcmp(sSignalName, sRegSigName) != 0) {
+				ssChangeSignal = SIMSIGNAL_NULL;
+			}
+		}
+		return (*this);
+	}
+
 	/** Cast operator to simsignal_t, we initialize the signal here if it is empty ;). */
 	operator simsignal_t () const {
-		if (ssChangeSignal == SIMSIGNAL_NULL && sSignalName != NULL) {
+		if (sSignalName != NULL && ssChangeSignal == SIMSIGNAL_NULL) {
 			ssChangeSignal = cComponent::registerSignal(sSignalName);
-			// opp_warning("%d = cComponent::registerSignal(\"%s\")", ssChangeSignal, sSignalName);
 		}
 		return ssChangeSignal;
 	}

@@ -31,6 +31,7 @@ void TrafficGen::initialize(int stage)
 	BaseApplLayer::initialize(stage);
 
 	if(stage == 0) {
+		BaseLayer::catPacketSignal.initialize();
 		world           = FindModule<BaseWorldUtility*>::findGlobalModule();
 		delayTimer      = new cMessage("delay-timer", SEND_PACKET_TIMER);
 

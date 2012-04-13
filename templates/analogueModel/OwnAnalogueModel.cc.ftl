@@ -5,8 +5,9 @@ ${bannerComment}
 
 #include <AirFrame_m.h>
 
-${amName}::${amName}()<#if par1Name!="">
-	: ${par1Name}(0)</#if><#if par2Name!="">
+${amName}::${amName}()
+	: AnalogueModel()<#if par1Name!="">
+	, ${par1Name}(0)</#if><#if par2Name!="">
 	, ${par2Name}(0)</#if>
 {}
 

@@ -33,7 +33,7 @@ void StateVisualize::initialize(int stage)
 {
     BaseModule::initialize(stage);
     if(stage == 0) {
-        findHost()->subscribe(StateChanger::catHostState, this);
+        findHost()->subscribe(StateChanger::catHostState.initialize(), this);
     }
 }
 

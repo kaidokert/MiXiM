@@ -78,6 +78,9 @@ bool DeciderUWBIRED::initFromMap(const ParameterMap& params) {
     else {
         alwaysFailOnDataInterference = false;
     }
+
+    catUWBIRPacketSignal.initialize();
+
     return BaseDecider::initFromMap(params) && bInitSuccess;
 }
 

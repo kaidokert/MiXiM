@@ -127,11 +127,14 @@ void SimpleBattery::initialize(int stage) {
 	}
 	else if (stage == 1) {
 		hostState.set(HostState::ACTIVE);
-		emit(catHostStateSignal, &hostState);
+		emit(catHostStateSignal.initialize(), &hostState);
 
 		if (publishDelta < 1 || publishTime> 0 ) {
 			batteryState->set(residualCapacity);
-			emit(BatteryStats::catBatteryStateSignal, batteryState);
+			emit(BatteryStats::catBatteryStateSignal.initialize(), batteryState);
+		}
+		else {
+			BatteryStats::catBatteryStateSignal.initialize();
 		}
 	}
 }

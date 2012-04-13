@@ -47,6 +47,7 @@ void csma::initialize(int stage) {
 	BaseMacLayer::initialize(stage);
 
 	if (stage == 0) {
+		BaseLayer::catDroppedPacketSignal.initialize();
 
 		useMACAcks = par("useMACAcks").boolValue();
 		queueLength = par("queueLength");

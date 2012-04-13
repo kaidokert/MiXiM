@@ -50,7 +50,7 @@ void BatteryStats::initialize(int stage)
     debugEV << "show timeSeries = " << doTimeSeries << endl;
 
     if (doTimeSeries) {
-      findHost()->subscribe(catBatteryStateSignal, this);
+      findHost()->subscribe(catBatteryStateSignal.initialize(), this);
 
       // suggest enabling only residualVec (omnetpp.ini), unless
       // others are of interest

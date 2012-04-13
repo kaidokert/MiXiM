@@ -44,7 +44,6 @@ double UWBIRStochasticPathlossModel::simtruncnormal(double mean, double stddev, 
 bool UWBIRStochasticPathlossModel::initFromMap(const ParameterMap& params) {
     ParameterMap::const_iterator it;
     bool                         bInitSuccess = true;
-    double                       delayRMS     = 0.0;
 
     if ((it = params.find("seed")) != params.end()) {
         srand( ParameterMap::mapped_type(it->second).longValue() );

@@ -26,8 +26,8 @@ void phyPER::initialize(int stage)
 {
 	BaseModule::initialize(stage);
 	if(stage == 0) {
-		findHost()->subscribe(BaseLayer::catPacketSignal, this);
-		findHost()->subscribe(DeciderUWBIRED::catUWBIRPacketSignal, this);
+		findHost()->subscribe(BaseLayer::catPacketSignal.initialize(), this);
+		findHost()->subscribe(DeciderUWBIRED::catUWBIRPacketSignal.initialize(), this);
 		maiPER.setName("maiPER");
 		maiPERnoRS.setName("maiPERnoRS");
 		nbSyncAttempts = 0;

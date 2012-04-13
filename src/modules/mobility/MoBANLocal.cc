@@ -60,7 +60,7 @@ void MoBANLocal::initialize(int stage)
         step = -1;
         stepSize = Coord(0,0,0);
 
-        findHost()->subscribe(catBBMoBANMsgSignal, this);
+        findHost()->subscribe(catBBMoBANMsgSignal.initialize(), this);
     }
     else if( stage == 1 ){
     	referencePoint = move.getStartPos();

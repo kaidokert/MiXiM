@@ -31,6 +31,7 @@ void LMacLayer::initialize(int stage)
     BaseMacLayer::initialize(stage);
 
     if (stage == 0) {
+    	BaseLayer::catDroppedPacketSignal.initialize();
 
         queueLength = par("queueLength");
         slotDuration = par("slotDuration");

@@ -86,6 +86,7 @@ void BaseMobility::initialize(int stage)
         		= par("scaleNodeByDepth").boolValue()
         		: scaleNodeByDepth = true;
 
+        mobilityStateChangedSignal.initialize();
         // get utility pointers (world and host)
 		world = FindModule<BaseWorldUtility*>::findGlobalModule();
         if (world == NULL)

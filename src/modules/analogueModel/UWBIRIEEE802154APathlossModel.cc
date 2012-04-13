@@ -183,7 +183,6 @@ const UWBIRIEEE802154APathlossModel::CMconfig UWBIRIEEE802154APathlossModel::CMc
 bool UWBIRIEEE802154APathlossModel::initFromMap(const ParameterMap& params) {
     ParameterMap::const_iterator it;
     bool                         bInitSuccess = true;
-    double                       delayRMS     = 0.0;
 
     if ((it = params.find("seed")) != params.end()) {
         srand( ParameterMap::mapped_type(it->second).longValue() );

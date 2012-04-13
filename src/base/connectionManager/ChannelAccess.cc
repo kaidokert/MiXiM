@@ -60,10 +60,10 @@ void ChannelAccess::initialize( int stage )
     if( stage == 0 ){
         hasPar("coreDebug") ? coreDebug = par("coreDebug").boolValue() : coreDebug = false;
 
-        findHost()->subscribe(mobilityStateChangedSignal, this);
+        findHost()->subscribe(mobilityStateChangedSignal.initialize(), this);
 
         cc = getConnectionManager(getNic());
-        if( cc == NULL ) error("Could not find connectionmanager module");
+        if( cc == NULL ) error("Could not find ConnectionManager module");
         isRegistered = false;
     }
 

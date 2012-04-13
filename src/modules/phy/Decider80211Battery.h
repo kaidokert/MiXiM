@@ -17,7 +17,7 @@
 #define DECIDER80211BATTERY_H_
 
 #include "MiXiMDefs.h"
-#include "Decider80211.h"
+#include "./Decider80211.h"
 
 /**
  * @brief Extends Decider80211 by drawing power during receiving

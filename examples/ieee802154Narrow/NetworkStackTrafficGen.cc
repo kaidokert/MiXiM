@@ -42,6 +42,7 @@ void NetworkStackTrafficGen::initialize(int stage)
 		destination  = LAddress::L3Type(par("destination").longValue());
 
 		nbPacketDropped = 0;
+		BaseMacLayer::catPacketSignal.initialize();
 	}
 	else if (stage == 1) {
 		AddressingInterface* addrScheme = FindModule<AddressingInterface*>

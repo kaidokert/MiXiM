@@ -31,7 +31,7 @@ void WorldUtilityStats::initialize(int stage)
 		bitsReceived = 0;
 
 		//register for global stats to collect
-		FindModule<>::findNetwork(this)->subscribe(BaseLayer::catPacketSignal, this);
+		FindModule<>::findNetwork(this)->subscribe(BaseLayer::catPacketSignal.initialize(), this);
 
 		sent.setName("Bits generated");
 		rcvd.setName("Bits received");
