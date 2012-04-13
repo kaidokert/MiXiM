@@ -46,11 +46,21 @@ public:
 	 */
 	typedef std::list<AirFrame*> AirFrameVector;
 
+	/**
+	 * @brief Used at initialization to pass the parameters
+	 *        to the AnalogueModel and Decider
+	 */
+	typedef std::map<std::string, cMsgPar> ParameterMap;
+
 	virtual ~DeciderToPhyInterface() {}
 
 	/**
-	 * @brief Fills the passed AirFrameVector with all AirFrames that intersect
-	 * with the time interval [from, to]
+	 * @brief Fills the passed AirFrameVector with all air frames that intersect
+	 *        with the time interval [from, to] with same channel number.
+	 *
+	 * @param[in]  from  The interval start time (included).
+	 * @param[in]  to    The interval end time (included).
+	 * @param[out] out   The vector where the air frames shall be inserted.
 	 */
 	virtual void getChannelInfo(simtime_t_cref from, simtime_t_cref to, AirFrameVector& out) const = 0;
 
@@ -115,11 +125,6 @@ public:
 	virtual void drawCurrent(double amount, int activity) = 0;
 
 	/**
-	 * @brief Returns a pointer to the simulations world-utility-module.
-	 */
-	virtual BaseWorldUtility* getWorldUtility() const = 0;
-
-	/**
 	 * @brief Utility method to enable a Decider, which isn't an OMNeT-module, to
 	 * use the OMNeT-method 'recordScalar' with the help of and through its interface to BasePhyLayer.
 	 *
@@ -132,6 +137,23 @@ public:
 
 	/** @brief Returns the channel currently used by the radio. */
 	virtual int getCurrentRadioChannel() const = 0;
+
+	/** @brief Returns the number of channels available in radio. */
+	virtual int getNbRadioChannels() const = 0;
+
+	/**
+	 * @brief Returns the true if the radio is in RX state.
+	 */
+	virtual bool isRadioInRX() const = 0;
+
+
+	/**
+	 * @brief Returns the length of the phy header in bits.
+	 *
+	 * If the decider should handle frame header retrieval he did needs the length of the
+	 * phy header for calculation of next air frame handle time.
+	 */
+	virtual long getPhyHeaderLength() const = 0;
 };
 
 #endif /*DECIDER_TO_PHY_INTERFACE_H_*/

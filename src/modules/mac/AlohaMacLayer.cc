@@ -55,6 +55,7 @@ void AlohaMacLayer::finish() {
 
        	recordScalar("nbSentPackets", nbSentPackets);
     }
+    UWBIRMac::finish();
 }
 
 MacPkt* AlohaMacLayer::encapsMsg(cPacket *msg) {

@@ -437,7 +437,7 @@ const cGate* BaseConnectionManager::getOutGateTo(const NicEntry* nic,
 {
 	NicEntries::const_iterator ItNic = nics.find(nic->nicId);
 	if (ItNic == nics.end())
-		error("No nic with this id (%d) is registered with this ConnectionManager.", nic->nicId);
+		error("No nic with this ID (%d) is registered with this ConnectionManager.", nic->nicId);
 
 	return ItNic->second->getOutGateTo(targetNic);
 }

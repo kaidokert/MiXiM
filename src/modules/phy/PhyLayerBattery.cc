@@ -24,6 +24,8 @@ Define_Module(PhyLayerBattery);
 void PhyLayerBattery::initialize(int stage) {
 	PhyLayer::initialize(stage);
 	if (stage == 0) {
+		cModule *const pNic = getNic();
+
 		numActivities = hasPar("numActivities") ? par("numActivities").longValue() : 5;
 
 		/* parameters belong to the NIC, not just phy layer
@@ -31,55 +33,34 @@ void PhyLayerBattery::initialize(int stage) {
 		 * if/when variable transmit power is supported, txCurrent
 		 * should be specified as an xml table of available transmit
 		 * power levels and corresponding txCurrent */
-		sleepCurrent = rxCurrent = decodingCurrentDelta = txCurrent = 0;
-		setupRxCurrent = setupTxCurrent = rxTxCurrent = txRxCurrent = 0;
-		sleepCurrent = getNic()->par( "sleepCurrent" );
-		rxCurrent = getNic()->par( "rxCurrent" );
-		decodingCurrentDelta = getNic()->par( "decodingCurrentDelta" );
-		txCurrent = getNic()->par( "txCurrent" );
-		setupRxCurrent = getNic()->par( "setupRxCurrent" );
-		setupTxCurrent = getNic()->par( "setupTxCurrent" );
-		rxTxCurrent = getNic()->par( "rxTxCurrent" );
-		txRxCurrent = getNic()->par( "txRxCurrent" );
+		sleepCurrent   = rxCurrent      = decodingCurrentDelta = txCurrent   = 0;
+		setupRxCurrent = setupTxCurrent = rxTxCurrent          = txRxCurrent = 0;
+		sleepCurrent         = pNic->par( "sleepCurrent" );
+		rxCurrent            = pNic->par( "rxCurrent" );
+		if (pNic->hasPar("decodingCurrentDelta"))
+		    decodingCurrentDelta = pNic->par( "decodingCurrentDelta" );
+		txCurrent            = pNic->par( "txCurrent" );
+		setupRxCurrent       = pNic->par( "setupRxCurrent" );
+		setupTxCurrent       = pNic->par( "setupTxCurrent" );
+		rxTxCurrent          = pNic->par( "rxTxCurrent" );
+		txRxCurrent          = pNic->par( "txRxCurrent" );
 	} else {
 		registerWithBattery("physical layer", numActivities);
 		setRadioCurrent(radio->getCurrentState());
 	}
 }
 
-Decider* PhyLayerBattery::getDeciderFromName(std::string name, ParameterMap& params) {
+Decider* PhyLayerBattery::getDeciderFromName(const std::string& name, ParameterMap& params) {
+    params["decodingCurrentDelta"] = cMsgPar("decodingCurrentDelta").setDoubleValue(decodingCurrentDelta);
+
 	if(name == "Decider80211Battery") {
-		return initializeDecider80211Battery(params);
+		return createDecider<Decider80211Battery>(params);
 	}
-	else if(name == "Decider80211MultiChannel") {
-		return initializeDecider80211MultiChannel(params);
+	if(name == "Decider80211MultiChannel") {
+		return createDecider<Decider80211MultiChannel>(params);
 	}
 
 	return PhyLayer::getDeciderFromName(name, params);
-}
-
-Decider* PhyLayerBattery::initializeDecider80211Battery(ParameterMap& params) {
-	double threshold = params["threshold"];
-	return new Decider80211Battery(this,
-								   threshold,
-								   sensitivity,
-								   radio->getCurrentChannel(),
-								   decodingCurrentDelta,
-								   findHost()->getIndex(),
-								   coreDebug);
-}
-
-Decider* PhyLayerBattery
-			::initializeDecider80211MultiChannel(ParameterMap& params)
-{
-	double threshold = params["threshold"];
-	return new Decider80211MultiChannel(this,
-								   threshold,
-								   sensitivity,
-								   decodingCurrentDelta,
-								   radio->getCurrentChannel(),
-								   findHost()->getIndex(),
-								   coreDebug);
 }
 
 void PhyLayerBattery::drawCurrent(double amount, int activity) {
@@ -130,8 +111,8 @@ void PhyLayerBattery::handleHostState(const HostState& state) {
 	}
 }
 
-void PhyLayerBattery::finishRadioSwitching() {
-	PhyLayer::finishRadioSwitching();
+void PhyLayerBattery::finishRadioSwitching(bool bSendCtrlMsg /*= true */) {
+	PhyLayer::finishRadioSwitching(bSendCtrlMsg);
 
 	setRadioCurrent(radio->getCurrentState());
 }
@@ -139,52 +120,55 @@ void PhyLayerBattery::finishRadioSwitching() {
 void PhyLayerBattery::setSwitchingCurrent(int from, int to) {
 	double current = 0;
 
+	if (from == to)
+	    return;
+
 	switch(from) {
-	case Radio::RX:
-		switch(to) {
-		case Radio::SLEEP:
-			current = rxCurrent;
-			break;
-		case Radio::TX:
-			current = rxTxCurrent;
-			break;
-		default:
-			opp_error("Unknown radio switch! From RX to %d", to);
-			break;
-		}
-		break;
+        case Radio::RX:
+            switch(to) {
+                case Radio::SLEEP:
+                    current = rxCurrent;
+                    break;
+                case Radio::TX:
+                    current = rxTxCurrent;
+                    break;
+                default:
+                    opp_error("Unknown radio switch! From RX to %d", to);
+                    break;
+            }
+            break;
 
-	case Radio::TX:
-		switch(to) {
-		case Radio::SLEEP:
-			current = txCurrent;
-			break;
-		case Radio::RX:
-			current = txRxCurrent;
-			break;
-		default:
-			opp_error("Unknown radio switch! From TX to %d", to);
-			break;
-		}
-		break;
+        case Radio::TX:
+            switch(to) {
+                case Radio::SLEEP:
+                    current = txCurrent;
+                    break;
+                case Radio::RX:
+                    current = txRxCurrent;
+                    break;
+                default:
+                    opp_error("Unknown radio switch! From TX to %d", to);
+                    break;
+            }
+            break;
 
-	case Radio::SLEEP:
-		switch(to) {
-		case Radio::TX:
-			current = setupTxCurrent;
-			break;
-		case Radio::RX:
-			current = setupRxCurrent;
-			break;
-		default:
-			opp_error("Unknown radio switch! From SLEEP to %d", to);
-			break;
-		}
-		break;
+        case Radio::SLEEP:
+            switch(to) {
+                case Radio::TX:
+                    current = setupTxCurrent;
+                    break;
+                case Radio::RX:
+                    current = setupRxCurrent;
+                    break;
+                default:
+                    opp_error("Unknown radio switch! From SLEEP to %d", to);
+                    break;
+            }
+            break;
 
-	default:
-		opp_error("Unknown radio state: %d", from);
-		break;
+        default:
+            opp_error("Unknown radio state: %d", from);
+            break;
 	}
 
 	BatteryAccess::drawCurrent(current, SWITCHING_ACCT);
@@ -214,15 +198,18 @@ simtime_t PhyLayerBattery::setRadioState(int rs) {
 	if (battery) {
 		if (battery && battery->getState() != HostState::ACTIVE && rs != Radio::SLEEP && prevState != rs) {
 			coreEV << "can not switch radio state, host is not in active state!" << endl;
-			return -1;
+			return Decider::notAgain;
 		}
 	}
 
 	simtime_t endSwitch = PhyLayer::setRadioState(rs);
 
-	if(endSwitch >= 0) {
+	if(endSwitch >= SIMTIME_ZERO) {
 		if(radio->getCurrentState() == Radio::SWITCHING) {
 			setSwitchingCurrent(prevState, rs);
+		}
+		else {
+		    setRadioCurrent(radio->getCurrentState());
 		}
 	}
 

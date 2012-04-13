@@ -219,6 +219,7 @@ void ProbabilisticBroadcast::finish()
 		  recordScalar("meanNbHops", 0);
 		}
 	}
+	BaseNetwLayer::finish();
 }
 
 bool ProbabilisticBroadcast::messageKnown(unsigned int msgId)

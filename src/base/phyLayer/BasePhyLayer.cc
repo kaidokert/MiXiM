@@ -122,11 +122,11 @@ void BasePhyLayer::initialize(int stage) {
 }
 
 Radio* BasePhyLayer::initializeRadio() const {
-	int initialRadioState = par("initialRadioState").longValue();
-	double radioMinAtt = par("radioMinAtt").doubleValue();
-	double radioMaxAtt = par("radioMaxAtt").doubleValue();
-	int nbRadioChannels = readPar("nbRadioChannels", 1);
-	int initialRadioChannel = readPar("initialRadioChannel", 0);
+	int    initialRadioState   = par("initialRadioState").longValue();
+	double radioMinAtt         = par("radioMinAtt").doubleValue();
+	double radioMaxAtt         = par("radioMaxAtt").doubleValue();
+	int    nbRadioChannels     = readPar("nbRadioChannels",     1);
+	int    initialRadioChannel = readPar("initialRadioChannel", 0);
 
 	Radio* radio = Radio::createNewRadio(recordStats, initialRadioState,
 										 radioMinAtt, radioMaxAtt,
@@ -246,9 +246,9 @@ void BasePhyLayer::initializeDecider(cXMLElement* xmlConfig) {
 	coreEV << "Decider \"" << name << "\" loaded." << endl;
 }
 
-Decider* BasePhyLayer::getDeciderFromName(std::string /*name*/, ParameterMap& /*params*/)
+Decider* BasePhyLayer::getDeciderFromName(const std::string& /*name*/, ParameterMap& /*params*/)
 {
-	return 0;
+	return NULL;
 }
 
 
@@ -323,17 +323,16 @@ void BasePhyLayer::initializeAnalogueModels(cXMLElement* xmlConfig) {
 
 }
 
-AnalogueModel* BasePhyLayer::getAnalogueModelFromName(std::string name, ParameterMap& /*params*/) const {
+AnalogueModel* BasePhyLayer::getAnalogueModelFromName(const std::string& name, ParameterMap& /*params*/) const {
 
 	// add default analogue models here
 
 	// case "RSAM", pointer is valid as long as the radio exists
-	if (name == "RadioStateAnalogueModel")
-	{
+	if (name == "RadioStateAnalogueModel") {
 		return radio->getAnalogueModel();
 	}
 
-	return 0;
+	return NULL;
 }
 
 //--Message handling--------------------------------------
@@ -387,7 +386,7 @@ void BasePhyLayer::handleAirFrame(AirFrame* frame) {
 }
 
 void BasePhyLayer::handleAirFrameStartReceive(AirFrame* frame) {
-	coreEV << "Received new AirFrame " << frame << " from channel." << endl;
+	coreEV << "Received new AirFrame " << frame << " from channel " << frame->getChannel() << "." << endl;
 
 	if(channelInfo.isChannelEmpty()) {
 		radio->setTrackingModeTo(true);
@@ -397,7 +396,7 @@ void BasePhyLayer::handleAirFrameStartReceive(AirFrame* frame) {
 	assert(!channelInfo.isChannelEmpty());
 
 	if(usePropagationDelay) {
-		Signal& s = frame->getSignal();
+		Signal&   s     = frame->getSignal();
 		simtime_t delay = simTime() - s.getSendingStart();
 		s.setPropagationDelay(delay);
 	}
@@ -425,11 +424,11 @@ void BasePhyLayer::handleAirFrameStartReceive(AirFrame* frame) {
 
 void BasePhyLayer::handleAirFrameReceiving(AirFrame* frame) {
 
-	Signal& signal = frame->getSignal();
+	Signal&   FrameSignal    = frame->getSignal();
 	simtime_t nextHandleTime = decider->processSignal(frame);
+	simtime_t signalEndTime  = FrameSignal.getReceptionEnd();
 
-	assert(signal.getDuration() == frame->getDuration());
-	simtime_t signalEndTime = signal.getReceptionStart() + frame->getDuration();
+	assert(FrameSignal.getDuration() == frame->getDuration());
 
 	//check if this is the end of the receiving process
 	if(simTime() >= signalEndTime) {
@@ -439,17 +438,17 @@ void BasePhyLayer::handleAirFrameReceiving(AirFrame* frame) {
 	}
 
 	//smaller zero means don't give it to me again
-	if(nextHandleTime < 0) {
+	if(nextHandleTime < SIMTIME_ZERO) {
 		nextHandleTime = signalEndTime;
 		frame->setState(END_RECEIVE);
 
 	//invalid point in time
 	} else if(nextHandleTime < simTime() || nextHandleTime > signalEndTime) {
-		opp_error("Invalid next handle time returned by Decider. Expected a value between current simulation time (%.2f) and end of signal (%.2f) but got %.2f",
-								SIMTIME_DBL(simTime()), SIMTIME_DBL(signalEndTime), SIMTIME_DBL(nextHandleTime));
+		opp_error("Invalid next handle time returned by Decider. Expected a value between current simulation time (%s) and end of signal (%s) but got %s",
+		          SIMTIME_STR(simTime()), SIMTIME_STR(signalEndTime), SIMTIME_STR(nextHandleTime));
 	}
 
-	coreEV << "Handed AirFrame with ID " << frame->getId() << " to Decider. Next handling in " << nextHandleTime - simTime() << "s." << endl;
+	coreEV << "Handed AirFrame with ID " << frame->getId() << " to Decider. Next handling in " << (nextHandleTime - simTime()) << "s." << endl;
 
 	sendSelfMessage(frame, nextHandleTime);
 }
@@ -566,7 +565,7 @@ void BasePhyLayer::handleChannelSenseRequest(cMessage* msg) {
 		if(!channelInfo.isRecording()) {
 			channelInfo.startRecording(simTime());
 		}
-	} else if(nextHandleTime >= 0.0){
+	} else if(nextHandleTime >= SIMTIME_ZERO){
 		opp_error("Next handle time of ChannelSenseRequest returned by the Decider is smaller then current simulation time: %.2f",
 				SIMTIME_DBL(nextHandleTime));
 	}
@@ -732,10 +731,19 @@ int BasePhyLayer::getRadioState() const {
 	return radio->getCurrentState();
 }
 
-void BasePhyLayer::finishRadioSwitching()
+/**
+ * @brief Returns the true if the radio is in RX state.
+ */
+bool BasePhyLayer::isRadioInRX() const {
+    return getRadioState() == Radio::RX;
+}
+
+void BasePhyLayer::finishRadioSwitching(bool bSendCtrlMsg /*= true*/)
 {
 	radio->endSwitch(simTime());
-	sendControlMsgToMac(new cMessage("Radio switching over", RADIO_SWITCHING_OVER));
+	if (bSendCtrlMsg) {
+	    sendControlMsgToMac(new cMessage("Radio switching over", RADIO_SWITCHING_OVER));
+	}
 }
 
 simtime_t BasePhyLayer::setRadioState(int rs) {
@@ -749,17 +757,15 @@ simtime_t BasePhyLayer::setRadioState(int rs) {
 	simtime_t switchTime = radio->switchTo(rs, simTime());
 
 	//invalid switch time, we are probably already switching
-	if(switchTime < 0)
+	if(switchTime < SIMTIME_ZERO)
 		return switchTime;
 
 	// if switching is done in exactly zero-time no extra self-message is scheduled
-	if (switchTime == 0.0)
-	{
-		// TODO: in case of zero-time-switch, send no control-message to mac!
-		// maybe call a method finishRadioSwitchingSilent()
-		finishRadioSwitching();
-	} else
-	{
+	if (switchTime == SIMTIME_ZERO) {
+		// In case of zero-time-switch, send no control-message to MAC!
+		finishRadioSwitching(false);
+	}
+	else {
 		sendSelfMessage(radioSwitchingOverTimer, simTime() + switchTime);
 	}
 
@@ -772,7 +778,7 @@ ChannelState BasePhyLayer::getChannelState() const {
 	return decider->getChannelState();
 }
 
-int BasePhyLayer::getPhyHeaderLength() const {
+long BasePhyLayer::getPhyHeaderLength() const {
 	Enter_Method_Silent();
 	if (headerLength < 0)
 		return par("headerLength").longValue();
@@ -780,6 +786,9 @@ int BasePhyLayer::getPhyHeaderLength() const {
 }
 
 void BasePhyLayer::setCurrentRadioChannel(int newRadioChannel) {
+	if (newRadioChannel == getCurrentRadioChannel())
+		return;
+
 	if(txOverTimer && txOverTimer->isScheduled()) {
 		opp_warning("Switched channel while sending an AirFrame. The effects this would have on the transmission are not simulated by the BasePhyLayer!");
 	}
@@ -794,13 +803,31 @@ int BasePhyLayer::getCurrentRadioChannel() const {
 }
 
 int BasePhyLayer::getNbRadioChannels() const {
-	return par("nbRadioChannels");
+	return radio->getNbChannels();
 }
 
 //--DeciderToPhyInterface implementation------------
 
 void BasePhyLayer::getChannelInfo(simtime_t_cref from, simtime_t_cref to, AirFrameVector& out) const {
-	channelInfo.getAirFrames(from, to, out);
+	if (getNbRadioChannels() < 2) {
+		channelInfo.getAirFrames(from, to, out);
+	}
+	else {
+		// here we filter out all air frames which are not on current channel
+		struct airframe_filter_channel_fctr : public ChannelInfo::airframe_filter_fctr {
+			int iChNum;
+
+			airframe_filter_channel_fctr(int chNum) : ChannelInfo::airframe_filter_fctr(), iChNum(chNum)
+			{}
+
+			virtual bool pass(const ChannelInfo::airframe_ptr_t& a) const {
+				return a->getChannel() == iChNum;
+			}
+		};
+
+		airframe_filter_channel_fctr fctrFilterChannel(getCurrentRadioChannel());
+		channelInfo.getAirFrames(from, to, out, &fctrFilterChannel);
+	}
 }
 
 ConstMapping* BasePhyLayer::getThermalNoise(simtime_t_cref from, simtime_t_cref /*to*/) {
@@ -853,10 +880,6 @@ void BasePhyLayer::rescheduleMessage(cMessage* msg, simtime_t_cref t) {
 
 void BasePhyLayer::drawCurrent(double amount, int activity) {
 	BatteryAccess::drawCurrent(amount, activity);
-}
-
-BaseWorldUtility* BasePhyLayer::getWorldUtility() const {
-	return world;
 }
 
 void BasePhyLayer::recordScalar(const char *name, double value, const char *unit) {

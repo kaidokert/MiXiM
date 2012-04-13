@@ -34,7 +34,6 @@ protected:
 	/** Stores if the AirFrame for this result was received correct.*/
 	bool isCorrect;
 public:
-
 	virtual ~DeciderResult() {}
 
 	/**
@@ -67,15 +66,21 @@ public:
  */
 class MIXIM_API Decider
 {
+public:
+	/** @brief simtime that tells the Phy-Layer not to pass an AirFrame again */
+	static const_simtime_t notAgain;
 protected:
 	/** @brief A pointer to the physical layer of this Decider. */
 	DeciderToPhyInterface* const phy;
 
-	/** @brief simtime that tells the Phy-Layer not to pass an AirFrame again */
-	const simtime_t notAgain;
-
 	/** @brief Defines what an AirFrameVector shall be here */
 	typedef DeciderToPhyInterface::AirFrameVector AirFrameVector;
+
+	/**
+	 * @brief Used at initialisation to pass the parameters
+	 * to the AnalogueModel and Decider
+	 */
+	typedef DeciderToPhyInterface::ParameterMap ParameterMap;
 
 private:
 	/** @brief Copy constructor is not allowed.
@@ -92,6 +97,16 @@ public:
 	 */
 	Decider(DeciderToPhyInterface* phy);
 
+	/** @brief Initialize the decider from XML map data.
+	 *
+	 * This method should be defined for generic decider initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap&) { return true; }
+
 	virtual ~Decider() {}
 
 	/**
@@ -99,6 +114,10 @@ public:
 	 * returns the time point when Decider wants to be given the AirFrame again.
 	 */
 	virtual simtime_t processSignal(AirFrame* frame);
+
+	/** @brief Cancels processing a AirFrame.
+	 */
+	virtual void cancelProcessSignal() {}
 
 	/**
 	 * @brief A function that returns information about the channel state

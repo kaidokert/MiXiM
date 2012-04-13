@@ -68,12 +68,12 @@ public:
 	/*
 	 * @brief Default constructor.
 	 */
-	UWBIRIEEE802154APathlossModel(int _channelModel, double _threshold, bool shadowing=true)
+	UWBIRIEEE802154APathlossModel()
 		: AnalogueModel()
-		, channelModel(_channelModel)
+		, channelModel(0)
 		, cfg()
-		, tapThreshold(_threshold)
-		, doShadowing(shadowing)
+		, tapThreshold(0)
+		, doShadowing(false)
  		, doSmallScaleShadowing(false)
 		, newTxPower(NULL)
 		, txPower(NULL)
@@ -85,19 +85,25 @@ public:
 		, gamma_l()
 		, Mcluster(0)
 		, Omega_l(0)
-		, distance(0)
 		, averagePower(0)
 		, nbCalls(0)
 		, averagePowers()
 		, pathlosses()
     {
-    	// Check that this model is supported
-    	assert(implemented_CMs[channelModel]);
-    	// load the model parameters
-    	cfg = CMconfigs[channelModel];
     	averagePowers.setName("averagePower");
     	pathlosses.setName("pathloss");
     }
+
+    /** @brief Initialize the analog model from XML map data.
+     *
+     * This method should be defined for generic analog model initialization.
+     *
+     * @param params The parameter map which was filled by XML reader.
+     *
+     * @return true if the initialization was successfully.
+     */
+    virtual bool initFromMap(const ParameterMap&);
+
     virtual ~UWBIRIEEE802154APathlossModel() {}
 
     /*
@@ -194,8 +200,6 @@ protected:
     double Mcluster;
     // cluster integrated energy
     double Omega_l;
-    // distance between source and receiver
-    double distance;
 
     double averagePower; // statistics counter (useful for model validation, should converges towards 1)
     long nbCalls;
@@ -210,7 +214,7 @@ protected:
     /*
      * @brief Computes the pathloss as a function of center frequency and bandwidth given in MHz
      */
-    double getPathloss(double fc, double BW) const;
+    double getPathloss(double fc, double BW, double distance) const;
 
 };
 

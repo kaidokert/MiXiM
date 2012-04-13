@@ -381,6 +381,13 @@ public:
 		return currentChannel;
 	}
 
+	/**
+	 * @brief Returns the number of channels.
+	 * @return The number of channels.
+	 */
+	int getNbChannels() const {
+		return nbChannels;
+	}
 
 protected:
 	/**

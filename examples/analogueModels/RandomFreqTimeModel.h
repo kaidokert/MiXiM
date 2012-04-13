@@ -47,15 +47,20 @@ public:
 	 * Besides using Dimension::time() is more typo resistant since the
 	 * compiler can check if the static member actually exists.
 	 */
-	RandomFreqTimeModel(int seed = 23):
-		frequency("frequency"),
-		dimensions(Dimension::time, frequency) {
+	RandomFreqTimeModel()
+	    : frequency("frequency")
+	    , dimensions(Dimension::time, frequency)
+	{ }
 
-		//sets the seed for random number generation. The PhyLayer
-		//(which created the analogue models) gets the seed from the
-		//configuration parameters inside the xml-config
-		srand(seed);
-	}
+	/** @brief Initialize the analog model from XML map data.
+	 *
+	 * This method should be defined for generic analog model initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap&);
 
 	/**
 	 * @brief Has to be overriden by every implementation.

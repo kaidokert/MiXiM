@@ -46,6 +46,22 @@ class MIXIM_API ChannelInfo {
 public:
 	/** The stored air frame pointer type */
 	typedef AirFrame* airframe_ptr_t;
+	/** @brief Invalid simulation time point, will be used for return value of emptiness. */
+	static const_simtime_t invalidSimTime;
+
+	/** @brief Functor which can be used as to filter for specific air frames.
+	 */
+	struct airframe_filter_fctr {
+		virtual ~airframe_filter_fctr() {}
+
+		/** @brief Return true if the air frame fits your criteria.
+		 *
+		 * @param a The air frame which should be checked.
+		*/
+		virtual bool pass(const airframe_ptr_t& a) const {
+			return true;
+		}
+    };
 protected:
 	/**
 	 * The AirFrames are stored in a Matrix with start- and end time as
@@ -58,6 +74,7 @@ protected:
 			return a.second.key_comp()(a.second.begin()->first, b.second.begin()->first);
 		}
 	};
+
 	/**
 	 * @brief Iterator for every intersection of a specific interval in a
 	 * AirFrameMatrix.
@@ -125,7 +142,7 @@ protected:
 			for (; endIt != endItEnd; startIt = endIt->second.begin()) {
 				// while there are entries left at the current end-time
 				if (startIt != startItEnd) {
-					// check if this entry fulfilles the intersection condition
+					// check if this entry fulfills the intersection condition
 					// 2 (condition 1 is already fulfilled in the constructor by
 					// the start-value of the end-time-iterator)
 					return *this;
@@ -318,7 +335,7 @@ protected:
 	AirFrameStartMap airFrameStarts;
 
 	/** @brief Stores a point in history up to which we need to keep all channel
-	 * information stored.*/
+	 * information stored (value should be less than 0.0).*/
 	simtime_t recordStartTime;
 
 public:
@@ -344,9 +361,21 @@ protected:
 	 * The intersecting AirFrames are stored in the AirFrameVector reference
 	 * passed as parameter.
 	 */
-	static void getIntersections( const AirFrameMatrix& airFrames,
-	                              simtime_t_cref from, simtime_t_cref to,
-	                              AirFrameVector& outVector );
+	static void getIntersections( const AirFrameMatrix&     airFrames
+                                , simtime_t_cref            from
+                                , simtime_t_cref            to
+                                , AirFrameVector&           outVector
+                                , airframe_filter_fctr *const fctrFilter = NULL)
+	{
+	    const_iterator itEnd = cConstItEnd;
+	    for (const_iterator it(&airFrames, from, to); it != itEnd; ++it) {
+	        if (fctrFilter != NULL) {
+	            if (!fctrFilter->pass(it->second))
+	                continue;
+	        }
+	        outVector.push_back(it->second);
+	    }
+	}
 
 	/**
 	 * @brief Returns true if there is at least one AirFrame in the passed
@@ -376,7 +405,7 @@ protected:
 	/**
 	 * @brief Returns the start time of the odlest AirFrame on the channel.
 	 */
-	simtime_t findEarliestInfoPoint(simtime_t_cref returnTimeIfEmpty = -1) const;
+	simtime_t findEarliestInfoPoint(simtime_t_cref returnTimeIfEmpty = invalidSimTime) const;
 
 	/**
 	 * @brief Checks if any information inside the passed interval can be
@@ -424,7 +453,7 @@ public:
 		: activeAirFrames()
 		, inactiveAirFrames()
 		, airFrameStarts()
-		, recordStartTime(-1)
+		, recordStartTime(invalidSimTime)
 	{}
 
 	virtual ~ChannelInfo() {}
@@ -447,7 +476,7 @@ public:
 	 * @return The current time-point from on which information concerning
 	 * AirFrames is needed to be stored.
 	 */
-	simtime_t removeAirFrame(airframe_ptr_t a, simtime_t_cref returnTimeIfEmpty = -1);
+	simtime_t removeAirFrame(airframe_ptr_t a, simtime_t_cref returnTimeIfEmpty = invalidSimTime);
 
 	/**
 	 * @brief Fills the passed AirFrameVector reference with the AirFrames which
@@ -459,13 +488,23 @@ public:
 	 * An AirFrame is called active if it has been added but not yet removed
 	 * from ChannelInfo.
 	 */
-	void getAirFrames(simtime_t_cref from, simtime_t_cref to, AirFrameVector& out) const;
+	void getAirFrames( simtime_t_cref            from
+                     , simtime_t_cref            to
+                     , AirFrameVector&           out
+                     , airframe_filter_fctr *const fctrFilter = NULL) const
+	{
+	    //check for intersecting inactive AirFrames
+	    getIntersections(inactiveAirFrames, from, to, out, fctrFilter);
+
+	    //check for intersecting active AirFrames
+	    getIntersections(activeAirFrames, from, to, out, fctrFilter);
+	}
 
 	/**
 	 * @brief Returns the current time-point from that information concerning
 	 * AirFrames is needed to be stored.
 	 */
-	simtime_t getEarliestInfoPoint(simtime_t_cref returnTimeIfEmpty = -1) const
+	simtime_t getEarliestInfoPoint(simtime_t_cref returnTimeIfEmpty = invalidSimTime) const
 	{
 		return findEarliestInfoPoint(returnTimeIfEmpty);
 	}
@@ -487,7 +526,7 @@ public:
 	void startRecording(simtime_t_cref start)
 	{
 		// clean up until old record start
-		if(recordStartTime > -1) {
+		if(recordStartTime >= SIMTIME_ZERO) {
 			recordStartTime = start;
 			checkAndCleanInterval(0, recordStartTime);
 		} else {
@@ -503,9 +542,9 @@ public:
 	 */
 	void stopRecording()
 	{
-		if(recordStartTime > -1) {
+		if(recordStartTime >= SIMTIME_ZERO) {
 			simtime_t old = recordStartTime;
-			recordStartTime = -1;
+			recordStartTime = invalidSimTime;
 			checkAndCleanFrom(old);
 		}
 	}
@@ -516,7 +555,7 @@ public:
 	 */
 	bool isRecording() const
 	{
-		return recordStartTime > -1;
+		return recordStartTime >= SIMTIME_ZERO;
 	}
 
 	/**
@@ -524,9 +563,6 @@ public:
 	 * AirFrames on the channel.
 	 */
 	bool isChannelEmpty() const {
-		assert(recordStartTime != -1
-			   || activeAirFrames.empty() == airFrameStarts.empty());
-
 		return airFrameStarts.empty();
 	}
 };

@@ -180,7 +180,43 @@ const UWBIRIEEE802154APathlossModel::CMconfig UWBIRIEEE802154APathlossModel::CMc
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}  // CM9
 };
 
-void UWBIRIEEE802154APathlossModel::filterSignal(AirFrame *frame, const Coord& /*sendersPos*/, const Coord& /*receiverPos*/)
+bool UWBIRIEEE802154APathlossModel::initFromMap(const ParameterMap& params) {
+    ParameterMap::const_iterator it;
+    bool                         bInitSuccess = true;
+    double                       delayRMS     = 0.0;
+
+    if ((it = params.find("seed")) != params.end()) {
+        srand( ParameterMap::mapped_type(it->second).longValue() );
+    }
+    if ((it = params.find("CM")) != params.end()) {
+        channelModel = ParameterMap::mapped_type(it->second).longValue();
+        // Check that this model is supported
+        assert(implemented_CMs[channelModel]);
+        // load the model parameters
+        cfg          = CMconfigs[channelModel];
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No channel model defined in config.xml for UWBIRIEEE802154APathlossModel!");
+    }
+    if ((it = params.find("Threshold")) != params.end()) {
+        tapThreshold = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No Threshold defined in config.xml for UWBIRIEEE802154APathlossModel!");
+    }
+    if ((it = params.find("shadowing")) != params.end()) {
+        doShadowing = ParameterMap::mapped_type(it->second).boolValue();
+    }
+    else {
+        doShadowing = false;
+    }
+
+    return AnalogueModel::initFromMap(params) && bInitSuccess;
+}
+
+void UWBIRIEEE802154APathlossModel::filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos)
 {
     Signal& signal = frame->getSignal();
     // We create a new "fake" txPower to add multipath taps
@@ -218,7 +254,7 @@ void UWBIRIEEE802154APathlossModel::filterSignal(AirFrame *frame, const Coord& /
 
     // Total radiated power Prx at that distance  [W]
     //double attenuation = 0.5 * ntx * nrx * cfg.PL0 / pow(distance / d0, cfg.n);
-    double attenuation = getPathloss(fc, BW);
+    double attenuation = getPathloss(fc, BW, receiverPos.distance(sendersPos));
     pathlosses.record(attenuation);
     // Power intensity I at that distance [W/m²]
     //attenuation = attenuation /(4*PI*pow(distance, cfg.n));
@@ -388,7 +424,7 @@ void UWBIRIEEE802154APathlossModel::addEchoes(simtime_t_cref pulseStart) {
  * Returns the integral of formula (12) assuming constant nrx, ntx over BW
  * and kappa != 0.5
  */
-double UWBIRIEEE802154APathlossModel::getPathloss(double /*fc*/, double /*BW*/) const {
+double UWBIRIEEE802154APathlossModel::getPathloss(double /*fc*/, double /*BW*/, double distance) const {
 	double pathloss = 0.5; // "antenna attenuation factor"
 	pathloss = pathloss * cfg.PL0;  // pathloss at reference distance
 	pathloss = pathloss * ntx * nrx; // antenna effects

@@ -10,7 +10,7 @@ class TestDecider:public Decider, public TestModule {
 protected:
 	int myIndex;
 	int run;
-	const int RECEIVING_STATE;
+	int RECEIVING_STATE;
 
 	bool state;
 	double rssi;
@@ -23,16 +23,48 @@ protected:
 	}
 
 public:
-	TestDecider(DeciderToPhyInterface* phy, int index, int run, int RECEIVING_STATE)
+	TestDecider( DeciderToPhyInterface* phy
+	           , double                 sensitivity
+	           , int                    myIndex
+	           , bool                   debug )
 		: Decider(phy)
-		, myIndex(index)
-		, run(run)
-		, RECEIVING_STATE(RECEIVING_STATE)
+		, myIndex(myIndex)
+		, run(0)
+		, RECEIVING_STATE(0)
 		, state(false)
 		, rssi(0.0)
 		, senseStart()
 	{
 		init("decider" + toString(myIndex));
+	}
+
+	/** @brief Initialize the decider from XML map data.
+	 *
+	 * This method should be defined for generic decider initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap& params) {
+	    ParameterMap::const_iterator it;
+	    bool                         bInitSuccess = true;
+
+	    if((it = params.find("recvState")) != params.end()) {
+	    	RECEIVING_STATE = ParameterMap::mapped_type(it->second).longValue();
+	    }
+	    else {
+	        bInitSuccess = false;
+	        opp_warning("No recvState defined in config.xml for TestDecider!");
+	    }
+	    if((it = params.find("runNumber")) != params.end()) {
+	    	run = ParameterMap::mapped_type(it->second).longValue();
+	    }
+	    else {
+	        bInitSuccess = false;
+	        opp_warning("No recvState defined in config.xml for TestDecider!");
+	    }
+	    return Decider::initFromMap(params) && bInitSuccess;
 	}
 
 	virtual ChannelState getChannelState() const {

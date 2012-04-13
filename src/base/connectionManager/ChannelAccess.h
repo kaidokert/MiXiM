@@ -45,7 +45,6 @@ typedef ChannelMobilityAccessType::wrapType* ChannelMobilityPtrType;
 
 class NicEntry;
 class BaseConnectionManager;
-class BaseWorldUtility;
 
 /**
  * @brief Basic class for all physical layers, please don't touch!!
@@ -82,9 +81,6 @@ protected:
 
 	/** @brief Is this module already registered with ConnectionManager? */
 	bool isRegistered;
-
-	/** @brief Pointer to the World Utility, to obtain some global information*/
-	BaseWorldUtility* world;
 
 protected:
 	/**
@@ -128,7 +124,6 @@ public:
 		, coreDebug(false)
 		, usePropagationDelay(false)
 		, isRegistered(false)
-		, world(NULL)
 	{}
 	ChannelAccess(unsigned sz)
 		: BatteryAccess(sz)
@@ -138,7 +133,6 @@ public:
 		, coreDebug(false)
 		, usePropagationDelay(false)
 		, isRegistered(false)
-		, world(NULL)
 	{}
 	virtual ~ChannelAccess() {}
 

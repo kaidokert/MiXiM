@@ -1,38 +1,41 @@
 #include "DeciderUWBIREDSync.h"
 
+#include "AirFrame_m.h"
 
-DeciderUWBIREDSync::DeciderUWBIREDSync(DeciderToPhyInterface* iface,
-				PhyLayerUWBIR* _uwbiface,
-				double _syncThreshold, bool _syncAlwaysSucceeds, bool _stats,
-				bool _trace, double _tmin, bool alwaysFailOnDataInterference) :
-					DeciderUWBIRED(iface, _uwbiface,
-						_syncThreshold, _syncAlwaysSucceeds, _stats, _trace,
-						alwaysFailOnDataInterference),
-						tmin(_tmin), syncVector(), argSync() {
+bool DeciderUWBIREDSync::initFromMap(const ParameterMap& params) {
+    bool                         bInitSuccess = true;
+    ParameterMap::const_iterator it           = params.find("syncMinDuration");
+    if(it != params.end()) {
+        tmin = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No syncMinDuration defined in config.xml for DeciderUWBIREDSync!");
+    }
+    return DeciderUWBIRED::initFromMap(params) && bInitSuccess;
+}
 
-};
+bool DeciderUWBIREDSync::attemptSync(const AirFrame* frame) {
+    AirFrameVector syncVector;
 
-bool DeciderUWBIREDSync::attemptSync(Signal* s) {
-	syncVector.clear();
-	// Retrieve all potentially colliding airFrames
-	phy->getChannelInfo(s->getReceptionStart(), s->getReceptionStart()+IEEE802154A::mandatory_preambleLength,
-			syncVector);
+    // Retrieve all potentially colliding airFrames
+	getChannelInfo(frame->getSignal().getReceptionStart(), frame->getSignal().getReceptionStart()+IEEE802154A::mandatory_preambleLength, syncVector);
 	assert(syncVector.size() != 0);
 
 	if (syncVector.size() == 1) {
-		return evaluateEnergy(s);
+		return evaluateEnergy(frame, syncVector);
 	}
 
 	bool synchronized = false;
 	AirFrameVector::iterator it = syncVector.begin();
 	bool search = true;
-	simtime_t latestSyncStart = s->getReceptionStart() + IEEE802154A::mandatory_preambleLength - tmin;
+	simtime_t latestSyncStart = frame->getSignal().getReceptionStart() + IEEE802154A::mandatory_preambleLength - tmin;
 	AirFrame* af = syncVector.front();
 	Signal & aSignal = af->getSignal();
 
 	while(search &&
-			!(aSignal.getReceptionStart() == s->getReceptionStart() &&
-					aSignal.getDuration() == s->getDuration())) {
+			!(aSignal.getReceptionStart() == frame->getSignal().getReceptionStart() &&
+					aSignal.getDuration() == frame->getSignal().getDuration())) {
 		if(aSignal.getReceptionEnd() > latestSyncStart) {
 			// CASE: the end of one of the previous signals goes too far
 			// and prevents synchronizing on the current frame.
@@ -56,30 +59,28 @@ bool DeciderUWBIREDSync::attemptSync(Signal* s) {
 
 	if(search) {
 		// the signal is long enough. Now evaluate its energy
-		synchronized = evaluateEnergy(s);
+		synchronized = evaluateEnergy(frame, syncVector);
 	}
 
 	return synchronized;
 };
 
-bool DeciderUWBIREDSync::evaluateEnergy(Signal* s) {
+bool DeciderUWBIREDSync::evaluateEnergy(const AirFrame* frame, const AirFrameVector& syncVector) const {
 	// Assumption: channel coherence time > signal duration
 	// Thus we can simply sample the first pulse of the received signal
-	const ConstMapping *const rxPower = s->getReceivingPower();
-	argSync.setTime(s->getReceptionStart() + IEEE802154A::tFirstSyncPulseMax);
+	const ConstMapping *const rxPower = frame->getSignal().getReceivingPower();
+	Argument                  argSync;
+
+	argSync.setTime(frame->getSignal().getReceptionStart() + IEEE802154A::tFirstSyncPulseMax);
 	// We could retrieve the pathloss through s->getAttenuation() but we must be careful:
 	// maybe the pathloss is not the only analogue model (e.g. RSAMAnalogueModel)
 	// If we get the pathloss, we can compute Eb/N0: Eb=1E-3*pathloss if we are at peak power
 	double signalPower = sqrt(pow(rxPower->getValue(argSync), 2)*0.5*peakPulsePower / 10); // de-normalize, take half, and 10 dB losses
-	double noisePower = pow(getNoiseValue(), 2)/ 50;
+	double noisePower  = pow(getNoiseValue(), 2)/ 50;
 	if(signalPower / noisePower > syncThreshold) {
 		return true;
 	}
 	return false;
-};
-
-DeciderUWBIREDSync::~DeciderUWBIREDSync() {
-	syncVector.clear();
 };
 
 

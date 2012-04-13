@@ -37,10 +37,10 @@ protected:
     double carrierFrequency;
 
     /** @brief Information needed about the playground */
-    const bool useTorus;
+    bool useTorus;
 
     /** @brief The size of the playground.*/
-    const Coord& playgroundSize;
+    Coord playgroundSize;
 
     /** @brief Whether debug messages should be displayed. */
     bool debug;
@@ -63,11 +63,10 @@ public:
 	 * @param playgroundSize information about the playground the host is moving in
 	 * @param debug display debug messages?
 	 */
-	BreakpointPathlossModel(double L01, double L02, double alpha1, double alpha2, double breakpointDistance,
-					double carrierFrequency, bool useTorus, const Coord& playgroundSize, bool debug)
+	BreakpointPathlossModel()
 		: AnalogueModel()
-		, PL01(L01)
-		, PL02(L02)
+		, PL01(0)
+		, PL02(0)
 		, PL01_real(0)
 		, PL02_real(0)
 		, alpha1(alpha1)
@@ -79,10 +78,18 @@ public:
 		, debug(debug)
 		, pathlosses()
 	{
-		PL01_real =  pow(10, PL01/10);
-		PL02_real =  pow(10, PL02/10);
 		pathlosses.setName("pathlosses");
 	}
+
+	/** @brief Initialize the analog model from XML map data.
+	 *
+	 * This method should be defined for generic analog model initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap&);
 
 	/**
 	 * @brief Filters a specified AirFrame's Signal by adding an attenuation

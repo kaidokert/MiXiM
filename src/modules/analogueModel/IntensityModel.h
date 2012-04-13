@@ -38,6 +38,7 @@ class MIXIM_API IntensityModel : public AnalogueModel {
 public:
 	IntensityModel() { }
 	virtual ~IntensityModel() { }
+
 	void filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos) {
 		Signal&              s          = frame->getSignal();
 		TimeMapping<Linear>* attMapping = new TimeMapping<Linear> ();

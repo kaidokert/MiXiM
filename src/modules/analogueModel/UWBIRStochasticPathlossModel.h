@@ -81,15 +81,15 @@ public:
     int myIndex;
     std::string myName;
 
-    UWBIRStochasticPathlossModel(double _PL0, double _mu_gamma, double _sigma_gamma, double _mu_sigma, double _sigma_sigma, bool _enabled, bool _shadowing=true)
+    UWBIRStochasticPathlossModel()
     	: AnalogueModel()
-    	, PL0(_PL0)
-    	, mu_gamma(_mu_gamma), sigma_gamma(_sigma_gamma)
-    	, mu_sigma(_mu_sigma), sigma_sigma(_sigma_sigma)
+    	, PL0(0)
+    	, mu_gamma(0), sigma_gamma(0)
+    	, mu_sigma(0), sigma_sigma(0)
     	, gamma(0.0), S(0.0), sigma(0.0)
     	, n1(0.0), n2(0.0), n3(0.0)
-    	, isEnabled(_enabled)
-    	, shadowing(_shadowing)
+    	, isEnabled(false)
+    	, shadowing(true)
     	, distances()
     	, srcPosX(), srcPosY(), dstPosX(), dstPosY()
     	, myIndex(-1)
@@ -106,6 +106,16 @@ public:
     	dstPosY.setName("dstPosY");
     	pathlosses.setName("pathloss");
     }
+
+    /** @brief Initialize the analog model from XML map data.
+     *
+     * This method should be defined for generic analog model initialization.
+     *
+     * @param params The parameter map which was filled by XML reader.
+     *
+     * @return true if the initialization was successfully.
+     */
+    virtual bool initFromMap(const ParameterMap&);
 
     void filterSignal(AirFrame *, const Coord&, const Coord&);
 

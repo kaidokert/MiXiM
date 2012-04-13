@@ -103,10 +103,10 @@ protected:
 	double carrierFrequency;
 
 	/** @brief Information needed about the playground */
-	const bool useTorus;
+	bool useTorus;
 
 	/** @brief The size of the playground.*/
-	const Coord& playgroundSize;
+	Coord playgroundSize;
 
 	/** @brief Whether debug messages should be displayed. */
 	bool debug;
@@ -127,16 +127,23 @@ public:
 	 * 						 moving in
 	 * @param debug display debug messages?
 	 */
-	SimplePathlossModel(double alpha, double carrierFrequency,
-					bool useTorus, const Coord& playgroundSize, bool debug):
-		pathLossAlphaHalf(alpha * 0.5),
-		carrierFrequency(carrierFrequency),
-		useTorus(useTorus),
-		playgroundSize(playgroundSize),
-		debug(debug)
-	{
+	SimplePathlossModel()
+	    : pathLossAlphaHalf(0)
+	    , carrierFrequency(0)
+	    , useTorus(false)
+	    , playgroundSize()
+	    , debug(false)
+	{ }
 
-	}
+	/** @brief Initialize the analog model from XML map data.
+	 *
+	 * This method should be defined for generic analog model initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap&);
 
 	/**
 	 * @brief Filters a specified AirFrame's Signal by adding an attenuation

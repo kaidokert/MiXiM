@@ -69,8 +69,11 @@ protected:
 	/** @brief Stores the functions describing the attenuations of the signal*/
 	ConstMappingList attenuations;
 
-	/** @brief Stores the mapping defining the receiving power of the signal.*/
-	MultipliedMapping* rcvPower;
+	/** @brief Stores the mapping defining the receiving power of the signal.
+	 *
+	 * Will be only calculated on access (thats why it is mutable).
+	 */
+	mutable MultipliedMapping* rcvPower;
 
 protected:
 	/**
@@ -220,7 +223,7 @@ public:
 	 * @brief Returns the function representing the bitrate of the
 	 * signal.
 	 */
-	Mapping* getBitrate() const {
+	const Mapping* getBitrate() const {
 		return bitrate;
 	}
 
@@ -239,17 +242,20 @@ public:
 	 * The receiving power is calculated by multiplying the transmission
 	 * power with the attenuation of every receiving phys AnalogueModel.
 	 */
-	MultipliedMapping* getReceivingPower() {
+	const MultipliedMapping* getReceivingPower() const {
 		if(!rcvPower)
 		{
 			ConstMapping* tmp = power;
 			if(propagationDelay != 0) {
 				tmp = new ConstDelayedMapping(power, propagationDelay);
+				// tmp will be deleted in ~Signal(), where rcvPower->getRefMapping()
+				// will be used for accessing this pointer
 			}
-			rcvPower = new MultipliedMapping(tmp,
-											  attenuations.begin(),
-											  attenuations.end(),
-											  false, Argument::MappedZero);
+			rcvPower = new MultipliedMapping( tmp
+			                                , attenuations.begin()
+			                                , attenuations.end()
+			                                , false
+			                                , Argument::MappedZero );
 		}
 
 		return rcvPower;

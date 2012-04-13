@@ -81,27 +81,14 @@ protected:
 
 protected:
 	/**
-	 * @brief Creates and returns an instance of the Decider with the specified
+	 * @brief Creates and returns an instance of the decider with the specified
 	 * name.
 	 *
-	 * Is able to initialize the following Deciders:
-	 *
-	 * - Decider80211
+	 * Is able to initialize directly the following decider:
 	 * - Decider80211Battery
 	 * - Decider80211MultiChannel
-	 * - SNRThresholdDecider
 	 */
-	virtual Decider* getDeciderFromName(std::string name, ParameterMap& params);
-
-	/**
-	 * @brief Initializes a new Decider80211Battery from the passed parameter map.
-	 */
-	virtual Decider* initializeDecider80211Battery(ParameterMap& params);
-
-	/**
-	 * @brief Initializes a new Decider80211MultiChannel from the passed parameter map.
-	 */
-	virtual Decider* initializeDecider80211MultiChannel(ParameterMap& params);
+	virtual Decider* getDeciderFromName(const std::string& name, ParameterMap& params);
 
 	/**
 	 * @brief Calculates the current needed for the transmission of the
@@ -153,7 +140,7 @@ protected:
 	/**
 	 * @brief Captures radio switches to adjust power consumption.
 	 */
-	virtual void finishRadioSwitching();
+	virtual void finishRadioSwitching(bool bSendCtrlMsg = true);
 
 public:
 	PhyLayerBattery()

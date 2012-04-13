@@ -23,7 +23,24 @@ class AirFrame;
 class MIXIM_API AnalogueModel {
 
 public:
+	/**
+	 * @brief Used at initialization to pass the parameters
+	 *        to the AnalogueModel and Decider
+	 */
+	typedef std::map<std::string, cMsgPar> ParameterMap;
+
+public:
 	virtual ~AnalogueModel() {}
+
+	/** @brief Initialize the analog model from XML map data.
+	 *
+	 * This method should be defined for generic analog model initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap&) { return true; }
 
 	/**
 	 * @brief Has to be overriden by every implementation.

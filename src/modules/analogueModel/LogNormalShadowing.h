@@ -65,7 +65,17 @@ public:
 	 * distributed attenuation values as well as the inteval in which
 	 * to define key entries in (accuracy of the model).
 	 */
-	LogNormalShadowing(double mean, double stdDev, simtime_t_cref interval);
+	LogNormalShadowing();
+
+	/** @brief Initialize the analog model from XML map data.
+	 *
+	 * This method should be defined for generic analog model initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap&);
 
 	virtual ~LogNormalShadowing();
 

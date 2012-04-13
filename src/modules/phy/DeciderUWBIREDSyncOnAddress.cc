@@ -4,26 +4,28 @@
 #include "MacPkt_m.h"
 #include "AirFrame_m.h"
 
-DeciderUWBIREDSyncOnAddress::DeciderUWBIREDSyncOnAddress(DeciderToPhyInterface* iface,
-				PhyLayerUWBIR* _uwbiface,
-				double _syncThreshold, bool _syncAlwaysSucceeds, bool _stats,
-                                                          bool _trace, const LAddress::L2Type& _addr, bool alwaysFailOnDataInterference)
-	: DeciderUWBIRED(iface, _uwbiface, _syncThreshold, _syncAlwaysSucceeds, _stats, _trace, alwaysFailOnDataInterference)
-	, currFrame(NULL)
-	, syncAddress(_addr)
-{ }
+bool DeciderUWBIREDSyncOnAddress::initFromMap(const ParameterMap& params) {
+    bool                         bInitSuccess = true;
+    ParameterMap::const_iterator it           = params.find("addr");
+    if(it != params.end()) {
+        syncAddress = LAddress::L2Type(ParameterMap::mapped_type(it->second).longValue());
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No addr defined in config.xml for DeciderUWBIREDSyncOnAddress!");
+    }
+    return DeciderUWBIRED::initFromMap(params) && bInitSuccess;
+}
 
-bool DeciderUWBIREDSyncOnAddress::attemptSync(Signal* /*s*/) {
-	cMessage* encaps = currFrame->getEncapsulatedPacket();
+bool DeciderUWBIREDSyncOnAddress::attemptSync(const AirFrame* /*frame*/) {
+    if (!currentSignal.isProcessing())
+        return false;
+
+	cMessage* encaps = currentSignal.first->getEncapsulatedPacket();
 	assert(static_cast<MacPkt*>(encaps));
 	MacPkt* macPkt = static_cast<MacPkt*>(encaps);
 
 	return (macPkt->getSrcAddr()==syncAddress);
-};
-
-simtime_t DeciderUWBIREDSyncOnAddress::processSignal(AirFrame* frame) {
-	currFrame = frame;
-	return DeciderUWBIRED::processSignal(frame);
 };
 
 

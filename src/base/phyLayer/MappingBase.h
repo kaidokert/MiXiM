@@ -477,7 +477,7 @@ public:
 	 * @brief Initialize this argument with the passed value for
 	 * the time dimension.
 	 */
-	Argument(simtime_t_cref timeVal = 0);
+	Argument(simtime_t_cref timeVal = SIMTIME_ZERO);
 
 	/**
 	 * @brief Initializes the Argument with the dimensions of the

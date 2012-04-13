@@ -22,11 +22,11 @@
 DimensionSet JakesFadingMapping::dimensions(Dimension::time);
 
 double JakesFadingMapping::getValue(const Argument& pos) const {
-	double f = model->carrierFrequency;
-	double v = relSpeed;
-	simtime_t t = pos.getTime();
-	double re_h = 0;
-	double im_h = 0;
+	double    f    = model->carrierFrequency;
+	double    v    = relSpeed;
+	simtime_t t    = pos.getTime();
+	double    re_h = 0;
+	double    im_h = 0;
 
 	// Compute Doppler shift.
 	double doppler_shift = v * f / BaseWorldUtility::speedOfLight;
@@ -46,7 +46,7 @@ double JakesFadingMapping::getValue(const Argument& pos) const {
 		// Phase shift due to delay spread => f-selectivity.
 		double phi_i = SIMTIME_DBL(model->delay[i]) * f;
 		// Calculate resulting phase due to t-selective and f-selective fading.
-		double phi = 2.00 * M_PI * (phi_d * SIMTIME_DBL(t) - phi_i);
+		double phi   = 2.00 * M_PI * (phi_d * SIMTIME_DBL(t) - phi_i);
 
 		// One ring model/Clarke's model plus f-selectivity according to Cavers:
 		// Due to isotropic antenna gain pattern on all paths only a^2 can be received on all paths.
@@ -64,15 +64,53 @@ double JakesFadingMapping::getValue(const Argument& pos) const {
 }
 
 
-JakesFading::JakesFading(int fadingPaths, simtime_t_cref delayRMS,
-						 double carrierFrequency, simtime_t_cref interval)
+JakesFading::JakesFading()
 	: AnalogueModel()
-	, fadingPaths(fadingPaths)
+	, fadingPaths(0)
 	, angleOfArrival(NULL)
 	, delay(NULL)
-	, carrierFrequency(carrierFrequency)
-	, interval(interval)
+	, carrierFrequency(0)
+	, interval()
 {
+}
+
+bool JakesFading::initFromMap(const ParameterMap& params) {
+    ParameterMap::const_iterator it;
+    bool                         bInitSuccess = true;
+    double                       delayRMS     = 0.0;
+
+    if ((it = params.find("seed")) != params.end()) {
+        srand( ParameterMap::mapped_type(it->second).longValue() );
+    }
+    if ((it = params.find("fadingPaths")) != params.end()) {
+        fadingPaths = ParameterMap::mapped_type(it->second).longValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No fadingPaths defined in config.xml for JakesFading!");
+    }
+    if ((it = params.find("delayRMS")) != params.end()) {
+        delayRMS = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No delayRMS defined in config.xml for JakesFading!");
+    }
+    if ((it = params.find("interval")) != params.end()) {
+        interval = Argument(ParameterMap::mapped_type(it->second).doubleValue());
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No interval defined in config.xml for JakesFading!");
+    }
+    if ((it = params.find("carrierFrequency")) != params.end()) {
+        carrierFrequency = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No carrierFrequency defined in config.xml for JakesFading!");
+    }
+    if (bInitSuccess) {
 	angleOfArrival = new double[fadingPaths];
 	delay = new simtime_t[fadingPaths];
 
@@ -80,10 +118,14 @@ JakesFading::JakesFading(int fadingPaths, simtime_t_cref delayRMS,
 		angleOfArrival[i] = cos(uniform(0, M_PI));
 		delay[i] = exponential(delayRMS);
 	}
+    }
+    return AnalogueModel::initFromMap(params) && bInitSuccess;
 }
 
 JakesFading::~JakesFading() {
+    if (delay != NULL)
 	delete[] delay;
+    if (angleOfArrival != NULL)
 	delete[] angleOfArrival;
 }
 

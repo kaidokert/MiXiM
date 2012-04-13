@@ -285,18 +285,25 @@ void DeciderTest::executeTestCase(TestCaseIdentifier testCase) {
 }
 
 
-Decider* DeciderTest::initDeciderTest(std::string name, ParameterMap& /*params*/) {
+Decider* DeciderTest::initDeciderTest(std::string name, ParameterMap& params) {
 
 	//reset globals
 	if(name == "SNRThresholdDeciderNew") {
 		// parameters for original TestDecider (tests/basePhyLayer with testBaseDecider = true)
-		double snrThreshold = 10.0;
-		double busyThreshold = FWMath::dBm2mW(6.0);
-		double sensitivity = FWMath::dBm2mW(6.0);
-		bool coreDebug = false;
-		int myIndex = 0;
+		params["snrThreshold"] = ParameterMap::mapped_type("snrThreshold");
+		params["snrThreshold"].setDoubleValue(10.0);
+		params["busyThreshold"] = ParameterMap::mapped_type("busyThreshold");
+		params["busyThreshold"].setDoubleValue(FWMath::dBm2mW(6.0));
 
-		return new TestSNRThresholdDeciderNew(this, snrThreshold, sensitivity, busyThreshold, myIndex, coreDebug);
+		double sensitivity = FWMath::dBm2mW(6.0);
+		bool   coreDebug   = false;
+		int    myIndex     = 0;
+
+		TestSNRThresholdDeciderNew *const pDecider = new TestSNRThresholdDeciderNew(this, sensitivity, myIndex, coreDebug);
+		if (pDecider != NULL && !pDecider->initFromMap(params)) {
+			opp_warning("Decider from config.xml could not be initialized correctly!");
+		}
+		return pDecider;
 	}
 
 	return NULL;

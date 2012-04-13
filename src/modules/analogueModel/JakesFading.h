@@ -137,12 +137,20 @@ protected:
 
 public:
 	/**
-	 * @brief Takes the number of fading paths, the maximum delay
-	 * on a path, the hosts move, the carrier frequency used and the
-	 * interval in which to defien attenuation entries in.	 *
+	 * @brief Default constructor for the model, the initialization will be done in initFromMap.
 	 */
-	JakesFading(int fadingPaths, simtime_t_cref delayRMS,
-				double carrierFrequency, simtime_t_cref interval);
+	JakesFading();
+
+	/** @brief Initialize the analog model from XML map data.
+	 *
+	 * This method should be defined for generic analog model initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap&);
+
 	virtual ~JakesFading();
 
 	virtual void filterSignal(AirFrame *, const Coord&, const Coord&);

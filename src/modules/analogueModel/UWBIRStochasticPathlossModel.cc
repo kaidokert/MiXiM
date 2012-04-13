@@ -41,6 +41,66 @@ double UWBIRStochasticPathlossModel::simtruncnormal(double mean, double stddev, 
     return res;
 }
 
+bool UWBIRStochasticPathlossModel::initFromMap(const ParameterMap& params) {
+    ParameterMap::const_iterator it;
+    bool                         bInitSuccess = true;
+    double                       delayRMS     = 0.0;
+
+    if ((it = params.find("seed")) != params.end()) {
+        srand( ParameterMap::mapped_type(it->second).longValue() );
+    }
+    if ((it = params.find("PL0")) != params.end()) {
+        PL0 = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No PL0 defined in config.xml for UWBIRStochasticPathlossModel!");
+    }
+    if ((it = params.find("mu_gamma")) != params.end()) {
+        mu_gamma = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No mu_gamma defined in config.xml for UWBIRStochasticPathlossModel!");
+    }
+    if ((it = params.find("sigma_gamma")) != params.end()) {
+        sigma_gamma = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No sigma_gamma defined in config.xml for UWBIRStochasticPathlossModel!");
+    }
+    if ((it = params.find("mu_sigma")) != params.end()) {
+        mu_sigma = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No mu_sigma defined in config.xml for UWBIRStochasticPathlossModel!");
+    }
+    if ((it = params.find("sigma_sigma")) != params.end()) {
+        sigma_sigma = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No sigma_sigma defined in config.xml for UWBIRStochasticPathlossModel!");
+    }
+    if ((it = params.find("isEnabled")) != params.end()) {
+        isEnabled = ParameterMap::mapped_type(it->second).boolValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No isEnabled defined in config.xml for UWBIRStochasticPathlossModel!");
+    }
+    if ((it = params.find("shadowing")) != params.end()) {
+        shadowing = ParameterMap::mapped_type(it->second).boolValue();
+    }
+    else {
+        shadowing = false;
+    }
+
+    return AnalogueModel::initFromMap(params) && bInitSuccess;
+}
+
 void UWBIRStochasticPathlossModel::filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos)
 {
 	if (isEnabled) {
@@ -67,8 +127,9 @@ void UWBIRStochasticPathlossModel::filterSignal(AirFrame *frame, const Coord& se
 		 srcPosY.record(senderPos.y);
 		 dstPosX.record(receiverPos.x);
 		 dstPosY.record(receiverPos.y);
+		*/
 		 distances.record(distance);
-		 */
+
 		// Compute pathloss
 		double attenuation = getGhassemzadehPathloss(distance);
 		pathlosses.record(attenuation);

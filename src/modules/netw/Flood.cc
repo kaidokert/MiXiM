@@ -75,6 +75,7 @@ void Flood::finish() {
 	} else {
 		recordScalar("meanNbHops", 0);
 	}
+	BaseNetwLayer::finish();
 }
 
 /**

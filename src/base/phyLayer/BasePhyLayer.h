@@ -118,12 +118,6 @@ protected:
 	/** @brief List of the analogue models to use.*/
 	AnalogueModelList analogueModels;
 
-	/**
-	 * @brief Used at initialisation to pass the parameters
-	 * to the AnalogueModel and Decider
-	 */
-	typedef std::map<std::string, cMsgPar> ParameterMap;
-
 	/** @brief The id of the in-data gate from the Mac layer */
 	int upperLayerIn;
 	/** @brief The id of the out-data gate to the Mac layer */
@@ -156,7 +150,7 @@ protected:
 	};
 
 	/** @brief Stores the length of the phy header in bits. */
-	int headerLength;
+	long headerLength;
 
 	/** @brief Pointer to the World Utility, to obtain some global information*/
 	BaseWorldUtility* world;
@@ -238,13 +232,34 @@ protected:
 	 * keeps the ownership of the returned AnalogueModel.
 	 *
 	 * This method is used by the BasePhyLayer during
-	 * initialisation to load the AnalogueModels which
+	 * initialization to load the AnalogueModels which
 	 * has been specified in the ned file.
 	 *
 	 * This method has to be overridden if you want to be
 	 * able to load your own AnalogueModels.
+	 *
+	 * Is able to initialize the following AnalogueModels:
+	 * - RadioStateAnalogueModel
 	 */
-	virtual AnalogueModel* getAnalogueModelFromName(std::string name, ParameterMap& params) const;
+	virtual AnalogueModel* getAnalogueModelFromName(const std::string& name, ParameterMap& params) const;
+
+	/**
+	 * @brief Creates and returns an instance of the analogue model with the specified
+	 *        _AMODEL_CLASS_.
+	 *
+	 * The returned Decider has to be generated with
+	 * the "new" command.
+	 *
+	 * @return Instance of the Decider with the specified class type.
+	 */
+	template <class _AMODEL_CLASS_>
+	_AMODEL_CLASS_* createAnalogueModel(const ParameterMap& params) const {
+		_AMODEL_CLASS_ *const pAnalogueModel = new _AMODEL_CLASS_();
+		if (pAnalogueModel != NULL && !pAnalogueModel->initFromMap(params)) {
+			opp_warning("Analog model from config.xml could not be initialized correctly!");
+		}
+		return pAnalogueModel;
+	}
 
 	/**
 	 * @brief Creates and returns an instance of the Decider with the specified
@@ -255,13 +270,33 @@ protected:
 	 * of the returned Decider.
 	 *
 	 * This method is used by the BasePhyLayer during
-	 * initialisation to load the Decider which has been
-	 * specified in the ned file.
+	 * Initialization to load the Decider which has been
+	 * specified in the config.xml file.
 	 *
 	 * This method has to be overridden if you want to be
 	 * able to load your own Decider.
+	 *
+	 * @return Instance of the Decider with the specified name.
 	 */
-	virtual Decider* getDeciderFromName(std::string name, ParameterMap& params);
+	virtual Decider* getDeciderFromName(const std::string& name, ParameterMap& params);
+
+	/**
+	 * @brief Creates and returns an instance of the Decider with the specified
+	 *        _DECIDER_CLASS_.
+	 *
+	 * The returned Decider has to be generated with
+	 * the "new" command.
+	 *
+	 * @return Instance of the Decider with the specified class type.
+	 */
+	template <class _DECIDER_CLASS_>
+	_DECIDER_CLASS_* createDecider(const ParameterMap& params) {
+		_DECIDER_CLASS_ *const pDecider = new _DECIDER_CLASS_(this, sensitivity, findHost()->getIndex(), coreDebug);
+		if (pDecider != NULL && !pDecider->initFromMap(params)) {
+			opp_warning("Decider from config.xml could not be initialized correctly!");
+		}
+		return pDecider;
+	}
 
 	/**
 	 * @name Handle Messages
@@ -361,8 +396,11 @@ protected:
 	 *
 	 * The Radio is set the new RadioState and the MAC Layer is sent
 	 * a confirmation message.
+	 *
+	 * @param bSendCtrlMsg Flag for sending control message to MAC (in case of zero switch time
+	 *                     this flag maybe false).
 	 */
-	virtual void finishRadioSwitching();
+	virtual void finishRadioSwitching(bool bSendCtrlMsg = true);
 
 	/**
 	 * @brief Returns the identifier of the protocol this phy uses to send
@@ -425,13 +463,18 @@ public:
 	virtual int getRadioState() const;
 
 	/**
+	 * @brief Returns the true if the radio is in RX state.
+	 */
+	virtual bool isRadioInRX() const;
+
+	/**
 	 * @brief Tells the BasePhyLayer to switch to the specified
 	 * radio state.
 	 *
 	 * The switching process can take some time depending on the
 	 * specified switching times in the ned file.
 	 *
-	 * @return	-1: Error code if the Radio is currently switching
+	 * @return Decider::notAgain: Error code if the Radio is currently switching
 	 *			else: switching time from the current RadioState to the new RadioState
 	 */
 	virtual simtime_t setRadioState(int rs);
@@ -446,12 +489,9 @@ public:
 	/**
 	 * @brief Returns the length of the phy header in bits.
 	 *
-	 * Since the MAC layer has to create the signal for
-	 * a transmission it has to know the total length of
-	 * the packet and therefore needs the length of the
-	 * phy header.
+	 * Both the MAC and the PHY needs the header length.
 	 */
-	virtual int getPhyHeaderLength() const;
+	virtual long getPhyHeaderLength() const;
 
 	/** @brief Sets the channel currently used by the radio. */
 	virtual void setCurrentRadioChannel(int newRadioChannel);
@@ -539,11 +579,6 @@ public:
 	 * phy see "PhyLayerBattery".
 	 */
 	virtual void drawCurrent(double amount, int activity);
-
-	/**
-	 * @brief Returns a pointer to the simulations world-utility-module.
-	 */
-	virtual BaseWorldUtility* getWorldUtility() const;
 
 	/**
 	 * @brief Records a double into the scalar result file.

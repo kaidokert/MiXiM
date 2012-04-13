@@ -1,6 +1,21 @@
 #include "RandomFreqTimeModel.h"
 
 #include "AirFrame_m.h"
+
+bool RandomFreqTimeModel::initFromMap(const ParameterMap& params) {
+    ParameterMap::const_iterator it;
+    bool                         bInitSuccess = true;
+
+    if ((it = params.find("seed")) != params.end()) {
+        srand( ParameterMap::mapped_type(it->second).longValue() );
+    }
+    else {
+        //bInitSuccess = false;
+        //opp_warning("No seed defined in config.xml for RandomFreqTimeModel!");
+    }
+    return AnalogueModel::initFromMap(params) && bInitSuccess;
+}
+
 /**
  * @brief The actual filtering method. This implementation just
  * put some random attenuations over time and frequency into

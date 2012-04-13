@@ -55,19 +55,6 @@ protected:
 	virtual bool checkIfAboveThreshold(Mapping* map, simtime_t_cref start, simtime_t_cref end) const;
 
 	/**
-	 * @brief Processes a new Signal. Returns the time it wants to
-	 * handle the signal again.
-	 *
-	 * Checks if the signals receiving power is above the sensitivity of
-	 * the radio and we are not already trying to receive another AirFrame.
-	 * If thats the case it waits for the end of the signal.
-	 *
-	 * Also checks if the new AirFrame changed the power level in the way
-	 * that we can answer an ongoing channel sense request.
-	 */
-	virtual simtime_t processNewSignal(AirFrame* frame);
-
-	/**
 	 * @brief Processes a received AirFrame.
 	 *
 	 * The SNR-mapping for the Signal is created and checked against the Deciders
@@ -76,13 +63,13 @@ protected:
 	 *
 	 * @return	usually return a value for: 'do not pass it again'
 	 */
-	virtual simtime_t processSignalEnd(AirFrame* frame);
+	virtual DeciderResult* createResult(const AirFrame* frame) const;
 
 	/**
 	 * @brief Returns point in time when the ChannelSenseRequest of the passed CSRInfo can be answered
 	 * (e.g. because channel state changed or timeout is reached).
 	 */
-	virtual simtime_t canAnswerCSR(const CSRInfo& requestInfo);
+	virtual simtime_t canAnswerCSR(const CSRInfo& requestInfo) const;
 
 	/**
 	 * @brief Answers the ChannelSenseRequest (CSR) from the passed CSRInfo.
@@ -116,16 +103,24 @@ public:
 	 * 						  (for debugging output)
 	 * @param debug 		- should debug messages be displayed?
 	 */
-	SNRThresholdDecider(DeciderToPhyInterface* phy,
-				double snrThreshold,
-				double sensitivity,
-				double busyThreshold,
-				int myIndex = -1,
-				bool debug = false):
-		BaseDecider(phy, sensitivity, myIndex, debug),
-		snrThreshold(snrThreshold),
-		busyThreshold(busyThreshold)
+	SNRThresholdDecider( DeciderToPhyInterface* phy
+	                   , double                 sensitivity
+	                   , int                    myIndex = -1
+	                   , bool                   debug   = false)
+		: BaseDecider(phy, sensitivity, myIndex, debug)
+		, snrThreshold(0)
+		, busyThreshold(sensitivity)
 	{}
+
+	/** @brief Initialize the decider from XML map data.
+	 *
+	 * This method should be defined for generic decider initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap& params);
 
 	virtual ~SNRThresholdDecider() {};
 

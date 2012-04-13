@@ -74,6 +74,12 @@ void WorldUtilityStats::finish()
 	if (bitrate && hosts > 1) {
 		recordScalar("Usage", bitsReceived / bitrate / simTime() / (hosts-1));
 	}
+	else if (bitrate) {
+		recordScalar("Usage", bitsReceived / bitrate / simTime());
+	}
+	else if (hosts > 1) {
+		recordScalar("Usage", bitsReceived / simTime() / (hosts-1));
+	}
 	else {
 		recordScalar("Usage", bitsReceived / simTime());
 	}

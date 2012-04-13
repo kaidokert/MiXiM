@@ -46,34 +46,32 @@ protected:
 		DECODING_ACCT=0
 	};
 public:
-	/**
-	 * @brief Initializes this Decider with the passed values.
-	 *
-	 * @param phy Pointer to this deciders phy layer
-	 * @param threshold The SNR threshold above which reception is correct
-	 * @param sensitivity The strength (mW) at which a signal can be received
-	 * @param centerFrequency The frequency used by the phy layer
-	 * @param decodingCurrentDelta The additional amount of power it takes to
-	 *        decode a signal
-	 * @param myIndex The index of this deciders host (for debug output)
-	 * @param debug Use debug output?
+	/** @brief Standard Decider constructor.
 	 */
-	Decider80211Battery(DeciderToPhyInterface* phy,
-						double threshold,
-						double sensitivity,
-						int channel,
-						double decodingCurrentDelta,
-						int myIndex = -1,
-						bool debug = false):
-		Decider80211(phy, threshold, sensitivity, channel, myIndex, debug),
-		decodingCurrentDelta(decodingCurrentDelta)
+	Decider80211Battery( DeciderToPhyInterface* phy
+                       , double                 sensitivity
+                       , int                    myIndex
+                       , bool                   debug )
+        : Decider80211(phy, sensitivity, myIndex, debug)
+	    , decodingCurrentDelta(0)
 	{}
+
+	/** @brief Initialize the decider from XML map data.
+	 *
+	 * This method should be defined for generic decider initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap& params);
 
 	/**
 	 * @brief Draws either idle or rx current, depending on the
 	 * "isIdle" state.
 	 */
-	virtual void setChannelIdleStatus(bool isIdle);
+	virtual void channelStateChanged();
+
 };
 
 #endif /* DECIDER80211BATTERY_H_ */

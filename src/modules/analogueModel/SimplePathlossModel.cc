@@ -31,7 +31,64 @@ double SimplePathlossConstMapping::getValue(const Argument& pos) const
 	return (wavelength * wavelength) * distFactor;
 }
 
+bool SimplePathlossModel::initFromMap(const ParameterMap& params) {
+    ParameterMap::const_iterator it;
+    bool                         bInitSuccess = true;
 
+    if ((it = params.find("seed")) != params.end()) {
+        srand( ParameterMap::mapped_type(it->second).longValue() );
+    }
+    if ((it = params.find("alpha")) != params.end()) {
+        pathLossAlphaHalf = ParameterMap::mapped_type(it->second).doubleValue() * .5;
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No alpha defined in config.xml for SimplePathlossModel!");
+    }
+    if ((it = params.find("useTorus")) != params.end()) {
+        useTorus = ParameterMap::mapped_type(it->second).boolValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No useTorus defined in config.xml for SimplePathlossModel!");
+    }
+    if ((it = params.find("PgsX")) != params.end()) {
+        playgroundSize.x = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No PgsX defined in config.xml for SimplePathlossModel!");
+    }
+    if ((it = params.find("PgsY")) != params.end()) {
+        playgroundSize.y = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No PgsY defined in config.xml for SimplePathlossModel!");
+    }
+    if ((it = params.find("PgsZ")) != params.end()) {
+        playgroundSize.z = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No PgsZ defined in config.xml for SimplePathlossModel!");
+    }
+    if ((it = params.find("debug")) != params.end()) {
+        debug = ParameterMap::mapped_type(it->second).boolValue();
+    }
+    else {
+        debug = false;
+    }
+    if ((it = params.find("carrierFrequency")) != params.end()) {
+        carrierFrequency = ParameterMap::mapped_type(it->second).doubleValue();
+    }
+    else {
+        bInitSuccess = false;
+        opp_warning("No carrierFrequency defined in config.xml for SimplePathlossModel!");
+    }
+
+    return AnalogueModel::initFromMap(params) && bInitSuccess;
+}
 
 void SimplePathlossModel::filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos)
 {

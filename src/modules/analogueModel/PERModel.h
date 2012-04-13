@@ -20,7 +20,17 @@ protected:
 	double packetErrorRate;
 public:
 	/** @brief The PERModel constructor takes as argument the packet error rate to apply (must be between 0 and 1). */
-	PERModel(double per): packetErrorRate(per) { assert(per <= 1 && per >= 0);}
+	PERModel() : packetErrorRate(0) { }
+
+	/** @brief Initialize the analog model from XML map data.
+	 *
+	 * This method should be defined for generic analog model initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap&);
 
 	virtual void filterSignal(AirFrame *, const Coord&, const Coord&);
 

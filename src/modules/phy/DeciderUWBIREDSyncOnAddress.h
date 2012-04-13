@@ -59,17 +59,27 @@ private:
 	DeciderUWBIREDSyncOnAddress& operator=(const DeciderUWBIREDSyncOnAddress&);
 
 public:
-	DeciderUWBIREDSyncOnAddress(DeciderToPhyInterface* iface,
-				PhyLayerUWBIR* _uwbiface,
-				double _syncThreshold, bool _syncAlwaysSucceeds, bool _stats,
-				bool _trace, const LAddress::L2Type& _addr, bool alwaysFailOnDataInterference);
+	DeciderUWBIREDSyncOnAddress( DeciderToPhyInterface* phy
+	                           , double                 sensitivity
+	                           , int                    myIndex
+	                           , bool                   debug )
+		: DeciderUWBIRED(phy, 0.0, myIndex, debug)
+		, syncAddress()
+	{}
 
-	virtual bool attemptSync(Signal* signal);
+	/** @brief Initialize the decider from XML map data.
+	 *
+	 * This method should be defined for generic decider initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap& params);
 
-	virtual simtime_t processSignal(AirFrame* frame);
+	virtual bool attemptSync(const AirFrame* frame);
 
 protected:
-	AirFrame*        currFrame;
 	LAddress::L2Type syncAddress;
 };
 

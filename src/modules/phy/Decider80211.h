@@ -10,6 +10,7 @@
 
 #include "MiXiMDefs.h"
 #include "BaseDecider.h"
+#include "MappingBase.h"
 
 /**
  * @brief Decider for the 802.11 modules
@@ -31,8 +32,6 @@ public:
 	/** @brief Control message kinds used by this Decider.*/
 	enum Decider80211ControlKinds {
 		NOTHING = 22100,
-		/** @brief The decider has recognized a bit error in the packet.*/
-		BITERROR,
 		/** @brief Packet lost due to collision.*/
 		COLLISION,
 		/** @brief Sub-classing deciders should begin their own kinds at this value.*/
@@ -46,6 +45,26 @@ protected:
 	double centerFrequency;
 
 protected:
+	/** @brief The lower band frequency at given time point.
+	 */
+	virtual Argument getLowerBandFrequency(simtime_t_cref pTimePoint) const {
+	    Argument       argTimeFrequ(DimensionSet::timeFreqDomain);
+
+	    argTimeFrequ.setTime(pTimePoint);
+	    argTimeFrequ.setArgValue(Dimension::frequency, centerFrequency - 11e6);
+
+	    return argTimeFrequ;
+	}
+	/** @brief The upper band frequency at given time point.
+	 */
+	virtual Argument getUpperBandFrequency(simtime_t_cref pTimePoint) const {
+		Argument       argTimeFrequ(DimensionSet::timeFreqDomain);
+
+		argTimeFrequ.setTime(pTimePoint);
+		argTimeFrequ.setArgValue(Dimension::frequency, centerFrequency + 11e6);
+
+		return argTimeFrequ;
+	}
 
 	/**
 	 * @brief Checks if the passed completed AirFrame was received correctly.
@@ -54,23 +73,15 @@ protected:
 	 *
 	 * @return	The result of the decider for the passed AirFrame.
 	 */
-	virtual DeciderResult* checkIfSignalOk(AirFrame* frame);
-
-	virtual simtime_t processNewSignal(AirFrame* frame);
+	virtual DeciderResult* createResult(const AirFrame* frame) const;
 
 	/**
-	 * @brief Processes a received AirFrame.
-	 *
-	 * The SNR-mapping for the Signal is created and checked against the Deciders
-	 * SNR-threshold. Depending on that the received AirFrame is either sent up
-	 * to the MAC-Layer or dropped.
-	 *
-	 * @return	usually return a value for: 'do not pass it again'
+	 * @brief Calculates the receive power of given frame.
 	 */
-	virtual simtime_t processSignalEnd(AirFrame* frame);
+	virtual double getFrameReceivingPower(AirFrame* frame) const;
 
 	/** @brief computes if packet is ok or has errors*/
-	bool packetOk(double snirMin, int lengthMPDU, double bitrate);
+	virtual bool packetOk(double snirMin, int lengthMPDU, double bitrate) const;
 
 	/**
 	 * @brief Calculates the RSSI value for the passed interval.
@@ -79,22 +90,28 @@ protected:
 	 * or calculates the current channel state.
 	 *
 	 * Returns the maximum RSSI value inside the passed time
-	 * interval and the channel the Decider currently listens to.
+	 * interval and the channel the Decider currently listens to. The second value is the
+	 * maximum reception end of all air frames in passed time interval.
 	 */
-	virtual double calcChannelSenseRSSI(simtime_t_cref start, simtime_t_cref end) const;
+	virtual channel_sense_rssi_t calcChannelSenseRSSI(simtime_t_cref start, simtime_t_cref end) const;
 
 public:
-
-	/**
-	 * @brief Initializes the Decider with a pointer to its PhyLayer and
-	 * specific values for threshold and sensitivity
+	/** @brief Standard Decider constructor.
 	 */
-	Decider80211(DeciderToPhyInterface* phy,
-				double threshold,
-				double sensitivity,
-				int channel,
-				int myIndex = -1,
-				bool debug = false);
+	Decider80211( DeciderToPhyInterface* phy
+                , double                 sensitivity
+                , int                    myIndex
+                , bool                   debug );
+
+	/** @brief Initialize the decider from XML map data.
+	 *
+	 * This method should be defined for generic decider initialization.
+	 *
+	 * @param params The parameter map which was filled by XML reader.
+	 *
+	 * @return true if the initialization was successfully.
+	 */
+	virtual bool initFromMap(const ParameterMap& params);
 
 	virtual ~Decider80211() {};
 };

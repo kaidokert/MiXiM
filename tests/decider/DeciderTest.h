@@ -7,7 +7,7 @@
 
 #include <list>
 #include <Decider.h>
-
+#include <ChannelSenseRequest_m.h>
 
 class DeciderTest : public DeciderToPhyInterface, public SimpleTest {
 private:
@@ -461,7 +461,7 @@ protected:
 		fillAirFramesOnChannel();
 	}
 
-	ChannelSenseRequest* createCSR(simtime_t_cref duration, int mode) {
+	ChannelSenseRequest* createCSR(simtime_t_cref duration, SenseMode mode) {
 		ChannelSenseRequest* tmp = new ChannelSenseRequest();
 		tmp->setSenseMode(mode);
 		tmp->setSenseTimeout(duration);
@@ -585,7 +585,19 @@ public:
 
 	virtual int getCurrentRadioChannel() const { return -1; }
 
+	virtual int getNbRadioChannels()     const { return 1;  }
+	/**
+	 * @brief Returns the current state the radio is in.
+	 *
+	 * See RadioState for possible values.
+	 *
+	 * This method is mainly used by the mac layer.
+	 */
+	virtual bool isRadioInRX() const {
+		return true;
+	}
 
+	virtual long getPhyHeaderLength() const { return 1; }
 	//---------SimpleTest implementation-----------
 
 	virtual void runTests();

@@ -290,7 +290,7 @@ void Mac80211::handleLowerControl(cMessage *msg)
         break;
 
     case Decider80211::COLLISION:
-    case Decider80211::BITERROR:
+    case BaseDecider::PACKET_DROPPED:
     {
     	int radioState = phy->getRadioState();
         if(radioState == Radio::RX) {
@@ -408,7 +408,7 @@ void Mac80211::handleMsgNotForMe(cMessage *af, simtime_t_cref duration)
         }
     }
 
-    if((af->getKind() == Decider80211::BITERROR) || (af->getKind() == Decider80211::COLLISION)) {
+    if((af->getKind() == BaseDecider::PACKET_DROPPED) || (af->getKind() == Decider80211::COLLISION)) {
 
     	assert(!contention->isScheduled());
         //suspendContention();

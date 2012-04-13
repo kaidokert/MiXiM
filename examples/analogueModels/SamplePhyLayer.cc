@@ -12,8 +12,6 @@ void SamplePhyLayer::initialize(int stage) {
 	PhyLayer::initialize(stage);
 
 	if(stage == 0) {
-		myIndex = findHost()->getIndex();
-
 	} else if(stage == 1) {
 		//Decider and AnalogueModels are created by the PhyLayer in this stage
 	}
@@ -53,53 +51,15 @@ void SamplePhyLayer::handleMessage(cMessage* msg) {
 }
 
 void SamplePhyLayer::log(std::string msg) const {
-	ev << "[Host " << myIndex << "] - PhyLayer: " << msg << endl;
+	ev << "[Host " << findHost()->getIndex() << "] - PhyLayer: " << msg << endl;
 }
 
-/**
- * @brief Creates and initializes a RandomFreqTimeModel with the passed
- * parameter values.
- */
-AnalogueModel* SamplePhyLayer::createRandomFreqTimeModel(ParameterMap& params) const{
-
-	//get the "seed"-parameter from the config
-	ParameterMap::iterator it = params.find("seed");
-
-	//create AnalogueModel with default seed if no seed parameter was defined
-	if(it == params.end()){
-		return new RandomFreqTimeModel();
-	}
-
-	long seed = it->second.longValue();
-	return new RandomFreqTimeModel(seed);
-
-}
-
-/**
- * @brief Creates and initializes a RandomFreqOnlyModel with the passed
- * parameter values.
- */
-AnalogueModel* SamplePhyLayer::createRandomFrequencyOnlyModel(ParameterMap& params) const{
-
-	//get the "seed"-parameter from the config
-	ParameterMap::iterator it = params.find("seed");
-
-	//create AnalogueModel with default seed if no seed parameter was defined
-	if(it == params.end()){
-		return new RandomFrequencyOnlyModel();
-	}
-
-	long seed = it->second.longValue();
-	return new RandomFrequencyOnlyModel(seed);
-
-}
-
-AnalogueModel* SamplePhyLayer::getAnalogueModelFromName(std::string name, ParameterMap& params) const {
+AnalogueModel* SamplePhyLayer::getAnalogueModelFromName(const std::string& name, ParameterMap& params) const {
 
 	if(name == "RandomFreqTimeModel")
-		return createRandomFreqTimeModel(params);
-	else if(name == "RandomFrequencyOnlyModel")
-		return createRandomFrequencyOnlyModel(params);
+		return createAnalogueModel<RandomFreqTimeModel>(params);
+	if(name == "RandomFrequencyOnlyModel")
+		return createAnalogueModel<RandomFrequencyOnlyModel>(params);
 
 	//If we couldn't create the passed analogue model, call the method
 	//of our base class.
@@ -110,23 +70,11 @@ AnalogueModel* SamplePhyLayer::getAnalogueModelFromName(std::string name, Parame
 	return PhyLayer::getAnalogueModelFromName(name, params);
 }
 
-Decider* SamplePhyLayer::getDeciderFromName(std::string name, ParameterMap& params) {
+Decider* SamplePhyLayer::getDeciderFromName(const std::string& name, ParameterMap& params) {
 
-	if(name == "ThresholdDecider"){
-		ParameterMap::iterator it = params.find("threshold");
-		if(it == params.end()){
-			log("ERROR: No threshold parameter defined for ThresholdDecider!");
-			return 0;
-		}
-
-		/*
-		 * The value for the deciders threshold should be checked here against
-		 * the value specified in ConnectionManager that stores the max/min valid value.
-		 *
-		 */
-
-		return new ThresholdDecider(this, myIndex, it->second.doubleValue());
+	if(name == "ThresholdDecider") {
+	    return createDecider<ThresholdDecider>(params);
 	}
 
-	return 0;
+	return PhyLayer::getDeciderFromName(name, params);
 }

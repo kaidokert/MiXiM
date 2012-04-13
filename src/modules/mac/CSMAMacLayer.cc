@@ -86,7 +86,7 @@ void CSMAMacLayer::finish() {
 	recordScalar("backoffDurations", backoffValues);
 	recordScalar("nbTxFrames", nbTxFrames);
 
-
+	BaseMacLayer::finish();
 }
 
 /**

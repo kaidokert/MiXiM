@@ -158,6 +158,7 @@ void csma::finish() {
 		recordScalar("nbBackoffs", nbBackoffs);
 		recordScalar("backoffDurations", backoffValues);
 	}
+	BaseMacLayer::finish();
 }
 
 csma::~csma() {
@@ -749,11 +750,11 @@ void csma::handleLowerMsg(cMessage *msg) {
 	long                    ExpectedNr = 0;
 
 	debugEV<< "Received frame name= " << macPkt->getName()
-	<< ", myState=" << macState << " src=" << macPkt->getSrcAddr()
-	<< " dst=" << macPkt->getDestAddr() << " myAddr="
+	<< ", myState=" << macState << " src=" << src
+	<< " dst=" << dest << " myAddr="
 	<< myMacAddr << endl;
 
-	if(macPkt->getDestAddr() == myMacAddr)
+	if(dest == myMacAddr)
 	{
 		if(!useMACAcks) {
 			debugEV << "Received a data packet addressed to me." << endl;
@@ -777,7 +778,7 @@ void csma::handleLowerMsg(cMessage *msg) {
 					delete ackMessage;
 				ackMessage = new MacPkt("CSMA-Ack");
 				ackMessage->setSrcAddr(myMacAddr);
-				ackMessage->setDestAddr(macPkt->getSrcAddr());
+				ackMessage->setDestAddr(src);
 				ackMessage->setBitLength(ackLength);
 				//Check for duplicates by checking expected seqNr of sender
 				if(SeqNrChild.find(src) == SeqNrChild.end()) {
@@ -806,15 +807,15 @@ void csma::handleLowerMsg(cMessage *msg) {
 				// message is an ack, and it is for us.
 				// Is it from the right node ?
 				MacPkt * firstPacket = static_cast<MacPkt *>(macQueue.front());
-				if(macPkt->getSrcAddr() == firstPacket->getDestAddr()) {
+				if(src == firstPacket->getDestAddr()) {
 					nbRecvdAcks++;
 					executeMac(EV_ACK_RECEIVED, macPkt);
 				} else {
-					EV << "Error! Received an ack from an unexpected source: src=" << macPkt->getSrcAddr() << ", I was expecting from node addr=" << firstPacket->getDestAddr() << endl;
+					EV << "Error! Received an ack from an unexpected source: src=" << src << ", I was expecting from node addr=" << firstPacket->getDestAddr() << endl;
 					delete macPkt;
 				}
 			} else {
-				EV << "Error! Received an Ack while my send queue was empty. src=" << macPkt->getSrcAddr() << "." << endl;
+				EV << "Error! Received an Ack while my send queue was empty. src=" << src << "." << endl;
 				delete macPkt;
 			}
 		}

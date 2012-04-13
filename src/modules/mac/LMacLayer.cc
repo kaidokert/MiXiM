@@ -111,6 +111,7 @@ LMacLayer::~LMacLayer() {
 }
 
 void LMacLayer::finish() {
+    BaseMacLayer::finish();
 }
 
 /**

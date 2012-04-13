@@ -305,6 +305,7 @@ void WiseRoute::finish()
 		recordScalar("nbRoutesRecorded", nbRoutesRecorded);
 		recordScalar("meanNbHops", (double) nbHops / (double) nbDataPacketsReceived);
 	}
+	BaseNetwLayer::finish();
 }
 
 void WiseRoute::updateRouteTable(const LAddress::L3Type& origin, const LAddress::L3Type& lastHop, double rssi, double ber)

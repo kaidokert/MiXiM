@@ -61,6 +61,7 @@ void DummyRoute::handleUpperMsg(cMessage* msg) {
 }
 
 void DummyRoute::finish() {
+    BaseNetwLayer::finish();
 }
 
 NetwPkt* DummyRoute::encapsMsg(cPacket *appPkt) {

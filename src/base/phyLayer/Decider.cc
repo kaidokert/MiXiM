@@ -1,16 +1,18 @@
 #include "Decider.h"
 
+const_simtime_t Decider::notAgain(-1);
 
 bool DeciderResult::isSignalCorrect() const {
 	return isCorrect;
 }
 
 Decider::Decider(DeciderToPhyInterface* phy):
-	phy(phy), notAgain(-1) {}
+	phy(phy)
+{}
 
 simtime_t Decider::processSignal(AirFrame* /*s*/) {
 
-	return -1;
+	return notAgain;
 }
 
 ChannelState Decider::getChannelState() const {
@@ -20,5 +22,5 @@ ChannelState Decider::getChannelState() const {
 
 simtime_t Decider::handleChannelSenseRequest(ChannelSenseRequest* /*request*/) {
 
-	return -1;
+	return notAgain;
 }

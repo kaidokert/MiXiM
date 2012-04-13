@@ -5,12 +5,48 @@ ${bannerComment}
 
 #include <AirFrame_m.h>
 
-${amName}::${amName}(<#if par1Name!="">${par1CType} ${par1Name}</#if><#if par2Name!="">,${par2CType} ${par2Name}</#if>)<#if par1Name!="">:
-	${par1Name}(${par1Name})</#if><#if par2Name!="">,
-	${par2Name}(${par2Name})</#if>
+${amName}::${amName}()<#if par1Name!="">
+	: ${par1Name}(0)</#if><#if par2Name!="">
+	, ${par2Name}(0)</#if>
 {}
 
 ${amName}::~${amName}() {}
+
+bool ${amName}::initFromMap(const ParameterMap& params) {
+	ParameterMap::const_iterator it;
+	bool                         bInitSuccess = true;
+
+	if ((it = params.find("seed")) != params.end()) {
+		srand( ParameterMap::mapped_type(it->second).longValue() );
+	}
+	// here is an example how you should access your parameters value from
+	// the map
+	/*
+	if ((it = params.find("MYPARAM")) != params.end()) {
+		myparam = ParameterMap::mapped_type(it->second);
+	}
+	else {
+		bInitSuccess = false;
+		opp_warning("No MYPARAM defined in config.xml for ${amName}!");
+	}
+	*/<#if par1Name!="">
+	if ((it = params.find("${par1Name}")) != params.end()) {
+		${par1Name} = ParameterMap::mapped_type(it->second).${par1Type}Value();
+	}
+	else {
+		bInitSuccess = false;
+		opp_warning("No ${par1Name} defined in config.xml for ${amName}!");
+	}</#if><#if par2Name!="">
+	if ((it = params.find("${par2Name}")) != params.end()) {
+		${par2Name} = ParameterMap::mapped_type(it->second).${par2Type}Value();
+	}
+	else {
+		bInitSuccess = false;
+		opp_warning("No ${par2Name} defined in config.xml for ${amName}!");
+	}</#if>
+	
+	return AnalogueModel::initFromMap(params) && bInitSuccess;
+}
 
 void ${amName}::filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos)
 {

@@ -102,6 +102,7 @@ void UWBIRMac::finish() {
 		}
 		recordScalar("nbSentPackets", nbSentPackets);
 	}
+	BaseMacLayer::finish();
 }
 
 void UWBIRMac::prepareData(UWBIRMacPkt* packet, IEEE802154A::config /*cfg*/) {

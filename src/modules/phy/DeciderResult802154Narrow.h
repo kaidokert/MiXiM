@@ -29,17 +29,20 @@ protected:
 	double ber;
 	/** @brief The received signal strength of the transmission.*/
 	double rssi;
+	/** @brief Maximum error probability. */
+	double maxErrProb;
 public:
 
 	/**
 	 * @brief Initialises with the passed values.
 	 */
-	DeciderResult802154Narrow(bool isCorrect, double bitrate, double snr, double ber, double rssi):
+	DeciderResult802154Narrow(bool isCorrect, double bitrate, double snr, double ber, double rssi, double errProbMax):
 		DeciderResult(isCorrect),
 		bitrate(bitrate),
 		snr(snr),
 		ber(ber),
-		rssi(rssi)
+		rssi(rssi),
+		maxErrProb(errProbMax)
 	{}
 
 	/**
@@ -56,6 +59,8 @@ public:
 	double getBER() const { return ber; }
 	/** @brief Returns the received signal strength of the transmission.*/
 	double getRSSI() const { return rssi; }
+	/** @brief Returns the received maximum error probability.*/
+	double getMaxErrorProbability() const { return maxErrProb; }
 };
 
 #endif /* DECIDERRESULT80211_H_ */

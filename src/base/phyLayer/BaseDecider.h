@@ -12,6 +12,7 @@
 #include "Decider.h"
 
 class Mapping;
+class DeciderResult;
 
 #define deciderEV (ev.isDisabled()||!debug) ? ev : ev << "[Host " << myIndex << "] - PhyLayer(Decider): "
 
@@ -59,7 +60,7 @@ public:
 protected:
 
 	/** @brief The current state of processing for a signal*/
-	enum SignalState {
+	enum eSignalState {
 		/** @brief Signal is received the first time. */
 		NEW,
 		/** @brief Waiting for the header of the signal. */
@@ -68,23 +69,95 @@ protected:
 		EXPECT_END,
 	};
 
-	/** @brief sensitivity value for receiving an AirFrame */
+    /** @name Tracked statistic values.*/
+    /*@{*/
+    unsigned long nbFramesWithInterference;
+    unsigned long nbFramesWithoutInterference;
+
+    unsigned long nbFramesWithInterferencePartial;
+    unsigned long nbFramesWithoutInterferencePartial;
+
+    unsigned long nbFramesWithInterferenceDropped;
+    unsigned long nbFramesWithoutInterferenceDropped;
+    /*@}*/
+
+	/** @brief Sensitivity value for receiving an AirFrame if it <tt><= 0</tt> then no sensitivity check
+	 *         will be done.
+	 */
 	double sensitivity;
 
 	/** @brief Pair of a AirFrame and the state it is in. */
-	typedef std::pair<AirFrame*, int> ReceivedSignal;
+	typedef struct tProcessingSignal {
+	    typedef AirFrame*    first_type;    /// @c first_type is the first bound type
+	    typedef eSignalState second_type;   /// @c second_type is the second bound type
 
-	/** @brief pointer to the currently received AirFrame */
+	    first_type  first;  /// @c first is a copy of the first object
+	    second_type second; /// @c second is a copy of the second object
+	    std::size_t iInterferenceCnt;       ///< counted interference frames
+	    simtime_t   busyUntilTime;    ///< the next idle time point
+
+	    tProcessingSignal()
+            : first(NULL)
+            , second(NEW)
+            , iInterferenceCnt(0)
+	        , busyUntilTime(notAgain)
+        {}
+        tProcessingSignal(first_type f, second_type s)
+            : first(f)
+            , second(s)
+            , iInterferenceCnt(0)
+            , busyUntilTime(notAgain)
+        {}
+	    tProcessingSignal(const tProcessingSignal& o)
+            : first(o.first)
+            , second(o.second)
+            , iInterferenceCnt(o.iInterferenceCnt)
+            , busyUntilTime(o.busyUntilTime)
+        {}
+	    tProcessingSignal& operator=(const tProcessingSignal& copy)
+        {
+            first               = copy.first;
+            second              = copy.second;
+            iInterferenceCnt    = copy.iInterferenceCnt;
+            busyUntilTime       = copy.busyUntilTime;
+            return *this;
+        }
+        void swap(tProcessingSignal& s)
+        {
+            std::swap(first,               s.first);
+            std::swap(second,              s.second);
+            std::swap(iInterferenceCnt,    s.iInterferenceCnt);
+            std::swap(busyUntilTime,       s.busyUntilTime);
+        }
+        std::size_t interferenceWith(const first_type& frame);
+        void startProcessing(first_type frame, second_type state);
+        std::size_t finishProcessing() {
+            first  = NULL;
+            second = NEW;
+            return iInterferenceCnt;
+        }
+        bool isProcessing() const                     { return first != NULL; }
+        /** @brief Returns the current interference count (how many other frames are on air on processing).
+         *
+         * If first is NULL than the interference count is the result from last processed packet.
+         */
+        std::size_t getInterferenceCnt() const        { return iInterferenceCnt; }
+        simtime_t   getBusyEndTime() const            { return busyUntilTime; }
+        void clear()                                  { first = NULL; second = NEW; iInterferenceCnt = 0; busyUntilTime = notAgain; }
+	} ReceivedSignal;
+
+	/** @brief Pointer to the currently received AirFrame */
 	ReceivedSignal currentSignal;
-
-	/** @brief Stores the idle state of the channel.*/
-	bool isChannelIdle;
 
 	/** @brief Data about an currently ongoing ChannelSenseRequest. */
 	typedef struct tCSRInfo {
-		ChannelSenseRequest* first;
-		simtime_t second;
-		simtime_t canAnswerAt;
+        typedef ChannelSenseRequest* first_type;    /// @c first_type is the first bound type
+        typedef simtime_t            second_type;   /// @c second_type is the second bound type
+
+        first_type  first;  /// @c first is a copy of the first object
+        second_type second; /// @c second is a copy of the second object
+
+		simtime_t   canAnswerAt;
 
 		tCSRInfo()
 			: first(NULL)
@@ -110,12 +183,13 @@ protected:
 			std::swap(canAnswerAt, s.canAnswerAt);
 		}
 
-		ChannelSenseRequest* getRequest() const { return first; }
+		ChannelSenseRequest *const getRequest() const { return first; }
 		void setRequest(ChannelSenseRequest* request) { first = request; }
-		simtime_t_cref getSenseStart() const { return second; }
-		void setSenseStart(simtime_t_cref start) { second = start; }
-		simtime_t_cref getAnswerTime() const { return canAnswerAt; }
-		void setAnswerTime(simtime_t_cref answerAt) { canAnswerAt = answerAt; }
+		simtime_t_cref getSenseStart() const          { return second; }
+		void setSenseStart(simtime_t_cref start)      { second = start; }
+		simtime_t_cref getAnswerTime() const          { return canAnswerAt; }
+		void setAnswerTime(simtime_t_cref answerAt)   { canAnswerAt = answerAt; }
+		void clear()                                  { first = NULL; second = canAnswerAt = Decider::notAgain; }
 	} CSRInfo;
 
 	/** @brief pointer to the currently running ChannelSenseRequest and its
@@ -136,21 +210,24 @@ public:
 	 * Needs a pointer to its physical layer, the sensitivity, the index of the
 	 * host and the debug flag.
 	 */
-	BaseDecider(DeciderToPhyInterface* phy, double sensitivity,
-	            int myIndex, bool debug)
+	BaseDecider( DeciderToPhyInterface* phy
+	           , double                 sensitivity
+	           , int                    myIndex
+	           , bool                   debug )
 		: Decider(phy)
+	    , nbFramesWithInterference(0)
+	    , nbFramesWithoutInterference(0)
+	    , nbFramesWithInterferencePartial(0)
+	    , nbFramesWithoutInterferencePartial(0)
+	    , nbFramesWithInterferenceDropped(0)
+	    , nbFramesWithoutInterferenceDropped(0)
 		, sensitivity(sensitivity)
-		, currentSignal()
-		, isChannelIdle(true)
+		, currentSignal(NULL, NEW)
 		, currentChannelSenseRequest()
 		, myIndex(myIndex)
 		, debug(debug)
 	{
-		currentSignal.first = 0;
-		currentSignal.second = NEW;
-		currentChannelSenseRequest.first = 0;
-		currentChannelSenseRequest.second = -1;
-		currentChannelSenseRequest.canAnswerAt = -1;
+		currentChannelSenseRequest.clear();
 	}
 
 	virtual ~BaseDecider() {}
@@ -163,6 +240,12 @@ public:
 	 * again.
 	 */
 	virtual simtime_t processSignal(AirFrame* frame);
+
+    /** @brief Cancels processing a AirFrame.
+     */
+    virtual void cancelProcessSignal() {
+        currentSignal.finishProcessing();
+    }
 
 	/**
 	 * @brief A function that returns information about the channel state
@@ -187,9 +270,56 @@ public:
 	 */
 	virtual simtime_t handleChannelSenseRequest(ChannelSenseRequest* request);
 
+    /**
+     * @brief Called by phy layer to indicate that the channel this radio
+     * currently listens to has changed.
+     *
+     * Sub-classing deciders which support multiple channels should override
+     * this method to handle the effects of channel changes on ongoing
+     * receptions.
+     *
+     * @param newChannel The new channel the radio has changed to.
+     */
+    virtual void channelChanged(int newChannel);
 
+    /**
+     * @brief Method to be called by an OMNeT-module during its own finish(),
+     * to enable a decider to do some things.
+     */
+    virtual void finish();
 
 protected:
+	/**
+	 * @brief Calculates the receive power of given frame.
+	 *
+	 * Default implementation use only the arrival time point
+	 * for signal receive power calculation.
+	 */
+	virtual double getFrameReceivingPower(AirFrame* frame) const;
+
+	/**
+	 * @brief Returns the next signal state (END, HEADER, NEW).
+	 *
+	 * @param CurState The current signal state.
+	 * @return The next signal state.
+	 */
+	virtual eSignalState getNextSignalState(eSignalState CurState) const {
+	    switch(CurState) {
+            case NEW:           return EXPECT_END; break;
+            case EXPECT_HEADER: return EXPECT_END; break;
+            default:            return NEW;        break;
+	    }
+	    return NEW;
+	}
+
+    /**
+     * @brief Returns the next handle time for scheduler.
+     *
+     * @param frame The current frame which is in processing.
+     * @return The next scheduler handle time.
+     */
+    virtual simtime_t getNextSignalHandleTime(const AirFrame* frame) const;
+
 	/**
 	 * @brief Processes a new Signal. Returns the time it wants to
 	 * handle the signal again.
@@ -212,6 +342,13 @@ protected:
 		opp_error("BaseDecider does not handle Signal headers!");
 		return notAgain;
 	}
+
+	/** @brief Creates the DeciderResult from frame.
+	 *
+	 * @param frame The processed frame.
+	 * @return The result for frame.
+	 */
+    virtual DeciderResult* createResult(const AirFrame* frame) const;
 
 	/**
 	 * @brief Processes the end of a received Signal.
@@ -237,7 +374,8 @@ protected:
 	 * is the "currentSignal" and returns its state or if not
 	 * "NEW".
 	 */
-	virtual int getSignalState(AirFrame* frame) const;
+	virtual eSignalState getSignalState(const AirFrame* frame) const;
+    virtual eSignalState setSignalState(const AirFrame* frame, eSignalState newState);
 
 	/**
 	 * @brief Handles a new incoming ChannelSenseRequest and returns the next
@@ -256,20 +394,18 @@ protected:
 	virtual void handleSenseRequestEnd(CSRInfo& requestInfo);
 
 	/**
-	 * @brief Changes the "isIdle"-status to the passed value.
-	 *
-	 * This method further checks if there are any ChannelSenseRequests
-	 * which can be answered because of the idle state changed.
-	 */
-	virtual void setChannelIdleStatus(bool isIdle);
-
-	/**
 	 * @brief Returns point in time when the ChannelSenseRequest of the passed
 	 * CSRInfo can be answered (e.g. because channel state changed or timeout
 	 * is reached).
 	 */
-	virtual simtime_t canAnswerCSR(const CSRInfo& requestInfo);
+	virtual simtime_t canAnswerCSR(const CSRInfo& requestInfo) const;
 
+	/** @brief Return type of BaseDecider::calcChannelSenseRSSI function.
+	 *
+	 *  The pair consists in first part the RSSI value and in second part
+	 *  the maximum reception time of all air frames in requested range.
+	 */
+	typedef std::pair<double, simtime_t> channel_sense_rssi_t;
 	/**
 	 * @brief Calculates the RSSI value for the passed interval.
 	 *
@@ -280,7 +416,7 @@ protected:
 	 * Default implementation returns the maximum RSSI value inside the
 	 * passed interval.
 	 */
-	virtual double calcChannelSenseRSSI(simtime_t_cref start, simtime_t_cref end) const;
+	virtual channel_sense_rssi_t calcChannelSenseRSSI(simtime_t_cref start, simtime_t_cref end) const;
 
 	/**
 	 * @brief Answers the ChannelSenseRequest (CSR) from the passed CSRInfo.
@@ -304,15 +440,13 @@ protected:
 	 *
 	 * Forwards to DeciderToPhyInterfaces "getChannelInfo" method.
 	 * Subclassing deciders can override this method to filter the returned
-	 * AirFrames for their own criteria, for example by removing AirFrames on
-	 * another not interferring channel.
+	 * AirFrames for their own criteria.
 	 *
-	 * @param start The start of the interval to collect AirFrames from.
-	 * @param end The end of the interval to collect AirFrames from.
-	 * @param out The output vector in which to put the AirFrames.
+	 * @param[in]  start The start of the interval to collect AirFrames from.
+     * @param[in]  end   The end of the interval to collect AirFrames from.
+	 * @param[out] out   The output vector in which to put the AirFrames.
 	 */
-	virtual void getChannelInfo(simtime_t_cref start, simtime_t_cref end,
-	                            AirFrameVector& out) const;
+	virtual void getChannelInfo(simtime_t_cref start, simtime_t_cref end, AirFrameVector& out) const;
 
 	//------Utility methods------------
 
@@ -327,7 +461,14 @@ protected:
 	 * Note: 'divided' means here the special element-wise operation on
 	 * mappings.
 	 */
-	virtual Mapping* calculateSnrMapping(AirFrame* frame);
+	virtual Mapping* calculateSnrMapping(const AirFrame* frame) const;
+
+    /** @brief Return type of BaseDecider::calculateRSSIMapping function.
+     *
+     *  The pair consists in first part the RSSI map pointer and in second part
+     *  the maximum reception time of all air frames in requested range.
+     */
+    typedef std::pair<Mapping*, channel_sense_rssi_t::second_type> rssi_mapping_t;
 
 	/**
 	 * @brief Calculates a RSSI-Mapping (or Noise-Strength-Mapping) for a
@@ -336,10 +477,12 @@ protected:
 	 * This method can be used to calculate a RSSI-Mapping in case the parameter
 	 * exclude is omitted OR to calculate a Noise-Strength-Mapping in case the
 	 * AirFrame of the received Signal is passed as parameter exclude.
+	 *
+	 * @return The mapping and the maximum reception end of all air frames in rang [start,end].
 	 */
-	virtual Mapping* calculateRSSIMapping( simtime_t_cref start,
-	                                       simtime_t_cref end,
-	                                       AirFrame*      exclude = NULL) const;
+	virtual rssi_mapping_t calculateRSSIMapping( simtime_t_cref  start
+	                                           , simtime_t_cref  end
+	                                           , const AirFrame* exclude = NULL) const;
 };
 
 #endif /* BASEDECIDER_H_ */
