@@ -123,9 +123,9 @@ public:
 	 *
 	 * Default setting is: tracking off
 	 */
-	RadioStateAnalogueModel(Argument::mapped_type_cref initValue,
-							bool currentlyTracking = false,
-							simtime_t_cref initTime = SIMTIME_ZERO)
+	RadioStateAnalogueModel( Argument::mapped_type_cref initValue
+	                       , bool                       currentlyTracking = false
+	                       , simtime_t_cref             initTime = SIMTIME_ZERO )
 		: AnalogueModel()
 		, currentlyTracking(currentlyTracking)
 		, radioStateAttenuation()

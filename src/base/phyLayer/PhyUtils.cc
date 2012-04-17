@@ -57,7 +57,7 @@ void RadioStateAnalogueModel::cleanUpUntil(simtime_t_cref t)
 
 	// CASE: t is "in between two elements"
 	// ==> set the iterators predecessors time to t, it becomes the first element
-	it--; // go back one element, possible since this one has not been the first one
+	--it; // go back one element, possible since this one has not been the first one
 
 	it->setTime(t); // set this elements time to t
 	radioStateAttenuation.erase(radioStateAttenuation.begin(), it); // and erase all previous elements
@@ -314,7 +314,7 @@ bool RSAMConstMappingIterator::hasNext() const
 	CurrList::const_iterator it2 = it;
 	if (it2 != rsam->radioStateAttenuation.end())
 	{
-		it2++;
+		++it2;
 	}
 
 	return 	position.getTime() < signalStart

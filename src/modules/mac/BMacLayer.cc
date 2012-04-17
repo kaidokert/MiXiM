@@ -70,7 +70,6 @@ void BMacLayer::initialize(int stage)
 		WATCH(macState);
 	}
 	else if(stage == 1) {
-
 		wakeup = new cMessage("wakeup");
 		wakeup->setKind(BMAC_WAKE_UP);
 

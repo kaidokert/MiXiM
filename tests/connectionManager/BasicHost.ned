@@ -41,6 +41,7 @@ module BasicHost extends TestNode
         string phyLayer; //physical layer type
 
         @display("bgb=180,200,white,,;bgp=10,10");
+        @node();
     gates:
         input radioIn;
 
