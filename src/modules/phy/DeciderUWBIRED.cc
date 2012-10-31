@@ -17,7 +17,7 @@ DeciderUWBIRED::DeciderUWBIRED( DeciderToPhyInterface* phy
               , double                 sensitivity
               , int                    myIndex
               , bool                   debug )
-    : BaseDecider(phy, 0.0, myIndex, debug)
+    : BaseDecider(phy, sensitivity, myIndex, debug)
     , trace(false), stats(false)
     , nbFailedSyncs(0), nbSuccessfulSyncs(0)
     , nbSymbols(0), allThresholds(0)

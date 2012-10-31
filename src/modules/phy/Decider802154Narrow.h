@@ -93,7 +93,7 @@ public:
 	                   , double                 sensitivity
 	                   , int                    myIndex
 	                   , bool                   debug )
-	    : BaseDecider(phy, 0.0, myIndex, debug)
+	    : BaseDecider(phy, sensitivity, myIndex, debug)
 	    , sfdLength(0)
 	    , BER_LOWER_BOUND(0)
 	    , modulation("")
