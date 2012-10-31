@@ -75,7 +75,7 @@ double Decider802154Narrow::evalBER(AirFrame* frame) const {
 	double        rcvPower   = signal.getReceivingPower()->getValue(argStart);
 
 	if (rcvPower == Argument::MappedZero) {
-	    return 0.0;
+	    return 1.0;
 	}
 
 	ConstMapping* noise      = calculateRSSIMapping(time, time, frame).first;
