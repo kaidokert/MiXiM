@@ -61,7 +61,7 @@ public:
 
 protected:
 
-    virtual MacPkt* encapsMsg(cPacket *msg);
+    virtual macpkt_ptr_t encapsMsg(cPacket *msg);
 
 
     virtual void handleLowerMsg(cMessage *msg);

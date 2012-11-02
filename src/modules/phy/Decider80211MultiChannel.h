@@ -38,7 +38,7 @@ protected:
 	 *
 	 * @return	The result of the decider for the passed AirFrame.
 	 */
-	virtual DeciderResult* createResult(const AirFrame* frame) const;
+	virtual DeciderResult* createResult(const airframe_ptr_t frame) const;
 
 public:
 	/** @brief Standard Decider constructor.

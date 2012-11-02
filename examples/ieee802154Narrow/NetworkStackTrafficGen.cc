@@ -123,7 +123,7 @@ void NetworkStackTrafficGen::sendBroadcast()
 	LAddress::L2Type macAddr;
 	LAddress::L3Type netwAddr = destination;
 
-	NetwPkt *pkt = new NetwPkt(LAddress::isL3Broadcast( netwAddr ) ? "TRAFFIC->ALL" : "TRAFFIC->TO", LAddress::isL3Broadcast( netwAddr ) ? BROADCAST_MESSAGE : TARGET_MESSAGE);
+	netwpkt_ptr_t pkt = new netwpkt_t(LAddress::isL3Broadcast( netwAddr ) ? "TRAFFIC->ALL" : "TRAFFIC->TO", LAddress::isL3Broadcast( netwAddr ) ? BROADCAST_MESSAGE : TARGET_MESSAGE);
 	pkt->setBitLength(packetLength);
 
 	Packet appPkt(packetLength, 0, 1);

@@ -125,10 +125,10 @@ protected:
     virtual void handleSelfMsg(cMessage* /*msg*/) {};
     
     /** @brief Checks whether a message was already broadcasted*/
-    bool notBroadcasted( NetwPkt* );
+    bool notBroadcasted( netwpkt_ptr_t );
 
     //overloading encaps method
-    virtual NetwPkt* encapsMsg(cPacket*);
+    virtual netwpkt_ptr_t encapsMsg(cPacket*);
 };
 
 #endif

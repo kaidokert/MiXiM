@@ -50,7 +50,7 @@ private:
 			return AnalogueModel::initFromMap(params) && bInitSuccess;
 		}
 
-		void filterSignal(AirFrame*, const Coord&, const Coord&) {
+		void filterSignal(airframe_ptr_t, const Coord&, const Coord&) {
 			return;
 		}
 	};

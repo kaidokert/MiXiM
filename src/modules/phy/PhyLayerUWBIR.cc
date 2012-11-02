@@ -159,7 +159,7 @@ bool PhyLayerUWBIR::isRadioInRX() const {
     return iCurRS == RadioUWBIR::RX || iCurRS == RadioUWBIR::SYNC;
 }
 
-AirFrame *PhyLayerUWBIR::encapsMsg(cPacket *macPkt)
+PhyLayerUWBIR::airframe_ptr_t PhyLayerUWBIR::encapsMsg(cPacket *macPkt)
 {
 	// the cMessage passed must be a MacPacket... but no cast needed here
 	// MacPkt* pkt = static_cast<MacPkt*>(msg);

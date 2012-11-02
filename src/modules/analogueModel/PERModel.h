@@ -32,7 +32,7 @@ public:
 	 */
 	virtual bool initFromMap(const ParameterMap&);
 
-	virtual void filterSignal(AirFrame *, const Coord&, const Coord&);
+	virtual void filterSignal(airframe_ptr_t, const Coord&, const Coord&);
 
 };
 

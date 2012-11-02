@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 #include "Mapping.h"
 
 bool SNRThresholdDecider::initFromMap(const ParameterMap& params) {
@@ -145,7 +145,7 @@ simtime_t SNRThresholdDecider::canAnswerCSR(const CSRInfo& requestInfo) const {
 	return answerTime;
 }
 
-DeciderResult* SNRThresholdDecider::createResult(const AirFrame* frame) const
+DeciderResult* SNRThresholdDecider::createResult(const airframe_ptr_t frame) const
 {
 	// first collect all necessary information
 	Mapping* snrMap = calculateSnrMapping(frame);

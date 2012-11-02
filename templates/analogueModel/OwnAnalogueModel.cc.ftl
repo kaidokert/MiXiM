@@ -49,7 +49,7 @@ bool ${amName}::initFromMap(const ParameterMap& params) {
 	return AnalogueModel::initFromMap(params) && bInitSuccess;
 }
 
-void ${amName}::filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos)
+void ${amName}::filterSignal(airframe_ptr_t frame, const Coord& sendersPos, const Coord& receiverPos)
 {
 	Signal&   signal = frame->getSignal();
 	simtime_t start  = signal.getReceptionStart();

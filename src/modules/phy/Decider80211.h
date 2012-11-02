@@ -73,12 +73,12 @@ protected:
 	 *
 	 * @return	The result of the decider for the passed AirFrame.
 	 */
-	virtual DeciderResult* createResult(const AirFrame* frame) const;
+	virtual DeciderResult* createResult(const airframe_ptr_t frame) const;
 
 	/**
 	 * @brief Calculates the receive power of given frame.
 	 */
-	virtual double getFrameReceivingPower(AirFrame* frame) const;
+	virtual double getFrameReceivingPower(airframe_ptr_t frame) const;
 
 	/** @brief computes if packet is ok or has errors*/
 	virtual bool packetOk(double snirMin, int lengthMPDU, double bitrate) const;

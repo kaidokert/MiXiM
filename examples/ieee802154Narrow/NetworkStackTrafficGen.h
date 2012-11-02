@@ -31,6 +31,9 @@
  */
 class NetworkStackTrafficGen : public BaseLayer
 {
+public:
+    typedef NetwPkt  netwpkt_t;
+    typedef netwpkt_t* netwpkt_ptr_t;
 private:
 	/** @brief Copy constructor is not allowed.
 	 */

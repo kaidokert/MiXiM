@@ -1,6 +1,6 @@
 #include "PERModel.h"
 
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 
 bool PERModel::initFromMap(const ParameterMap& params) {
     ParameterMap::const_iterator it;
@@ -20,7 +20,7 @@ bool PERModel::initFromMap(const ParameterMap& params) {
     return AnalogueModel::initFromMap(params) && bInitSuccess;
 }
 
-void PERModel::filterSignal(AirFrame *frame, const Coord& /*sendersPos*/, const Coord& /*receiverPos*/) {
+void PERModel::filterSignal(airframe_ptr_t frame, const Coord& /*sendersPos*/, const Coord& /*receiverPos*/) {
 	Signal&   signal = frame->getSignal();
 	//simtime_t start  = signal.getReceptionStart();
 	//simtime_t end    = signal.getReceptionEnd();

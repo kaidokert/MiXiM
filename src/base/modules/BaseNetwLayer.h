@@ -48,6 +48,8 @@ private:
 	BaseNetwLayer& operator=(const BaseNetwLayer&);
 
 public:
+	/** @brief network packet pointer type. */
+	typedef NetwPkt* netwpkt_ptr_t;
 	/** @brief Message kinds used by this layer.*/
 	enum BaseNetwMessageKinds {
 		/** @brief Stores the id on which classes extending BaseNetw should
@@ -132,10 +134,10 @@ public:
     /*@}*/
 
     /** @brief decapsulate higher layer message from NetwPkt */
-    virtual cMessage* decapsMsg(NetwPkt*);
+    virtual cMessage*     decapsMsg(netwpkt_ptr_t);
 
     /** @brief Encapsulate higher layer packet into an NetwPkt*/
-    virtual NetwPkt* encapsMsg(cPacket*);
+    virtual netwpkt_ptr_t encapsMsg(cPacket*);
 
     /**
      * @brief Attaches a "control info" (NetwToMac) structure (object) to the message pMsg.

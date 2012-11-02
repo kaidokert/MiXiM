@@ -117,7 +117,7 @@ public:
      */
     virtual bool initFromMap(const ParameterMap&);
 
-    void filterSignal(AirFrame *, const Coord&, const Coord&);
+    void filterSignal(airframe_ptr_t, const Coord&, const Coord&);
 
 protected:
     double pathloss_exponent;

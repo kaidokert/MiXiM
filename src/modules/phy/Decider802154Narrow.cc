@@ -20,9 +20,9 @@
 #endif
 
 #include "DeciderResult802154Narrow.h"
-#include "MacPkt_m.h"
+#include "MiXiMMacPkt.h"
 #include "PhyToMacControlInfo.h"
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 #include "Mapping.h"
 
 bool Decider802154Narrow::initFromMap(const ParameterMap& params) {
@@ -58,7 +58,7 @@ bool Decider802154Narrow::initFromMap(const ParameterMap& params) {
     return BaseDecider::initFromMap(params) && bInitSuccess;
 }
 
-bool Decider802154Narrow::syncOnSFD(AirFrame* frame) const {
+bool Decider802154Narrow::syncOnSFD(airframe_ptr_t frame) const {
 	double BER;
 	double sfdErrorProbability;
 
@@ -68,7 +68,7 @@ bool Decider802154Narrow::syncOnSFD(AirFrame* frame) const {
 	return sfdErrorProbability < uniform(0, 1, 0);
 }
 
-double Decider802154Narrow::evalBER(AirFrame* frame) const {
+double Decider802154Narrow::evalBER(airframe_ptr_t frame) const {
 	Signal&       signal     = frame->getSignal();
 	simtime_t     time       = MappingUtils::post(phy->getSimTime());
     Argument      argStart(time);
@@ -91,7 +91,7 @@ double Decider802154Narrow::evalBER(AirFrame* frame) const {
     return ber;
 }
 
-simtime_t Decider802154Narrow::processSignalHeader(AirFrame* frame)
+simtime_t Decider802154Narrow::processSignalHeader(airframe_ptr_t frame)
 {
 	if (!syncOnSFD(frame)) {
 		currentSignal.finishProcessing();
@@ -108,7 +108,7 @@ simtime_t Decider802154Narrow::processSignalHeader(AirFrame* frame)
 	return frame->getSignal().getReceptionEnd();
 }
 
-DeciderResult* Decider802154Narrow::createResult(const AirFrame* frame) const
+DeciderResult* Decider802154Narrow::createResult(const airframe_ptr_t frame) const
 {
 	ConstMapping* snrMapping = calculateSnrMapping(frame);
 	const Signal& s          = frame->getSignal();

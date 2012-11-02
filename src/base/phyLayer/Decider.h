@@ -14,8 +14,6 @@
 #include "ChannelSenseRequest_m.h"
 #include "ChannelState.h"
 
-
-
 /**
  * @brief A class to represent the result of a processed packet (that is not
  * noise) by the Decider.
@@ -69,6 +67,8 @@ class MIXIM_API Decider
 public:
 	/** @brief simtime that tells the Phy-Layer not to pass an AirFrame again */
 	static const_simtime_t notAgain;
+	/** Defines the AirFrame pointer type which will be used as AirFrame. */
+	typedef DeciderToPhyInterface::airframe_ptr_t airframe_ptr_t;
 protected:
 	/** @brief A pointer to the physical layer of this Decider. */
 	DeciderToPhyInterface* const phy;
@@ -113,7 +113,7 @@ public:
 	 * @brief This function processes a AirFrame given by the PhyLayer and
 	 * returns the time point when Decider wants to be given the AirFrame again.
 	 */
-	virtual simtime_t processSignal(AirFrame* frame);
+	virtual simtime_t processSignal(airframe_ptr_t frame);
 
 	/** @brief Cancels processing a AirFrame.
 	 */

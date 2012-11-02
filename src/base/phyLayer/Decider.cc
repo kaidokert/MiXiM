@@ -10,17 +10,15 @@ Decider::Decider(DeciderToPhyInterface* phy):
 	phy(phy)
 {}
 
-simtime_t Decider::processSignal(AirFrame* /*s*/) {
-
+simtime_t Decider::processSignal(airframe_ptr_t /*s*/)
+{
 	return notAgain;
 }
 
 ChannelState Decider::getChannelState() const {
-
 	return ChannelState();
 }
 
 simtime_t Decider::handleChannelSenseRequest(ChannelSenseRequest* /*request*/) {
-
 	return notAgain;
 }

@@ -176,7 +176,7 @@ void BMacLayer::handleUpperMsg(cMessage *msg)
  */
 void BMacLayer::sendPreamble()
 {
-	MacPkt* preamble = new MacPkt();
+	macpkt_ptr_t preamble = new MacPkt();
 	preamble->setSrcAddr(myMacAddr);
 	preamble->setDestAddr(LAddress::L2BROADCAST);
 	preamble->setKind(BMAC_PREAMBLE);
@@ -193,7 +193,7 @@ void BMacLayer::sendPreamble()
  */
 void BMacLayer::sendMacAck()
 {
-	MacPkt* ack = new MacPkt();
+	macpkt_ptr_t ack = new MacPkt();
 	ack->setSrcAddr(myMacAddr);
 	ack->setDestAddr(lastDataPktSrcAddr);
 	ack->setKind(BMAC_ACK);
@@ -418,7 +418,7 @@ void BMacLayer::handleSelfMsg(cMessage *msg)
 		if (msg->getKind() == BMAC_ACK)
 		{
 			debugEV << "State WAIT_ACK, message BMAC_ACK" << endl;
-			MacPkt*                 mac = static_cast<MacPkt *>(msg);
+			macpkt_ptr_t            mac = static_cast<macpkt_ptr_t>(msg);
 			const LAddress::L2Type& src = mac->getSrcAddr();
 			// the right ACK is received..
 			debugEV << "We are waiting for ACK from : " << lastDataPktDestAddr
@@ -466,7 +466,7 @@ void BMacLayer::handleSelfMsg(cMessage *msg)
 		if (msg->getKind() == BMAC_DATA)
 		{
 			nbRxDataPackets++;
-			MacPkt*                 mac  = static_cast<MacPkt *>(msg);
+			macpkt_ptr_t            mac  = static_cast<macpkt_ptr_t>(msg);
 			const LAddress::L2Type& dest = mac->getDestAddr();
 			const LAddress::L2Type& src  = mac->getSrcAddr();
 			if ((dest == myMacAddr) || LAddress::isL2Broadcast(dest)) {
@@ -564,7 +564,7 @@ void BMacLayer::handleLowerMsg(cMessage *msg)
 void BMacLayer::sendDataPacket()
 {
 	nbTxDataPackets++;
-	MacPkt *pkt = macQueue.front()->dup();
+	macpkt_ptr_t pkt = macQueue.front()->dup();
 	attachSignal(pkt);
 	lastDataPktDestAddr = pkt->getDestAddr();
 	pkt->setKind(BMAC_DATA);
@@ -634,7 +634,7 @@ bool BMacLayer::addToQueue(cMessage *msg)
 		return false;
 	}
 
-	MacPkt *macPkt = new MacPkt(msg->getName());
+	macpkt_ptr_t macPkt = new MacPkt(msg->getName());
 	macPkt->setBitLength(headerLength);
 	cObject *const cInfo = msg->removeControlInfo();
 	//EV<<"CSMA received a message from upper layer, name is "
@@ -654,7 +654,7 @@ bool BMacLayer::addToQueue(cMessage *msg)
 	return true;
 }
 
-void BMacLayer::attachSignal(MacPkt *macPkt)
+void BMacLayer::attachSignal(macpkt_ptr_t macPkt)
 {
 	//calc signal duration
 	simtime_t duration = macPkt->getBitLength() / bitrate;

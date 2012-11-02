@@ -180,8 +180,8 @@ csma::~csma() {
  * to the FSM main method for further processing.
  */
 void csma::handleUpperMsg(cMessage *msg) {
-	//MacPkt *macPkt = encapsMsg(msg);
-	MacPkt *macPkt = new MacPkt(msg->getName());
+	//macpkt_ptr_tmacPkt = encapsMsg(msg);
+    macpkt_ptr_t macPkt = new MacPkt(msg->getName());
 	macPkt->setBitLength(headerLength);
 	cObject *const cInfo = msg->removeControlInfo();
 	debugEV<<"CSMA received a message from upper layer, name is " << msg->getName() <<", CInfo removed, mac addr="<< getUpperDestinationFromControlInfo(cInfo) << endl;
@@ -216,7 +216,7 @@ void csma::updateStatusIdle(t_mac_event event, cMessage *msg) {
 	switch (event) {
 	case EV_SEND_REQUEST:
 		if (macQueue.size() <= queueLength) {
-			macQueue.push_back(static_cast<MacPkt *> (msg));
+			macQueue.push_back(static_cast<macpkt_ptr_t> (msg));
 			debugEV<<"(1) FSM State IDLE_1, EV_SEND_REQUEST and [TxBuff avail]: startTimerBackOff -> BACKOFF." << endl;
 			updateMacState(BACKOFF_2);
 			NB = 0;
@@ -247,7 +247,7 @@ void csma::updateStatusIdle(t_mac_event event, cMessage *msg) {
 
 	case EV_FRAME_RECEIVED:
 		debugEV << "(15) FSM State IDLE_1, EV_FRAME_RECEIVED: setting up radio tx -> WAITSIFS." << endl;
-		sendUp(decapsMsg(static_cast<MacPkt *>(msg)));
+		sendUp(decapsMsg(static_cast<macpkt_ptr_t>(msg)));
 		nbRxFrames++;
 		delete msg;
 
@@ -261,7 +261,7 @@ void csma::updateStatusIdle(t_mac_event event, cMessage *msg) {
 	case EV_BROADCAST_RECEIVED:
 		debugEV << "(23) FSM State IDLE_1, EV_BROADCAST_RECEIVED: Nothing to do." << endl;
 		nbRxFrames++;
-		sendUp(decapsMsg(static_cast<MacPkt *>(msg)));
+		sendUp(decapsMsg(static_cast<macpkt_ptr_t>(msg)));
 		delete msg;
 		break;
 	default:
@@ -314,13 +314,13 @@ void csma::updateStatusBackoff(t_mac_event event, cMessage *msg) {
 		} else {
 			debugEV << "sending frame up and resuming normal operation.";
 		}
-		sendUp(decapsMsg(static_cast<MacPkt *>(msg)));
+		sendUp(decapsMsg(static_cast<macpkt_ptr_t>(msg)));
 		delete msg;
 		break;
 	case EV_BROADCAST_RECEIVED:
 		debugEV << "(29) FSM State BACKOFF, EV_BROADCAST_RECEIVED:"
 		<< "sending frame up and resuming normal operation." <<endl;
-		sendUp(decapsMsg(static_cast<MacPkt *>(msg)));
+		sendUp(decapsMsg(static_cast<macpkt_ptr_t>(msg)));
 		delete msg;
 		break;
 	default:
@@ -329,7 +329,7 @@ void csma::updateStatusBackoff(t_mac_event event, cMessage *msg) {
 	}
 }
 
-void csma::attachSignal(MacPkt* mac, simtime_t_cref startTime) {
+void csma::attachSignal(macpkt_ptr_t mac, simtime_t_cref startTime) {
 	simtime_t duration = (mac->getBitLength() + phyHeaderLength)/bitrate;
 	setDownControlInfo(mac, createSignal(startTime, duration, txPower, bitrate));
 }
@@ -344,7 +344,7 @@ void csma::updateStatusCCA(t_mac_event event, cMessage *msg) {
 			debugEV << "(3) FSM State CCA_3, EV_TIMER_CCA, [Channel Idle]: -> TRANSMITFRAME_4." << endl;
 			updateMacState(TRANSMITFRAME_4);
 			phy->setRadioState(Radio::TX);
-			MacPkt * mac = check_and_cast<MacPkt *>(macQueue.front()->dup());
+			macpkt_ptr_t mac = check_and_cast<macpkt_ptr_t>(macQueue.front()->dup());
 			attachSignal(mac, simTime()+aTurnaroundTime);
 			//sendDown(msg);
 			// give time for the radio to be in Tx state before transmitting
@@ -394,7 +394,7 @@ void csma::updateStatusCCA(t_mac_event event, cMessage *msg) {
 		} else {
 			debugEV << " Nothing to do." << endl;
 		}
-		//sendUp(decapsMsg(static_cast<MacPkt *>(msg)));
+		//sendUp(decapsMsg(static_cast<macpkt_ptr_t>(msg)));
 		delete msg;
 		break;
 
@@ -413,13 +413,13 @@ void csma::updateStatusCCA(t_mac_event event, cMessage *msg) {
 		} else {
 			debugEV << " Nothing to do." << endl;
 		}
-		sendUp(decapsMsg(static_cast<MacPkt *>(msg)));
+		sendUp(decapsMsg(static_cast<macpkt_ptr_t>(msg)));
 		delete msg;
 		break;
 	case EV_BROADCAST_RECEIVED:
 		debugEV << "(24) FSM State BACKOFF, EV_BROADCAST_RECEIVED:"
 		<< " Nothing to do." << endl;
-		sendUp(decapsMsg(static_cast<MacPkt *>(msg)));
+		sendUp(decapsMsg(static_cast<macpkt_ptr_t>(msg)));
 		delete msg;
 		break;
 	default:
@@ -431,7 +431,7 @@ void csma::updateStatusCCA(t_mac_event event, cMessage *msg) {
 void csma::updateStatusTransmitFrame(t_mac_event event, cMessage *msg) {
 	if (event == EV_FRAME_TRANSMITTED) {
 		//    delete msg;
-		MacPkt * packet = macQueue.front();
+	    macpkt_ptr_t packet = macQueue.front();
 		phy->setRadioState(Radio::RX);
 
 		bool expectAck = useMACAcks;
@@ -487,7 +487,7 @@ void csma::updateStatusWaitAck(t_mac_event event, cMessage *msg) {
 		break;
 	case EV_BROADCAST_RECEIVED:
 	case EV_FRAME_RECEIVED:
-		sendUp(decapsMsg(static_cast<MacPkt*>(msg)));
+		sendUp(decapsMsg(static_cast<macpkt_ptr_t>(msg)));
 		break;
 	case EV_DUPLICATE_RECEIVED:
 		debugEV << "Error ! Received a frame during SIFS !" << endl;
@@ -543,7 +543,7 @@ void csma::updateStatusSIFS(t_mac_event event, cMessage *msg) {
 	case EV_BROADCAST_RECEIVED:
 	case EV_FRAME_RECEIVED:
 		EV << "Error ! Received a frame during SIFS !" << endl;
-		sendUp(decapsMsg(static_cast<MacPkt*>(msg)));
+		sendUp(decapsMsg(static_cast<macpkt_ptr_t>(msg)));
 		delete msg;
 		break;
 	default:
@@ -569,7 +569,7 @@ void csma::updateStatusTransmitAck(t_mac_event event, cMessage *msg) {
 void csma::updateStatusNotIdle(cMessage *msg) {
 	debugEV<< "(20) FSM State NOT IDLE, EV_SEND_REQUEST. Is a TxBuffer available ?" << endl;
 	if (macQueue.size() <= queueLength) {
-		macQueue.push_back(static_cast<MacPkt *>(msg));
+		macQueue.push_back(static_cast<macpkt_ptr_t>(msg));
 		debugEV << "(21) FSM State NOT IDLE, EV_SEND_REQUEST"
 		<<" and [TxBuff avail]: enqueue packet and don't move." << endl;
 	} else {
@@ -745,7 +745,7 @@ void csma::handleSelfMsg(cMessage *msg) {
  * frame. Generates the corresponding event.
  */
 void csma::handleLowerMsg(cMessage *msg) {
-	MacPkt*                 macPkt     = static_cast<MacPkt *> (msg);
+    macpkt_ptr_t            macPkt     = static_cast<macpkt_ptr_t> (msg);
 	const LAddress::L2Type& src        = macPkt->getSrcAddr();
 	const LAddress::L2Type& dest       = macPkt->getDestAddr();
 	long                    ExpectedNr = 0;
@@ -807,7 +807,7 @@ void csma::handleLowerMsg(cMessage *msg) {
 
 				// message is an ack, and it is for us.
 				// Is it from the right node ?
-				MacPkt * firstPacket = static_cast<MacPkt *>(macQueue.front());
+			    macpkt_ptr_t firstPacket = static_cast<macpkt_ptr_t>(macQueue.front());
 				if(src == firstPacket->getDestAddr()) {
 					nbRecvdAcks++;
 					executeMac(EV_ACK_RECEIVED, macPkt);
@@ -845,7 +845,7 @@ void csma::handleLowerControl(cMessage *msg) {
 	delete msg;
 }
 
-cPacket *csma::decapsMsg(MacPkt * macPkt) {
+cPacket *csma::decapsMsg(macpkt_ptr_t macPkt) {
 	cPacket * msg = macPkt->decapsulate();
 	setUpControlInfo(msg, macPkt->getSrcAddr());
 

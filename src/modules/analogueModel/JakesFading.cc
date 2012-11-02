@@ -16,7 +16,7 @@
 #include "JakesFading.h"
 
 #include "BaseWorldUtility.h"
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 #include "connectionManager/ChannelAccess.h"
 
 DimensionSet JakesFadingMapping::dimensions(Dimension::time);
@@ -129,7 +129,7 @@ JakesFading::~JakesFading() {
 	delete[] angleOfArrival;
 }
 
-void JakesFading::filterSignal(AirFrame *frame, const Coord& /*sendersPos*/, const Coord& /*receiverPos*/)
+void JakesFading::filterSignal(airframe_ptr_t frame, const Coord& /*sendersPos*/, const Coord& /*receiverPos*/)
 {
 	Signal&                signal           = frame->getSignal();
 	ChannelMobilityPtrType senderMobility   = dynamic_cast<ChannelAccess *>(frame->getSenderModule())->getMobilityModule();

@@ -204,7 +204,7 @@ void Mac80211::handleUpperMsg(cMessage *msg)
  * Encapsulates the received network-layer packet into a MacPkt and set all needed
  * header fields.
  */
-MacPkt *Mac80211::encapsMsg(cPacket* netw)
+Mac80211::macpkt_ptr_t Mac80211::encapsMsg(cPacket* netw)
 {
 
     Mac80211Pkt *pkt = new Mac80211Pkt(netw->getName());
@@ -234,7 +234,7 @@ MacPkt *Mac80211::encapsMsg(cPacket* netw)
     return pkt;
 }
 
-cPacket *Mac80211::decapsMsg(MacPkt *frame) {
+cPacket *Mac80211::decapsMsg(macpkt_ptr_t frame) {
     cPacket *m = frame->decapsulate();
     setUpControlInfo(m, frame->getSrcAddr());
     debugEV << " message decapsulated " << endl;

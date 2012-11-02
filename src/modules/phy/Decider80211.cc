@@ -21,7 +21,7 @@
 #include "messages/Mac80211Pkt_m.h"
 #include "utility/Consts80211.h"
 #include "Mapping.h"
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 
 Decider80211::Decider80211( DeciderToPhyInterface* phy
                           , double                 sensitivity
@@ -49,7 +49,7 @@ bool Decider80211::initFromMap(const ParameterMap& params) {
     return BaseDecider::initFromMap(params) && bInitSuccess;
 }
 
-double Decider80211::getFrameReceivingPower(AirFrame* frame) const
+double Decider80211::getFrameReceivingPower(airframe_ptr_t frame) const
 {
 	// get the receiving power of the Signal at start-time and center frequency
 	Signal& signal = frame->getSignal();
@@ -72,7 +72,7 @@ BaseDecider::channel_sense_rssi_t Decider80211::calcChannelSenseRSSI(simtime_t_c
 	return std::make_pair(rssi, pairMapMaxEnd.second);
 }
 
-DeciderResult* Decider80211::createResult(const AirFrame* frame) const
+DeciderResult* Decider80211::createResult(const airframe_ptr_t frame) const
 {
 	// check if the snrMapping is above the Decider's specific threshold,
 	// i.e. the Decider has received it correctly

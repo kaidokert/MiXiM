@@ -126,7 +126,7 @@ void BaseMacLayer::registerInterface()
 /**
  * Decapsulates the network packet from the received MacPkt
  **/
-cPacket* BaseMacLayer::decapsMsg(MacPkt* msg)
+cPacket* BaseMacLayer::decapsMsg(macpkt_ptr_t msg)
 {
     cPacket *m = msg->decapsulate();
     setUpControlInfo(m, msg->getSrcAddr());
@@ -140,9 +140,9 @@ cPacket* BaseMacLayer::decapsMsg(MacPkt* msg)
  * Encapsulates the received NetwPkt into a MacPkt and set all needed
  * header fields.
  **/
-MacPkt* BaseMacLayer::encapsMsg(cPacket *netwPkt)
+BaseMacLayer::macpkt_ptr_t BaseMacLayer::encapsMsg(cPacket *netwPkt)
 {
-    MacPkt *pkt = new MacPkt(netwPkt->getName(), netwPkt->getKind());
+    macpkt_ptr_t pkt = new MacPkt(netwPkt->getName(), netwPkt->getKind());
     pkt->setBitLength(headerLength);
 
     // copy dest address from the Control Info attached to the network
@@ -188,7 +188,7 @@ void BaseMacLayer::handleUpperMsg(cMessage *mac)
 
 void BaseMacLayer::handleLowerMsg(cMessage *msg)
 {
-    MacPkt*          mac  = static_cast<MacPkt *>(msg);
+    macpkt_ptr_t     mac  = static_cast<macpkt_ptr_t>(msg);
     LAddress::L2Type dest = mac->getDestAddr();
     LAddress::L2Type src  = mac->getSrcAddr();
 

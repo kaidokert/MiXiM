@@ -167,10 +167,10 @@ protected:
     void sendBROADCASTframe();
 
     /** @brief encapsulate packet */
-    virtual MacPkt* encapsMsg(cPacket *netw);
+    virtual macpkt_ptr_t encapsMsg(cPacket *netw);
 
     /** @brief decapsulate packet */
-    virtual cPacket* decapsMsg(MacPkt *frame);
+    virtual cPacket* decapsMsg(macpkt_ptr_t frame);
 
     /** @brief start a new contention period */
     virtual void beginNewCycle();

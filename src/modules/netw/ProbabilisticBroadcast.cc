@@ -282,7 +282,7 @@ ProbabilisticBroadcast::tMsgDesc* ProbabilisticBroadcast::popFirstMessageUpdateQ
 	return msgDesc;
 }
 
-NetwPkt* ProbabilisticBroadcast::encapsMsg(cPacket* message)
+ProbabilisticBroadcast::netwpkt_ptr_t ProbabilisticBroadcast::encapsMsg(cPacket* message)
 {
 	cPacket* msg = static_cast<cPacket*>(message);
 	ProbabilisticBroadcastPkt* pkt = new ProbabilisticBroadcastPkt(msg->getName(), DATA);
@@ -343,7 +343,7 @@ void ProbabilisticBroadcast::insertNewMessage(ProbabilisticBroadcastPkt* pkt, bo
 	}
 }
 
-cPacket* ProbabilisticBroadcast::decapsMsg(NetwPkt *msg)
+cPacket* ProbabilisticBroadcast::decapsMsg(netwpkt_ptr_t msg)
 {
 	cPacket *m = msg->decapsulate();
 	m->setControlInfo(new ProbBcastNetwControlInfo(msg->getSrcAddr()));

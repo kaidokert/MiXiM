@@ -64,7 +64,7 @@ protected:
 		return BaseDecider::getNextSignalState(CurState);
 	}
 
-	virtual simtime_t processSignalHeader(AirFrame* frame);
+	virtual simtime_t processSignalHeader(airframe_ptr_t frame);
 
 
 	/** @brief Creates the DeciderResult from frame.
@@ -72,13 +72,13 @@ protected:
 	 * @param frame The processed frame.
 	 * @return The result for frame.
 	 */
-	virtual DeciderResult* createResult(const AirFrame* frame) const;
+	virtual DeciderResult* createResult(const airframe_ptr_t frame) const;
 
 	double getBERFromSNR(double snr) const;
 
-	bool   syncOnSFD(AirFrame* frame) const;
+	bool   syncOnSFD(airframe_ptr_t frame) const;
 
-	double evalBER(AirFrame* frame) const;
+	double evalBER(airframe_ptr_t frame) const;
 
 	bool recordStats;
 

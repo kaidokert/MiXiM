@@ -4,7 +4,7 @@
 #include "MiXiMDefs.h"
 #include "Coord.h"
 
-class AirFrame;
+class MiximAirFrame;
 
 /**
  * @brief Interface for the analogue models of the physical layer.
@@ -28,6 +28,7 @@ public:
 	 *        to the AnalogueModel and Decider
 	 */
 	typedef std::map<std::string, cMsgPar> ParameterMap;
+	typedef MiximAirFrame*                 airframe_ptr_t;
 
 public:
 	virtual ~AnalogueModel() {}
@@ -52,7 +53,7 @@ public:
 	 * @param sendersPos	The position of the frame sender.
 	 * @param receiverPos	The position of frame receiver.
 	 */
-	virtual void filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos) = 0;
+	virtual void filterSignal(airframe_ptr_t frame, const Coord& sendersPos, const Coord& receiverPos) = 0;
 };
 
 #endif /*ANALOGUEMODEL_*/

@@ -63,7 +63,7 @@ protected:
 	 *
 	 * @return	usually return a value for: 'do not pass it again'
 	 */
-	virtual DeciderResult* createResult(const AirFrame* frame) const;
+	virtual DeciderResult* createResult(const airframe_ptr_t frame) const;
 
 	/**
 	 * @brief Returns point in time when the ChannelSenseRequest of the passed CSRInfo can be answered

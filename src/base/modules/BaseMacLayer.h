@@ -45,6 +45,7 @@ class Signal;
 class MIXIM_API BaseMacLayer : public BaseLayer
 {
 public:
+    typedef MacPkt* macpkt_ptr_t;
     /** @brief Message kinds used by this layer.*/
     enum BaseMacMessageKinds {
         /** Stores the id on which classes extending BaseMac should
@@ -163,10 +164,10 @@ protected:
 
 
     /** @brief decapsulate the network message from the MacPkt */
-    virtual cPacket* decapsMsg(MacPkt*);
+    virtual cPacket* decapsMsg(macpkt_ptr_t);
 
     /** @brief Encapsulate the NetwPkt into an MacPkt */
-    virtual MacPkt* encapsMsg(cPacket*);
+    virtual macpkt_ptr_t encapsMsg(cPacket*);
 
     /**
      * @brief Creates a simple Signal defined over time with the

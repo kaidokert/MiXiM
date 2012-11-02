@@ -121,12 +121,12 @@ protected:
 	/** @brief Returns a network layer packet which encapsulates the upper layer
 	 *         packet passed to the function.
 	 **/
-	virtual NetwPkt* encapsMsg(cPacket* msg);
+	virtual netwpkt_ptr_t encapsMsg(cPacket* msg);
 
 	/** @brief extracts and returns the application layer packet which is encapsulated
 	 *         in the network layer packet given in argument.
 	 **/
-	virtual cPacket* decapsMsg(NetwPkt *msg);
+	virtual cPacket*      decapsMsg(netwpkt_ptr_t msg);
 
 	/** @brief Insert a new message in both known ID list and message queue.
 	 *         The message comes either from upper layer or from lower layer.

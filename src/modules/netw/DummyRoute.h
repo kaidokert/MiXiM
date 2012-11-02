@@ -59,10 +59,10 @@ protected:
 
     virtual void handleUpperControl(cMessage* msg) { delete msg; }
 
-    virtual NetwPkt* encapsMsg(cPacket *appPkt);
+    virtual netwpkt_ptr_t encapsMsg(cPacket *appPkt);
 
     /** @brief Decapsulate a message */
-    virtual cPacket* decapsMsg(NetwPkt *msg);
+    virtual cPacket* decapsMsg(netwpkt_ptr_t msg);
 
 };
 

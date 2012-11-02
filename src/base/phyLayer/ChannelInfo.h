@@ -6,7 +6,7 @@
 #include <omnetpp.h>
 
 #include "MiXiMDefs.h"
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 
 /**
  * @brief This class is used by the BasePhyLayer to keep track of the AirFrames
@@ -44,8 +44,9 @@
  */
 class MIXIM_API ChannelInfo {
 public:
+    typedef MiximAirFrame  airframe_t;
 	/** The stored air frame pointer type */
-	typedef AirFrame* airframe_ptr_t;
+	typedef airframe_t*    airframe_ptr_t;
 	/** @brief Invalid simulation time point, will be used for return value of emptiness. */
 	static const_simtime_t invalidSimTime;
 

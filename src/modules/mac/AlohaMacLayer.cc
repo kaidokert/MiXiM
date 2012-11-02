@@ -58,7 +58,7 @@ void AlohaMacLayer::finish() {
     UWBIRMac::finish();
 }
 
-MacPkt* AlohaMacLayer::encapsMsg(cPacket *msg) {
+AlohaMacLayer::macpkt_ptr_t AlohaMacLayer::encapsMsg(cPacket *msg) {
     UWBIRMacPkt* encaps = new UWBIRMacPkt(msg->getName(), msg->getKind());
     encaps->setByteLength(headerLength);
 

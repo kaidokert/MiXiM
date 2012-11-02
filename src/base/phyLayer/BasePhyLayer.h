@@ -305,7 +305,7 @@ protected:
 	/**
 	 * @brief Handles messages received from the channel (probably AirFrames).
 	 */
-	virtual void handleAirFrame(AirFrame* frame);
+	virtual void handleAirFrame(airframe_ptr_t frame);
 
 	/**
 	 * @brief Handles messages received from the upper layer through the
@@ -334,22 +334,22 @@ protected:
 	/**
 	 * @brief Handles incoming AirFrames with the state FIRST_RECEIVE.
 	 */
-	void handleAirFrameFirstReceive(AirFrame* msg);
+	void handleAirFrameFirstReceive(airframe_ptr_t msg);
 
 	/**
 	 * @brief Handles incoming AirFrames with the state START_RECEIVE.
 	 */
-	virtual void handleAirFrameStartReceive(AirFrame* msg);
+	virtual void handleAirFrameStartReceive(airframe_ptr_t msg);
 
 	/**
 	 * @brief Handles incoming AirFrames with the state RECEIVING.
 	 */
-	virtual void handleAirFrameReceiving(AirFrame* msg);
+	virtual void handleAirFrameReceiving(airframe_ptr_t msg);
 
 	/**
 	 * @brief Handles incoming AirFrames with the state END_RECEIVE.
 	 */
-	virtual void handleAirFrameEndReceive(AirFrame* msg);
+	virtual void handleAirFrameEndReceive(airframe_ptr_t msg);
 
 	/*@}*/
 
@@ -371,7 +371,7 @@ protected:
 	/**
 	 * @brief Sends the passed AirFrame to the channel
 	 */
-	void sendMessageDown(AirFrame* pkt);
+	void sendMessageDown(airframe_ptr_t pkt);
 
 	/**
 	 * @brief Schedule self message to passed point in time.
@@ -384,12 +384,12 @@ protected:
 	 * @brief This function encapsulates messages from the upper layer into an
 	 * AirFrame and sets all necessary attributes.
 	 */
-	virtual AirFrame *encapsMsg(cPacket *msg);
+	virtual airframe_ptr_t encapsMsg(cPacket *msg);
 
 	/**
 	 * @brief Filters the passed AirFrame's Signal by every registered AnalogueModel.
 	 */
-	virtual void filterSignal(AirFrame *frame);
+	virtual void filterSignal(airframe_ptr_t frame);
 
 	/**
 	 * @brief Called the moment the simulated switching process of the Radio is finished.
@@ -548,7 +548,7 @@ public:
 	 * the corresponding DeciderResult up to MACLayer
 	 *
 	 */
-	virtual void sendUp(AirFrame* packet, DeciderResult* result);
+	virtual void sendUp(airframe_ptr_t packet, DeciderResult* result);
 
 	/**
 	 * @brief Returns the current simulation time

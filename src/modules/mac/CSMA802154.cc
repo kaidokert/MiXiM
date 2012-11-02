@@ -31,7 +31,7 @@ void CSMA802154::initialize(int stage)
 	csma::initialize(stage);
 }
 
-cPacket *CSMA802154::decapsMsg(MacPkt * macPkt) {
+cPacket *CSMA802154::decapsMsg(macpkt_ptr_t macPkt) {
 
 	cPacket * msg = csma::decapsMsg(macPkt);
 

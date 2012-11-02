@@ -68,7 +68,7 @@ public:
 	 * Filters a specified AirFrame's Signal by adding an attenuation
 	 * over time to the Signal.
 	 */
-	virtual void filterSignal(AirFrame *, const Coord&, const Coord&);
+	virtual void filterSignal(airframe_ptr_t, const Coord&, const Coord&);
 };
 
 #endif /*RANDOMFREQTIMEMODEL_H_*/

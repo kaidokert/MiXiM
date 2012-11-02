@@ -61,7 +61,7 @@ void BaseNetwLayer::initialize(int stage)
 /**
  * Decapsulates the packet from the received Network packet
  **/
-cMessage* BaseNetwLayer::decapsMsg(NetwPkt *msg)
+cMessage* BaseNetwLayer::decapsMsg(netwpkt_ptr_t msg)
 {
     cMessage *m = msg->decapsulate();
     setUpControlInfo(m, msg->getSrcAddr());
@@ -75,13 +75,13 @@ cMessage* BaseNetwLayer::decapsMsg(NetwPkt *msg)
  * Encapsulates the received ApplPkt into a NetwPkt and set all needed
  * header fields.
  **/
-NetwPkt* BaseNetwLayer::encapsMsg(cPacket *appPkt) {
+BaseNetwLayer::netwpkt_ptr_t BaseNetwLayer::encapsMsg(cPacket *appPkt) {
     LAddress::L2Type macAddr;
     LAddress::L3Type netwAddr;
 
     coreEV <<"in encaps...\n";
 
-    NetwPkt *pkt = new NetwPkt(appPkt->getName(), appPkt->getKind());
+    netwpkt_ptr_t pkt = new NetwPkt(appPkt->getName(), appPkt->getKind());
     pkt->setBitLength(headerLength);
 
     cObject* cInfo = appPkt->removeControlInfo();
@@ -127,7 +127,7 @@ NetwPkt* BaseNetwLayer::encapsMsg(cPacket *appPkt) {
  **/
 void BaseNetwLayer::handleLowerMsg(cMessage* msg)
 {
-    NetwPkt *m = static_cast<NetwPkt *>(msg);
+    netwpkt_ptr_t m = static_cast<netwpkt_ptr_t>(msg);
     coreEV << " handling packet from " << m->getSrcAddr() << std::endl;
     sendUp(decapsMsg(m));
 }

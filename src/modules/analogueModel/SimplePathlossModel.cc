@@ -1,6 +1,6 @@
 #include "SimplePathlossModel.h"
 
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 
 #define splmEV (ev.isDisabled()||!debug) ? ev : ev << "PhyLayer(SimplePathlossModel): "
 
@@ -90,7 +90,7 @@ bool SimplePathlossModel::initFromMap(const ParameterMap& params) {
     return AnalogueModel::initFromMap(params) && bInitSuccess;
 }
 
-void SimplePathlossModel::filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos)
+void SimplePathlossModel::filterSignal(airframe_ptr_t frame, const Coord& sendersPos, const Coord& receiverPos)
 {
 	Signal& signal = frame->getSignal();
 

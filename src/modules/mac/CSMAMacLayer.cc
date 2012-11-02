@@ -124,7 +124,7 @@ void CSMAMacLayer::handleUpperMsg(cMessage *msg)
     else {
         // queue is full, message has to be deleted
     	EV << "New packet arrived, but queue is FULL, so new packet is deleted\n";
-        MacPkt* mac = encapsMsg(pkt);
+    	macpkt_ptr_t mac = encapsMsg(pkt);
         mac->setName("MAC ERROR");
         mac->setKind(PACKET_DROPPED);
         sendControlUp(mac);
@@ -203,7 +203,7 @@ void CSMAMacLayer::handleSelfMsg(cMessage *msg)
  */
 void CSMAMacLayer::handleLowerMsg(cMessage *msg)
 {
-    MacPkt*                 mac  = static_cast<MacPkt *>(msg);
+    macpkt_ptr_t            mac  = static_cast<macpkt_ptr_t>(msg);
     const LAddress::L2Type& dest = mac->getDestAddr();
 
     if(dest == myMacAddr || LAddress::isL2Broadcast(dest))
@@ -286,9 +286,9 @@ void CSMAMacLayer::scheduleBackoff()
 
 }
 
-MacPkt* CSMAMacLayer::encapsMsg(cPacket *pkt)
+CSMAMacLayer::macpkt_ptr_t CSMAMacLayer::encapsMsg(cPacket *pkt)
 {
-	MacPkt* macPkt = BaseMacLayer::encapsMsg(pkt);
+    macpkt_ptr_t macPkt = BaseMacLayer::encapsMsg(pkt);
 
 	//calc signal duration
 	simtime_t duration = macPkt->getBitLength() / bitrate;

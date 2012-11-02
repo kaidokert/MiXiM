@@ -160,7 +160,7 @@ public:
 	//static t_dynamic_expression_value (*ghassemzadehNLOSFPtr) (cComponent *context, t_dynamic_expression_value argv[], int argc);
 
 protected:
-	virtual AirFrame *encapsMsg(cPacket *msg);
+	virtual airframe_ptr_t encapsMsg(cPacket *msg);
 
 	/**
 	 * @brief Creates and returns an instance of the AnalogueModel with the

@@ -122,7 +122,7 @@ class MIXIM_API csma : public BaseMacLayer
     virtual void handleLowerControl(cMessage *msg);
 
   protected:
-    typedef std::list<MacPkt*> MacQueue;
+    typedef std::list<macpkt_ptr_t> MacQueue;
 
     /** @name Different tracked statistics.*/
     /*@{*/
@@ -315,14 +315,14 @@ protected:
 	void manageQueue();
 	void updateMacState(t_mac_states newMacState);
 
-	void attachSignal(MacPkt* mac, simtime_t_cref startTime);
+	void attachSignal(macpkt_ptr_t mac, simtime_t_cref startTime);
 	void manageMissingAck(t_mac_event event, cMessage *msg);
 	void startTimer(t_mac_timer timer);
 
 	virtual simtime_t scheduleBackoff();
 
-	virtual cPacket *decapsMsg(MacPkt * macPkt);
-	MacPkt * ackMessage;
+	virtual cPacket *decapsMsg(macpkt_ptr_t macPkt);
+	macpkt_ptr_t ackMessage;
 
 	//sequence number for sending, map for the general case with more senders
 	//also in initialisation phase multiple potential parents

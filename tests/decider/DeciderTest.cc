@@ -8,6 +8,7 @@ DeciderTest::DeciderTest()
 	: DeciderToPhyInterface()
 	, SimpleTest()
 	, decider(NULL)
+    , processedAF(NULL)
 {
 	// initializing members for testing
 	world = new TestWorld();
@@ -103,7 +104,7 @@ DeciderTest::~DeciderTest() {
 	world = 0;
 }
 
-void DeciderTest::removeAirFrameFromPool(AirFrame* af)
+void DeciderTest::removeAirFrameFromPool(airframe_ptr_t af)
 {
 	for(AirFrameList::iterator it = airFramePool.begin();
 		it != airFramePool.end(); ++it)
@@ -118,7 +119,7 @@ void DeciderTest::removeAirFrameFromPool(AirFrame* af)
 	assertTrue("AirFrame to remove has to be in pool.",false);
 }
 
-AirFrame *DeciderTest::addAirFrameToPool(simtime_t_cref start, simtime_t_cref payloadStart, simtime_t_cref end,
+DeciderTest::airframe_ptr_t DeciderTest::addAirFrameToPool(simtime_t_cref start, simtime_t_cref payloadStart, simtime_t_cref end,
 										 double headerPower, double payloadPower)
 {
 	// create Signal containing TXpower- and bitrate-mapping
@@ -130,7 +131,7 @@ AirFrame *DeciderTest::addAirFrameToPool(simtime_t_cref start, simtime_t_cref pa
 	//s->addAttenuation(bypassMap);
 
 	// create the new AirFrame
-	AirFrame* frame = new AirFrame(0, MacToPhyInterface::AIR_FRAME);
+	airframe_ptr_t frame = new airframe_t(0, MacToPhyInterface::AIR_FRAME);
 
 	// set the members
 	frame->setDuration(s->getDuration());
@@ -148,7 +149,7 @@ AirFrame *DeciderTest::addAirFrameToPool(simtime_t_cref start, simtime_t_cref pa
 	return frame;
 }
 
-AirFrame *DeciderTest::addAirFrameToPool(simtime_t_cref start, simtime_t_cref end, double power)
+DeciderTest::airframe_ptr_t DeciderTest::addAirFrameToPool(simtime_t_cref start, simtime_t_cref end, double power)
 {
 	// create Signal containing TXpower- and bitrate-mapping
 	Signal* s = createSignal(start, end, power, 16.0);
@@ -159,7 +160,7 @@ AirFrame *DeciderTest::addAirFrameToPool(simtime_t_cref start, simtime_t_cref en
 	//s->addAttenuation(bypassMap);
 
 	// create the new AirFrame
-	AirFrame* frame = new AirFrame(0, MacToPhyInterface::AIR_FRAME);
+	airframe_ptr_t frame = new airframe_t(0, MacToPhyInterface::AIR_FRAME);
 
 	// set the members
 	frame->setDuration(s->getDuration());
@@ -467,7 +468,7 @@ void DeciderTest::fillAirFramesOnChannel()
  *
  * NOTE: No message is encapsulated in these test-AirFrames!
  */
-AirFrame* DeciderTest::createTestAirFrame(int i)
+DeciderTest::airframe_ptr_t DeciderTest::createTestAirFrame(int i)
 {
 	// parameters needed
 	simtime_t signalStart = -1;
@@ -563,7 +564,7 @@ AirFrame* DeciderTest::createTestAirFrame(int i)
 	// --- Phy-Layer's tasks
 
 	// create the new AirFrame
-	AirFrame* frame = new AirFrame(0, MacToPhyInterface::AIR_FRAME);
+	airframe_ptr_t frame = new airframe_t(0, MacToPhyInterface::AIR_FRAME);
 
 	// set the members
 	frame->setDuration(s->getDuration());
@@ -884,7 +885,7 @@ void DeciderTest::sendControlMsgToMac(cMessage* msg)
 /**
  * SPECIAL TESTING IMPLEMENTATION: PLEASE REFER TO HEADER-FILE!
  */
-void DeciderTest::sendUp(AirFrame* packet, DeciderResult* /*result*/)
+void DeciderTest::sendUp(airframe_ptr_t packet, DeciderResult* /*result*/)
 {
 
 	// signal that method has been called
@@ -1082,7 +1083,7 @@ void DeciderTest::executeSNRNewTestCase()
 
 			// try to receive another AirFrame at the same time, whose signal not too weak
 			// (taking a copy of the currently received one)
-			AirFrame* tempAF = new AirFrame(*TestAF3);
+			airframe_ptr_t tempAF = new airframe_t(*TestAF3);
 			ev << log("Trying to receive another AirFrame at the same time.") << endl;
 			nextHandoverTime = decider->processSignal(tempAF);
 			assertTrue("AirFrame has been rejected, since we already receive one.", (nextHandoverTime < 0));
@@ -1387,7 +1388,7 @@ void DeciderTest::executeSNRNewTestCase()
 		{
 			//test UNTIL_IDLE on already idle channel
 			double tmpAF1Power = TXpower2;
-			AirFrame* tmpAF1 = addAirFrameToPool(t1, t8, tmpAF1Power);
+			airframe_ptr_t tmpAF1 = addAirFrameToPool(t1, t8, tmpAF1Power);
 			updateSimTime(t1);
 
 			simtime_t handleTime = decider->processSignal(tmpAF1);
@@ -1510,7 +1511,7 @@ void DeciderTest::executeSNRNewTestCase()
 
 			// - with new airframe delaying answer time
 			double tmpAF3Power = 1;
-			AirFrame* tmpAF3 = addAirFrameToPool(t4, t6, tmpAF3Power);
+			airframe_ptr_t tmpAF3 = addAirFrameToPool(t4, t6, tmpAF3Power);
 
 			updateSimTime(t3);
 
@@ -1583,7 +1584,7 @@ void DeciderTest::executeSNRNewTestCase()
 			//UNTIL_IDLE with channel state busy->idle during airframe
 			double tmpAF1Power1 = 4;
 			double tmpAF1Power2 = 0.5;
-			AirFrame* tmpAF1 = addAirFrameToPool(t1, t3, t5, tmpAF1Power1, tmpAF1Power2);
+			airframe_ptr_t tmpAF1 = addAirFrameToPool(t1, t3, t5, tmpAF1Power1, tmpAF1Power2);
 
 			updateSimTime(t2);
 
@@ -1611,8 +1612,8 @@ void DeciderTest::executeSNRNewTestCase()
 			tmpAF1 = addAirFrameToPool(t2, t5, t8, tmpAF1Power1, tmpAF1Power2);
 			double tmpAF23Power1 = 2;
 			double tmpAF23Power2 = 0.5;
-			AirFrame* tmpAF2 = addAirFrameToPool(t1, t4, t8, tmpAF23Power2, tmpAF23Power1);
-			AirFrame* tmpAF3 = addAirFrameToPool(t3, t6, t8, tmpAF23Power1, tmpAF23Power2);
+			airframe_ptr_t tmpAF2 = addAirFrameToPool(t1, t4, t8, tmpAF23Power2, tmpAF23Power1);
+			airframe_ptr_t tmpAF3 = addAirFrameToPool(t3, t6, t8, tmpAF23Power1, tmpAF23Power2);
 
 			updateSimTime(t2);
 

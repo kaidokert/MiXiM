@@ -64,7 +64,7 @@ void DummyRoute::finish() {
     BaseNetwLayer::finish();
 }
 
-NetwPkt* DummyRoute::encapsMsg(cPacket *appPkt) {
+DummyRoute::netwpkt_ptr_t DummyRoute::encapsMsg(cPacket *appPkt) {
     LAddress::L2Type macAddr;
     LAddress::L3Type netwAddr;
 
@@ -107,7 +107,7 @@ NetwPkt* DummyRoute::encapsMsg(cPacket *appPkt) {
     return pkt;
 }
 
-cPacket* DummyRoute::decapsMsg(NetwPkt *msg) {
+cPacket* DummyRoute::decapsMsg(netwpkt_ptr_t msg) {
 	cPacket *m = msg->decapsulate();
 	setUpControlInfo(m, msg->getSrcAddr());
 		// delete the netw packet

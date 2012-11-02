@@ -17,7 +17,7 @@
 
 #include "Decider80211MultiChannel.h"
 #include "MacToPhyControlInfo.h"
-#include "MacPkt_m.h"
+#include "MiXiMMacPkt.h"
 
 Define_Module(PhyLayerBattery);
 
@@ -82,7 +82,7 @@ void PhyLayerBattery::handleUpperMessage(cMessage* msg) {
 		return;
 	}
 
-	MacPkt* pkt = static_cast<MacPkt*>(msg);
+	macpkt_ptr_t pkt = static_cast<macpkt_ptr_t>(msg);
 	MacToPhyControlInfo* cInfo = static_cast<MacToPhyControlInfo*>(pkt->getControlInfo());
 
 	double current = calcTXCurrentForPacket(pkt, cInfo);
@@ -94,7 +94,7 @@ void PhyLayerBattery::handleUpperMessage(cMessage* msg) {
 	PhyLayer::handleUpperMessage(msg);
 }
 
-void PhyLayerBattery::handleAirFrame(AirFrame* frame) {
+void PhyLayerBattery::handleAirFrame(airframe_ptr_t frame) {
 	if (battery && battery->getState() != HostState::ACTIVE) {
 		coreEV<< "host has FAILED, dropping air frame msg " << frame->getName() << endl;
 		delete frame;

@@ -675,7 +675,7 @@ void LMacLayer::findNewSlot()
  * Encapsulates the received network-layer packet into a MacPkt and set all needed
  * header fields.
  */
-MacPkt *LMacLayer::encapsMsg(cPacket* msg)
+LMacLayer::macpkt_ptr_t LMacLayer::encapsMsg(cPacket* msg)
 {
 
     LMacPkt *pkt = new LMacPkt(msg->getName(), msg->getKind());
@@ -702,7 +702,7 @@ MacPkt *LMacLayer::encapsMsg(cPacket* msg)
 
 }
 
-void LMacLayer::attachSignal(MacPkt *macPkt)
+void LMacLayer::attachSignal(macpkt_ptr_t macPkt)
 {
 	//calc signal duration
 	simtime_t duration = macPkt->getBitLength() / bitrate;

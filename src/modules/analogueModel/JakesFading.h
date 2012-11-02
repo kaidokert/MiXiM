@@ -153,7 +153,7 @@ public:
 
 	virtual ~JakesFading();
 
-	virtual void filterSignal(AirFrame *, const Coord&, const Coord&);
+	virtual void filterSignal(airframe_ptr_t, const Coord&, const Coord&);
 };
 
 #endif /* JAKESFADING_H_ */

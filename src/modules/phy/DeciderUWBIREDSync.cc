@@ -1,6 +1,6 @@
 #include "DeciderUWBIREDSync.h"
 
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 
 bool DeciderUWBIREDSync::initFromMap(const ParameterMap& params) {
     bool                         bInitSuccess = true;
@@ -15,7 +15,7 @@ bool DeciderUWBIREDSync::initFromMap(const ParameterMap& params) {
     return DeciderUWBIRED::initFromMap(params) && bInitSuccess;
 }
 
-bool DeciderUWBIREDSync::attemptSync(const AirFrame* frame) {
+bool DeciderUWBIREDSync::attemptSync(const airframe_ptr_t frame) {
     AirFrameVector syncVector;
 
     // Retrieve all potentially colliding airFrames
@@ -30,7 +30,7 @@ bool DeciderUWBIREDSync::attemptSync(const AirFrame* frame) {
 	AirFrameVector::iterator it = syncVector.begin();
 	bool search = true;
 	simtime_t latestSyncStart = frame->getSignal().getReceptionStart() + IEEE802154A::mandatory_preambleLength - tmin;
-	AirFrame* af = syncVector.front();
+	airframe_ptr_t af = syncVector.front();
 	Signal & aSignal = af->getSignal();
 
 	while(search &&
@@ -65,7 +65,7 @@ bool DeciderUWBIREDSync::attemptSync(const AirFrame* frame) {
 	return synchronized;
 };
 
-bool DeciderUWBIREDSync::evaluateEnergy(const AirFrame* frame, const AirFrameVector& syncVector) const {
+bool DeciderUWBIREDSync::evaluateEnergy(const airframe_ptr_t frame, const AirFrameVector& syncVector) const {
 	// Assumption: channel coherence time > signal duration
 	// Thus we can simply sample the first pulse of the received signal
 	const ConstMapping *const rxPower = frame->getSignal().getReceivingPower();

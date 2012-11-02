@@ -109,7 +109,7 @@ class MIXIM_API BMacLayer : public BaseMacLayer
     virtual void handleLowerControl(cMessage *msg);
 
   protected:
-    typedef std::list<MacPkt*> MacQueue;
+    typedef std::list<macpkt_ptr_t> MacQueue;
 
     /** @brief A queue to store packets from upper layer in case another
 	packet is still waiting for transmission.*/
@@ -258,7 +258,7 @@ class MIXIM_API BMacLayer : public BaseMacLayer
 	void sendPreamble();
 
 	/** @brief Internal function to attach a signal to the packet */
-	void attachSignal(MacPkt *macPkt);
+	void attachSignal(macpkt_ptr_t macPkt);
 
 	/** @brief Internal function to add a new packet from upper to the queue */
 	bool addToQueue(cMessage * msg);

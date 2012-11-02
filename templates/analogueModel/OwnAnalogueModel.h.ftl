@@ -35,7 +35,7 @@ public:
 	 * @param sendersPos	The position of the frame sender.
 	 * @param receiverPos	The position of frame receiver.
 	 */
-	virtual void filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos);
+	virtual void filterSignal(airframe_ptr_t frame, const Coord& sendersPos, const Coord& receiverPos);
 };
 
 #endif /* ${(amName?upper_case)}_H_ */

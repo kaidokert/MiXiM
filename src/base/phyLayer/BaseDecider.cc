@@ -9,7 +9,7 @@
 
 #include <cassert>
 
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 #include "PhyToMacControlInfo.h"
 #include "FWMath.h"
 
@@ -41,7 +41,7 @@ void BaseDecider::tProcessingSignal::startProcessing(first_type frame, second_ty
     }
 }
 
-simtime_t BaseDecider::processSignal(AirFrame* frame) {
+simtime_t BaseDecider::processSignal(airframe_ptr_t frame) {
 	deciderEV << "Processing AirFrame with ID " << frame->getId() << "..." << endl;
 
 	simtime_t HandleAgain = notAgain;
@@ -105,7 +105,7 @@ simtime_t BaseDecider::processSignal(AirFrame* frame) {
 	return HandleAgain;
 }
 
-double BaseDecider::getFrameReceivingPower(AirFrame* frame) const {
+double BaseDecider::getFrameReceivingPower(airframe_ptr_t frame) const {
 	// get the receiving power of the Signal at start-time
 	//Note: We assume the transmission power is represented by a rectangular function
 	//which discontinuities (at start and end of the signal) are represented
@@ -122,7 +122,7 @@ double BaseDecider::getFrameReceivingPower(AirFrame* frame) const {
 	return signal.getReceivingPower()->getValue(Argument(receivingStart));
 }
 
-simtime_t BaseDecider::processNewSignal(AirFrame* frame) {
+simtime_t BaseDecider::processNewSignal(airframe_ptr_t frame) {
 
 	if(currentSignal.isProcessing()) {
 		deciderEV << "Already receiving another AirFrame!" << endl;
@@ -156,7 +156,7 @@ simtime_t BaseDecider::processNewSignal(AirFrame* frame) {
 	return getNextSignalHandleTime(frame);
 }
 
-simtime_t BaseDecider::processSignalEnd(AirFrame* frame) {
+simtime_t BaseDecider::processSignalEnd(airframe_ptr_t frame) {
     if (frame != currentSignal.first)
         return notAgain; // it is not the frame which we are processing
 
@@ -196,16 +196,16 @@ simtime_t BaseDecider::processSignalEnd(AirFrame* frame) {
 	return getNextSignalHandleTime(frame);
 }
 
-DeciderResult* BaseDecider::createResult(const AirFrame* frame) const
+DeciderResult* BaseDecider::createResult(const airframe_ptr_t frame) const
 {
     return new DeciderResult(!frame->hasBitError());
 }
 
-simtime_t BaseDecider::processUnknownSignal(AirFrame* frame) {
+simtime_t BaseDecider::processUnknownSignal(airframe_ptr_t frame)
+{
 	opp_error("Unknown state for the AirFrame with ID %d", frame->getId());
 	return notAgain;
 }
-
 
 ChannelState BaseDecider::getChannelState() const {
 
@@ -215,8 +215,8 @@ ChannelState BaseDecider::getChannelState() const {
 	return ChannelState(!currentSignal.isProcessing() && (!bUseNewSense || pairRssiMaxEnd.second <= now), pairRssiMaxEnd.first);
 }
 
-
-simtime_t BaseDecider::handleChannelSenseRequest(ChannelSenseRequest* request) {
+simtime_t BaseDecider::handleChannelSenseRequest(ChannelSenseRequest* request)
+{
 
 	assert(request);
 
@@ -281,14 +281,14 @@ void BaseDecider::handleSenseRequestEnd(CSRInfo& requestInfo) {
 	answerCSR(requestInfo);
 }
 
-BaseDecider::eSignalState BaseDecider::getSignalState(const AirFrame* frame) const {
+BaseDecider::eSignalState BaseDecider::getSignalState(const airframe_ptr_t frame) const {
 	if (frame == currentSignal.first)
 		return currentSignal.second;
 
 	return NEW;
 }
 
-BaseDecider::eSignalState BaseDecider::setSignalState(const AirFrame* frame, BaseDecider::eSignalState newState) {
+BaseDecider::eSignalState BaseDecider::setSignalState(const airframe_ptr_t frame, BaseDecider::eSignalState newState) {
     if (frame == currentSignal.first) {
         currentSignal.second = newState;
         return currentSignal.second;
@@ -297,7 +297,7 @@ BaseDecider::eSignalState BaseDecider::setSignalState(const AirFrame* frame, Bas
     return NEW;
 }
 
-simtime_t BaseDecider::getNextSignalHandleTime(const AirFrame* frame) const {
+simtime_t BaseDecider::getNextSignalHandleTime(const airframe_ptr_t frame) const {
     if (frame != currentSignal.first)
         return notAgain;
     switch(getSignalState(frame)) {
@@ -390,8 +390,8 @@ BaseDecider::channel_sense_rssi_t BaseDecider::calcChannelSenseRSSI(simtime_t_cr
 	return std::make_pair(rssi, pairMapMaxEnd.second);
 }
 
-void BaseDecider::answerCSR(CSRInfo& requestInfo) {
-
+void BaseDecider::answerCSR(CSRInfo& requestInfo)
+{
     simtime_t            now            = phy->getSimTime(); // maybe better requestInfo.getAnswerTime()
     channel_sense_rssi_t pairRssiMaxEnd = calcChannelSenseRSSI(requestInfo.getSenseStart(), now);
 
@@ -405,7 +405,7 @@ void BaseDecider::answerCSR(CSRInfo& requestInfo) {
 	requestInfo.clear();
 }
 
-Mapping* BaseDecider::calculateSnrMapping(const AirFrame* frame) const
+Mapping* BaseDecider::calculateSnrMapping(const airframe_ptr_t frame) const
 {
 	/* calculate Noise-Strength-Mapping */
 	const Signal& signal = frame->getSignal();
@@ -435,9 +435,9 @@ void BaseDecider::getChannelInfo( simtime_t_cref  start
 }
 
 BaseDecider::rssi_mapping_t
-BaseDecider::calculateRSSIMapping( simtime_t_cref  start,
-                                   simtime_t_cref  end,
-                                   const AirFrame* exclude ) const
+BaseDecider::calculateRSSIMapping( simtime_t_cref       start,
+                                   simtime_t_cref       end,
+                                   const airframe_ptr_t exclude ) const
 {
 	if(exclude) {
 		deciderEV << "Creating RSSI map for range [" << SIMTIME_STR(start) << "," << SIMTIME_STR(end) << "] excluding AirFrame with id " << exclude->getId() << endl;

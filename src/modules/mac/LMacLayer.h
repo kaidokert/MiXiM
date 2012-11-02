@@ -119,7 +119,7 @@ class MIXIM_API  LMacLayer : public BaseMacLayer
     virtual void handleLowerControl(cMessage *msg);
 
     /** @brief Encapsulate the NetwPkt into an MacPkt */
-    virtual MacPkt* encapsMsg(cPacket*);
+    virtual macpkt_ptr_t encapsMsg(cPacket*);
 
   protected:
     typedef std::list<LMacPkt*> MacQueue;
@@ -221,7 +221,7 @@ class MIXIM_API  LMacLayer : public BaseMacLayer
     int nicId;
     
 	/** @brief Internal function to attach a signal to the packet */
-	void attachSignal(MacPkt *macPkt);
+	void attachSignal(macpkt_ptr_t macPkt);
 
 	/** @brief Transmission power of the node */
 	double txPower;

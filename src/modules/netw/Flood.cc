@@ -95,7 +95,7 @@ void Flood::finish() {
 void Flood::handleUpperMsg(cMessage* m) {
 
 	assert(dynamic_cast<cPacket*> (m));
-	NetwPkt *msg = encapsMsg(static_cast<cPacket*> (m));
+	netwpkt_ptr_t msg = encapsMsg(static_cast<cPacket*> (m));
 
 	msg->setSeqNum(seqNum);
 	seqNum++;
@@ -141,7 +141,7 @@ void Flood::handleUpperMsg(cMessage* m) {
 			 * notBroadcasted). Otherwise the message will be deleted.
 			 **/
 void Flood::handleLowerMsg(cMessage* m) {
-	NetwPkt *msg = static_cast<NetwPkt *> (m);
+    netwpkt_ptr_t msg = static_cast<netwpkt_ptr_t> (m);
 
 	//msg not broadcastes yet
 	if (notBroadcasted(msg)) {
@@ -156,11 +156,11 @@ void Flood::handleLowerMsg(cMessage* m) {
 		else if( LAddress::isL3Broadcast(msg->getDestAddr()) ) {
 			//check ttl and rebroadcast
 			if( msg->getTtl() > 1 ) {
-				NetwPkt *dMsg;
+			    netwpkt_ptr_t dMsg;
 				EV <<" data msg BROADCAST! ttl = "<<msg->getTtl()
 				<<" > 1 -> rebroadcast msg & send to upper\n";
 				msg->setTtl( msg->getTtl()-1 );
-				dMsg = static_cast<NetwPkt*>(msg->dup());
+				dMsg = static_cast<netwpkt_ptr_t>(msg->dup());
 				setDownControlInfo(dMsg, LAddress::L2BROADCAST);
 				sendDown(dMsg);
 				nbDataPacketsForwarded++;
@@ -210,7 +210,7 @@ void Flood::handleLowerMsg(cMessage* m) {
  * the list is full and a new message has to be entered, the oldest
  * entry is deleted.
  **/
-bool Flood::notBroadcasted(NetwPkt* msg) {
+bool Flood::notBroadcasted(netwpkt_ptr_t msg) {
 	if (!plainFlooding)
 		return true;
 
@@ -241,13 +241,13 @@ bool Flood::notBroadcasted(NetwPkt* msg) {
     return true;
 }
 
-NetwPkt* Flood::encapsMsg(cPacket *appPkt) {
+Flood::netwpkt_ptr_t Flood::encapsMsg(cPacket *appPkt) {
     LAddress::L2Type macAddr;
     LAddress::L3Type netwAddr;
 
     EV<<"in encaps...\n";
 
-    NetwPkt *pkt = new NetwPkt(appPkt->getName(), appPkt->getKind());
+    netwpkt_ptr_t pkt = new NetwPkt(appPkt->getName(), appPkt->getKind());
     pkt->setBitLength(headerLength);
 
     cObject* cInfo = appPkt->removeControlInfo();

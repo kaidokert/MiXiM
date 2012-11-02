@@ -52,7 +52,9 @@ class MacPkt;
  * @ingroup power
  * @ingroup phyLayer
  */
-class MIXIM_API PhyLayerBattery : public PhyLayer{
+class MIXIM_API PhyLayerBattery : public PhyLayer {
+public:
+    typedef MacPkt* macpkt_ptr_t;
 protected:
 	/** @brief Number of power consuming activities (accounts).*/
 	int numActivities;
@@ -101,7 +103,7 @@ protected:
 	 * a default TX-current for every transmission but a current depending on
 	 * the actual used TX power for a packet.
 	 */
-	virtual double calcTXCurrentForPacket(MacPkt* /*pkt*/, MacToPhyControlInfo* /*cInfo*/) const
+	virtual double calcTXCurrentForPacket(macpkt_ptr_t /*pkt*/, MacToPhyControlInfo* /*cInfo*/) const
 	{ return -1.0; }
 
 	/** @brief Updates the actual current drawn for the passed state.*/
@@ -127,7 +129,7 @@ protected:
 	 *
 	 * Calls the base classes overriden method for normal handling.
 	 */
-	virtual void handleAirFrame(AirFrame* frame);
+	virtual void handleAirFrame(airframe_ptr_t frame);
 
 	/**
 	 * @brief Captures changes in host state.

@@ -205,7 +205,7 @@ protected:
     /**
      * @brief Encapsulates the NetwPkt into the MacPkt and sets the parameters.
      */
-    virtual MacPkt* encapsMsg(cPacket* pkt);
+    virtual macpkt_ptr_t encapsMsg(cPacket* pkt);
 };
 
 #endif

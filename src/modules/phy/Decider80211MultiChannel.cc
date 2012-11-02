@@ -9,11 +9,13 @@
 
 #include "DeciderResult80211.h"
 #include "utility/Consts80211.h"
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 
-Decider80211MultiChannel::~Decider80211MultiChannel() {}
+Decider80211MultiChannel::~Decider80211MultiChannel()
+{
+}
 
-DeciderResult* Decider80211MultiChannel::createResult(const AirFrame* frame) const {
+DeciderResult* Decider80211MultiChannel::createResult(const airframe_ptr_t frame) const {
     DeciderResult80211* result = static_cast<DeciderResult80211*>(Decider80211Battery::createResult(frame));
 
 	if(result->isSignalCorrect() && frame->getChannel() != phy->getCurrentRadioChannel()) {

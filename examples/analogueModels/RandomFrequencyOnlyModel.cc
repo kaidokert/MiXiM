@@ -1,6 +1,6 @@
 #include "RandomFrequencyOnlyModel.h"
 
-#include "AirFrame_m.h"
+#include "MiximAirFrame.h"
 
 bool RandomFrequencyOnlyModel::initFromMap(const ParameterMap& params) {
     ParameterMap::const_iterator it;
@@ -21,7 +21,7 @@ bool RandomFrequencyOnlyModel::initFromMap(const ParameterMap& params) {
  * put some random attenuations over time and frequency into
  * the attenuation mapping.
  */
-void RandomFrequencyOnlyModel::filterSignal(AirFrame *frame, const Coord& /*sendersPos*/, const Coord& /*receiverPos*/){
+void RandomFrequencyOnlyModel::filterSignal(airframe_ptr_t frame, const Coord& /*sendersPos*/, const Coord& /*receiverPos*/){
 	Signal& signal = frame->getSignal();
 
 	/* At first get a new instance of the default Mapping implementation

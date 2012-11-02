@@ -1,8 +1,8 @@
 #include "DeciderUWBIREDSyncOnAddress.h"
 
 #include "DeciderUWBIRED.h"
-#include "MacPkt_m.h"
-#include "AirFrame_m.h"
+#include "MiXiMMacPkt.h"
+#include "MiXiMAirFrame.h"
 
 bool DeciderUWBIREDSyncOnAddress::initFromMap(const ParameterMap& params) {
     bool                         bInitSuccess = true;
@@ -17,15 +17,14 @@ bool DeciderUWBIREDSyncOnAddress::initFromMap(const ParameterMap& params) {
     return DeciderUWBIRED::initFromMap(params) && bInitSuccess;
 }
 
-bool DeciderUWBIREDSyncOnAddress::attemptSync(const AirFrame* /*frame*/) {
+bool DeciderUWBIREDSyncOnAddress::attemptSync(const airframe_ptr_t /*frame*/) {
     if (!currentSignal.isProcessing())
         return false;
 
 	cMessage* encaps = currentSignal.first->getEncapsulatedPacket();
 	assert(static_cast<MacPkt*>(encaps));
-	MacPkt* macPkt = static_cast<MacPkt*>(encaps);
 
-	return (macPkt->getSrcAddr()==syncAddress);
+	return ((static_cast<MacPkt*>(encaps))->getSrcAddr()==syncAddress);
 };
 
 

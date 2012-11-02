@@ -77,7 +77,7 @@ public:
 	 */
 	virtual bool initFromMap(const ParameterMap& params);
 
-	virtual bool attemptSync(const AirFrame* frame);
+	virtual bool attemptSync(const airframe_ptr_t frame);
 
 protected:
 	LAddress::L2Type syncAddress;

@@ -88,8 +88,8 @@ protected:
 
 	/** @brief Pair of a AirFrame and the state it is in. */
 	typedef struct tProcessingSignal {
-	    typedef AirFrame*    first_type;    /// @c first_type is the first bound type
-	    typedef eSignalState second_type;   /// @c second_type is the second bound type
+	    typedef airframe_ptr_t first_type;    /// @c first_type is the first bound type
+	    typedef eSignalState   second_type;   /// @c second_type is the second bound type
 
 	    first_type  first;  /// @c first is a copy of the first object
 	    second_type second; /// @c second is a copy of the second object
@@ -239,7 +239,7 @@ public:
 	 * Returns the time point when the decider wants to be given the AirFrame
 	 * again.
 	 */
-	virtual simtime_t processSignal(AirFrame* frame);
+	virtual simtime_t processSignal(airframe_ptr_t frame);
 
     /** @brief Cancels processing a AirFrame.
      */
@@ -295,7 +295,7 @@ protected:
 	 * Default implementation use only the arrival time point
 	 * for signal receive power calculation.
 	 */
-	virtual double getFrameReceivingPower(AirFrame* frame) const;
+	virtual double getFrameReceivingPower(airframe_ptr_t frame) const;
 
 	/**
 	 * @brief Returns the next signal state (END, HEADER, NEW).
@@ -318,7 +318,7 @@ protected:
      * @param frame The current frame which is in processing.
      * @return The next scheduler handle time.
      */
-    virtual simtime_t getNextSignalHandleTime(const AirFrame* frame) const;
+    virtual simtime_t getNextSignalHandleTime(const airframe_ptr_t frame) const;
 
 	/**
 	 * @brief Processes a new Signal. Returns the time it wants to
@@ -329,7 +329,7 @@ protected:
 	 * to receive another AirFrame. If thats the case it waits for the end
 	 * of the signal.
 	 */
-	virtual simtime_t processNewSignal(AirFrame* frame);
+	virtual simtime_t processNewSignal(airframe_ptr_t frame);
 
 	/**
 	 * @brief Processes the end of the header of a received Signal.
@@ -338,7 +338,7 @@ protected:
 	 *
 	 * Default implementation does not handle signal headers.
 	 */
-	virtual simtime_t processSignalHeader(AirFrame* /*frame*/) {
+	virtual simtime_t processSignalHeader(airframe_ptr_t /*frame*/) {
 		opp_error("BaseDecider does not handle Signal headers!");
 		return notAgain;
 	}
@@ -348,7 +348,7 @@ protected:
 	 * @param frame The processed frame.
 	 * @return The result for frame.
 	 */
-    virtual DeciderResult* createResult(const AirFrame* frame) const;
+    virtual DeciderResult* createResult(const airframe_ptr_t frame) const;
 
 	/**
 	 * @brief Processes the end of a received Signal.
@@ -359,13 +359,13 @@ protected:
 	 * Default implementation just decides every signal as correct and passes it
 	 * to the upper layer.
 	 */
-	virtual simtime_t processSignalEnd(AirFrame* frame);
+	virtual simtime_t processSignalEnd(airframe_ptr_t frame);
 
 	/**
 	 * @brief Processes any Signal for which no state could be found.
 	 * (is an error case).
 	 */
-	virtual simtime_t processUnknownSignal(AirFrame* frame);
+	virtual simtime_t processUnknownSignal(airframe_ptr_t frame);
 
 	/**
 	 * @brief Returns the SignalState for the passed AirFrame.
@@ -374,8 +374,8 @@ protected:
 	 * is the "currentSignal" and returns its state or if not
 	 * "NEW".
 	 */
-	virtual eSignalState getSignalState(const AirFrame* frame) const;
-    virtual eSignalState setSignalState(const AirFrame* frame, eSignalState newState);
+	virtual eSignalState getSignalState(const airframe_ptr_t frame) const;
+    virtual eSignalState setSignalState(const airframe_ptr_t frame, eSignalState newState);
 
 	/**
 	 * @brief Handles a new incoming ChannelSenseRequest and returns the next
@@ -461,7 +461,7 @@ protected:
 	 * Note: 'divided' means here the special element-wise operation on
 	 * mappings.
 	 */
-	virtual Mapping* calculateSnrMapping(const AirFrame* frame) const;
+	virtual Mapping* calculateSnrMapping(const airframe_ptr_t frame) const;
 
     /** @brief Return type of BaseDecider::calculateRSSIMapping function.
      *
@@ -480,9 +480,9 @@ protected:
 	 *
 	 * @return The mapping and the maximum reception end of all air frames in rang [start,end].
 	 */
-	virtual rssi_mapping_t calculateRSSIMapping( simtime_t_cref  start
-	                                           , simtime_t_cref  end
-	                                           , const AirFrame* exclude = NULL) const;
+	virtual rssi_mapping_t calculateRSSIMapping( simtime_t_cref       start
+	                                           , simtime_t_cref       end
+	                                           , const airframe_ptr_t exclude = NULL) const;
 };
 
 #endif /* BASEDECIDER_H_ */

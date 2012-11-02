@@ -1,6 +1,6 @@
 #include "BreakpointPathlossModel.h"
 
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 
 #define debugEV (ev.isDisabled()||!debug) ? ev : ev << "PhyLayer(BreakpointPathlossModel): "
 
@@ -93,7 +93,7 @@ bool BreakpointPathlossModel::initFromMap(const ParameterMap& params) {
     return AnalogueModel::initFromMap(params) && bInitSuccess;
 }
 
-void BreakpointPathlossModel::filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos) {
+void BreakpointPathlossModel::filterSignal(airframe_ptr_t frame, const Coord& sendersPos, const Coord& receiverPos) {
 	Signal& signal = frame->getSignal();
 
 	/** Calculate the distance factor */

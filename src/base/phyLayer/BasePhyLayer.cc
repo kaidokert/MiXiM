@@ -353,7 +353,7 @@ void BasePhyLayer::handleMessage(cMessage* msg) {
 
 	//AirFrames
 	} else if(msg->getKind() == AIR_FRAME){
-		handleAirFrame(static_cast<AirFrame*>(msg));
+		handleAirFrame(static_cast<airframe_ptr_t>(msg));
 
 	//unknown message
 	} else {
@@ -362,7 +362,7 @@ void BasePhyLayer::handleMessage(cMessage* msg) {
 	}
 }
 
-void BasePhyLayer::handleAirFrame(AirFrame* frame) {
+void BasePhyLayer::handleAirFrame(airframe_ptr_t frame) {
 	//TODO: ask jerome to set air frame priority in his UWBIRPhy
 	//assert(frame->getSchedulingPriority() == airFramePriority);
 
@@ -385,7 +385,7 @@ void BasePhyLayer::handleAirFrame(AirFrame* frame) {
 	}
 }
 
-void BasePhyLayer::handleAirFrameStartReceive(AirFrame* frame) {
+void BasePhyLayer::handleAirFrameStartReceive(airframe_ptr_t frame) {
 	coreEV << "Received new AirFrame " << frame << " from channel " << frame->getChannel() << "." << endl;
 
 	if(channelInfo.isChannelEmpty()) {
@@ -422,7 +422,7 @@ void BasePhyLayer::handleAirFrameStartReceive(AirFrame* frame) {
 	}
 }
 
-void BasePhyLayer::handleAirFrameReceiving(AirFrame* frame) {
+void BasePhyLayer::handleAirFrameReceiving(airframe_ptr_t frame) {
 
 	Signal&   FrameSignal    = frame->getSignal();
 	simtime_t nextHandleTime = decider->processSignal(frame);
@@ -453,7 +453,8 @@ void BasePhyLayer::handleAirFrameReceiving(AirFrame* frame) {
 	sendSelfMessage(frame, nextHandleTime);
 }
 
-void BasePhyLayer::handleAirFrameEndReceive(AirFrame* frame) {
+void BasePhyLayer::handleAirFrameEndReceive(airframe_ptr_t frame)
+{
 	coreEV << "End of Airframe with ID " << frame->getId() << "." << endl;
 
 	simtime_t earliestInfoPoint = channelInfo.removeAirFrame(frame);
@@ -492,7 +493,7 @@ void BasePhyLayer::handleUpperMessage(cMessage* msg){
 	// build the AirFrame to send
 	assert(dynamic_cast<cPacket*>(msg) != 0);
 
-	AirFrame* frame = encapsMsg(static_cast<cPacket*>(msg));
+	airframe_ptr_t frame = encapsMsg(static_cast<cPacket*>(msg));
 
 	// make sure there is no self message of kind TX_OVER scheduled
 	// and schedule the actual one
@@ -502,7 +503,7 @@ void BasePhyLayer::handleUpperMessage(cMessage* msg){
 	sendMessageDown(frame);
 }
 
-AirFrame *BasePhyLayer::encapsMsg(cPacket *macPkt)
+BasePhyLayer::airframe_ptr_t BasePhyLayer::encapsMsg(cPacket *macPkt)
 {
 	// the cMessage passed must be a MacPacket... but no cast needed here
 	// MacPkt* pkt = static_cast<MacPkt*>(msg);
@@ -512,7 +513,7 @@ AirFrame *BasePhyLayer::encapsMsg(cPacket *macPkt)
 	assert(ctrlInfo);
 
 	// create the new AirFrame
-	AirFrame* frame = new AirFrame(macPkt->getName(), AIR_FRAME);
+	airframe_ptr_t frame = new MiximAirFrame(macPkt->getName(), AIR_FRAME);
 
 	// Retrieve the pointer to the Signal-instance from the ControlInfo-instance.
 	// We are now the new owner of this instance.
@@ -534,7 +535,6 @@ AirFrame *BasePhyLayer::encapsMsg(cPacket *macPkt)
 	frame->setBitLength(headerLength);
 	frame->setId(world->getUniqueAirFrameId());
 	frame->setChannel(radio->getCurrentChannel());
-
 
 	// pointer and Signal not needed anymore
 	delete s;
@@ -603,7 +603,7 @@ void BasePhyLayer::handleSelfMessage(cMessage* msg) {
 
 	//AirFrame
 	case AIR_FRAME:
-		handleAirFrame(static_cast<AirFrame*>(msg));
+		handleAirFrame(static_cast<airframe_ptr_t>(msg));
 		break;
 
 	//ChannelSenseRequest
@@ -626,8 +626,7 @@ void BasePhyLayer::sendMacPktUp(cMessage* pkt) {
 	send(pkt, upperLayerOut);
 }
 
-void BasePhyLayer::sendMessageDown(AirFrame* msg) {
-
+void BasePhyLayer::sendMessageDown(airframe_ptr_t msg) {
 	sendToChannel(msg);
 }
 
@@ -639,7 +638,7 @@ void BasePhyLayer::sendSelfMessage(cMessage* msg, simtime_t_cref time) {
 }
 
 
-void BasePhyLayer::filterSignal(AirFrame *frame) {
+void BasePhyLayer::filterSignal(airframe_ptr_t frame) {
 	if (analogueModels.empty())
 		return;
 
@@ -846,7 +845,7 @@ void BasePhyLayer::sendControlMsgToMac(cMessage* msg) {
 	sendControlMessageUp(msg);
 }
 
-void BasePhyLayer::sendUp(AirFrame* frame, DeciderResult* result) {
+void BasePhyLayer::sendUp(airframe_ptr_t frame, DeciderResult* result) {
 
 	coreEV << "Decapsulating MacPacket from Airframe with ID " << frame->getId() << " and sending it up to MAC." << endl;
 

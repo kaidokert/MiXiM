@@ -37,7 +37,7 @@ protected:
 	 */
 	typedef std::map<std::string, cMsgPar> ParameterMap;
 
-	typedef std::list<AirFrame*> AirFrameList;
+	typedef std::list<airframe_ptr_t> AirFrameList;
 
 	/** @brief Defines the all AirFrames for one test scenario which
 	 * can appear on the channel.*/
@@ -267,7 +267,7 @@ protected:
 	void fillAirFramesOnChannel();
 
 	// create a test AirFrame identified by an index
-	AirFrame* createTestAirFrame(int i);
+	airframe_ptr_t createTestAirFrame(int i);
 
 	// pass AirFrames currently on the (virtual) channel to currently tested decider
 	void passAirFramesOnChannel(AirFrameVector& out) const;
@@ -358,14 +358,14 @@ protected:
 	simtime_t testTime;
 
 	// some test AirFrames
-	AirFrame* TestAF1;
-	AirFrame* TestAF2;
-	AirFrame* TestAF3;
-	AirFrame* TestAF4;
+	airframe_ptr_t TestAF1;
+	airframe_ptr_t TestAF2;
+	airframe_ptr_t TestAF3;
+	airframe_ptr_t TestAF4;
 
 	// AirFrames for SNR-threshold tests
-	AirFrame* TestAF5;
-	AirFrame* TestAF6;
+	airframe_ptr_t TestAF5;
+	airframe_ptr_t TestAF6;
 
 
 	// Used for ChannelSenseRequest tests to define the expected result of a Test sense
@@ -386,7 +386,7 @@ protected:
 	ChannelSenseRequest*  testChannelSense;
 
 	// pointer to the AirFrame that is currently processed by decider
-	const AirFrame* processedAF;
+	airframe_ptr_t processedAF;
 
 	// value for no attenuation (in attenuation-mappings)
 	double noAttenuation;
@@ -468,10 +468,10 @@ protected:
 		return tmp;
 	}
 
-	AirFrame* addAirFrameToPool(simtime_t_cref start, simtime_t_cref end, double power);
-	AirFrame* addAirFrameToPool(simtime_t_cref start, simtime_t_cref payloadStart, simtime_t_cref end,
+	airframe_ptr_t addAirFrameToPool(simtime_t_cref start, simtime_t_cref end, double power);
+	airframe_ptr_t addAirFrameToPool(simtime_t_cref start, simtime_t_cref payloadStart, simtime_t_cref end,
 								double headerPower, double payloadPower);
-	void removeAirFrameFromPool(AirFrame* af);
+	void removeAirFrameFromPool(airframe_ptr_t af);
 
 	void freeAirFramePool();
 
@@ -516,7 +516,7 @@ public:
 	 * the corresponding DeciderResult up to MACLayer
 	 *
 	 */
-	virtual void sendUp(AirFrame* packet, DeciderResult* result);
+	virtual void sendUp(airframe_ptr_t packet, DeciderResult* result);
 
 	/**
 	 * @brief Returns a special test-time

@@ -20,7 +20,7 @@
 #include "UWBIRStochasticPathlossModel.h"
 
 #include "BaseWorldUtility.h"
-#include "AirFrame_m.h"
+#include "MiXiMAirFrame.h"
 
 //const double UWBIRStochasticPathlossModel::Gtx = 0.9, UWBIRStochasticPathlossModel::Grx = 0.9, UWBIRStochasticPathlossModel::ntx = 0.9, UWBIRStochasticPathlossModel::nrx = 0.9;
 const double UWBIRStochasticPathlossModel::Gtx = 1, UWBIRStochasticPathlossModel::Grx = 1, UWBIRStochasticPathlossModel::ntx = 1, UWBIRStochasticPathlossModel::nrx = 1;
@@ -100,7 +100,7 @@ bool UWBIRStochasticPathlossModel::initFromMap(const ParameterMap& params) {
     return AnalogueModel::initFromMap(params) && bInitSuccess;
 }
 
-void UWBIRStochasticPathlossModel::filterSignal(AirFrame *frame, const Coord& sendersPos, const Coord& receiverPos)
+void UWBIRStochasticPathlossModel::filterSignal(airframe_ptr_t frame, const Coord& sendersPos, const Coord& receiverPos)
 {
 	if (isEnabled) {
 		Signal& signal = frame->getSignal();
