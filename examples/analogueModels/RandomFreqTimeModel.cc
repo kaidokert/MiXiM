@@ -1,6 +1,6 @@
 #include "RandomFreqTimeModel.h"
 
-#include "MiximAirFrame.h"
+#include "MiXiMAirFrame.h"
 
 bool RandomFreqTimeModel::initFromMap(const ParameterMap& params) {
     ParameterMap::const_iterator it;

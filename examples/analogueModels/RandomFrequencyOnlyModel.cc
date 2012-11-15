@@ -1,6 +1,6 @@
 #include "RandomFrequencyOnlyModel.h"
 
-#include "MiximAirFrame.h"
+#include "MiXiMAirFrame.h"
 
 bool RandomFrequencyOnlyModel::initFromMap(const ParameterMap& params) {
     ParameterMap::const_iterator it;
