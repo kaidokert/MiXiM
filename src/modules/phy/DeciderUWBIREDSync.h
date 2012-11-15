@@ -49,7 +49,7 @@ public:
 	                  , double                 sensitivity
 	                  , int                    myIndex
 	                  , bool                   debug )
-		: DeciderUWBIRED(phy, 0.0, myIndex, debug)
+		: DeciderUWBIRED(phy, sensitivity, myIndex, debug)
 		, tmin()
 	{}
 
