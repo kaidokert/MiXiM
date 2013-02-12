@@ -19,7 +19,6 @@
  *              subclass to create your own MAC layer
  **************************************************************************/
 
-
 #include "BaseMacLayer.h"
 
 #include <cassert>
@@ -303,11 +302,13 @@ ConstMapping* BaseMacLayer::createSingleFrequencyMapping(simtime_t_cref         
 	return res;
 }
 
-BaseConnectionManager* BaseMacLayer::getConnectionManager() const {
+BaseConnectionManager* BaseMacLayer::getConnectionManager() const
+{
 	return ChannelAccess::getConnectionManager(getNic());
 }
 
-const LAddress::L2Type& BaseMacLayer::getUpperDestinationFromControlInfo(const cObject *const pCtrlInfo) const {
+const LAddress::L2Type& BaseMacLayer::getUpperDestinationFromControlInfo(const cObject * const pCtrlInfo) const
+{
 	return NetwToMacControlInfo::getDestFromControlInfo(pCtrlInfo);
 }
 

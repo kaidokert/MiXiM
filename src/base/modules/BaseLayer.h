@@ -19,7 +19,6 @@
  *              subclass to create your own layer
  **************************************************************************/
 
-
 #ifndef BASE_LAYER_H
 #define BASE_LAYER_H
 
@@ -141,7 +140,6 @@ protected:
     virtual void handleUpperControl(cMessage *msg) = 0;
 
     /*@}*/
-
 
     /**
      * @name Convenience Functions

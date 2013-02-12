@@ -37,7 +37,6 @@ void AdaptiveProbabilisticBroadcast::handleLowerMsg(cMessage* msg)
 	ProbabilisticBroadcast::handleLowerMsg(msg);
 }
 
-
 void AdaptiveProbabilisticBroadcast::updateNeighMap(ProbabilisticBroadcastPkt* m)
 {
 	//find the network address of the node who sent the msg
@@ -63,7 +62,6 @@ void AdaptiveProbabilisticBroadcast::updateNeighMap(ProbabilisticBroadcastPkt* m
 		// set the context pointer to point to the integer that resembles to the address of
 		// the node to be removed when the corresponding event occurs
 		(ret.first)->second->setContextPointer((void*)(&(ret.first)->first));
-
 
 	}
 	//if the node is NOT a "new" neighbor update its timer
@@ -123,7 +121,7 @@ void AdaptiveProbabilisticBroadcast::updateBeta()
 	else
 		beta = 0.1;
 	if(trace) {
-      bvec.record(beta);
+		bvec.record(beta);
 	}
 }
 

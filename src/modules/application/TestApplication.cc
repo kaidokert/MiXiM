@@ -20,7 +20,6 @@ void TestApplication::initialize(int stage) {
         ctrlOut = findGate("lowerControlOut");
         ctrlIn  = findGate("lowerControlIn");
 
-
         // Retrieve parameters
         debug = par("debug").boolValue();
         stats = par("stats").boolValue();

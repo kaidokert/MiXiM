@@ -43,8 +43,8 @@
  */
 class SimpleNetwLayer : public BaseModule {
 public:
-    typedef NetwPkt netwpkt_t;
-    typedef netwpkt_t* netwpkt_ptr_t;
+	typedef NetwPkt    netwpkt_t;
+	typedef netwpkt_t* netwpkt_ptr_t;
 //--------members----------
 private:
 	/** @brief Copy constructor is not allowed.
@@ -112,7 +112,7 @@ protected:
 	}
 
 	void forwardPacket(netwpkt_ptr_t pkt, const LAddress::L2Type& nextHop){
-	    netwpkt_ptr_t fwd = new netwpkt_t(pkt->getName(), pkt->getKind());
+		netwpkt_ptr_t fwd = new netwpkt_t(pkt->getName(), pkt->getKind());
 
 		fwd->setDestAddr(pkt->getDestAddr());
 		fwd->setSrcAddr(pkt->getSrcAddr());

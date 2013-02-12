@@ -61,7 +61,6 @@
 // Second International Omnet++ Workshop,Simu'TOOLS, Rome, 6 Mar 09.
 // http://portal.acm.org/citation.cfm?id=1537714
 //
-
 #ifndef UWBIR_PHY_LAYER_H
 #define UWBIR_PHY_LAYER_H
 

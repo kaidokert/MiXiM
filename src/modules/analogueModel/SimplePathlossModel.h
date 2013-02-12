@@ -28,7 +28,6 @@ private:
 	 */
 	SimplePathlossConstMapping& operator=(const SimplePathlossConstMapping&);
 
-
 protected:
 	/** @brief The factor dependent on the distance of the transmission.*/
 	const double distFactor;

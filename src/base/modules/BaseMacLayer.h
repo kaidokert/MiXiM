@@ -153,15 +153,14 @@ protected:
      */
     virtual void handleLowerMsg(cMessage *msg);
 
-    virtual void handleSelfMsg(cMessage*){
+    virtual void handleSelfMsg(cMessage*) {
 	error("BaseMacLayer does not handle self messages");
-    };
+    }
     virtual void handleLowerControl(cMessage* msg);
 
-    virtual void handleUpperControl(cMessage*){
+    virtual void handleUpperControl(cMessage*) {
 	error("BaseMacLayer does not handle control messages from upper layers");
-    };
-
+    }
 
     /** @brief decapsulate the network message from the MacPkt */
     virtual cPacket* decapsMsg(macpkt_ptr_t);
@@ -255,10 +254,12 @@ protected:
 
     /** @brief Pointer to nic Module.
      */
-    const cModule* getNic() const {
+    const cModule* getNic() const
+    {
         return getParentModule();
     }
-    cModule* getNic() {
+    cModule* getNic()
+    {
         return getParentModule();
     }
 };

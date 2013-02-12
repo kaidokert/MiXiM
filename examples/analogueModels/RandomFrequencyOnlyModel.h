@@ -49,10 +49,15 @@ public:
 	 * work also, but using "Dimension::time()" saves us a string comparison
 	 * and should therefore be prefered instead of using "Dimension("time")".
 	 */
-	RandomFrequencyOnlyModel()
-	    : frequency("frequency")
-	    , dimensions(Dimension::time, frequency)
-	{}
+	RandomFrequencyOnlyModel(int seed = 23):
+		frequency("frequency"),
+		dimensions(Dimension::time, frequency) {
+
+		//sets the seed for random number generation. The PhyLayer
+		//(which created the analogue models) gets the seed from the
+		//configuration parameters inside the xml-config
+		srand(seed);
+	}
 
 	/** @brief Initialize the analog model from XML map data.
 	 *

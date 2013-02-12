@@ -81,13 +81,13 @@ public:
     const Coord* getPgs(){
     	initializeIfNecessary();
         return &playgroundSize;
-    };
+    }
 
     /** @brief Returns true if our playground represents a torus (borders are connected)*/
     bool useTorus(){
     	initializeIfNecessary();
     	return useTorusFlag;
-    };
+    }
 
     /** @brief Random position somewhere in the playground */
     virtual Coord getRandomPosition();
@@ -105,7 +105,7 @@ public:
     	initializeIfNecessary();
 
     	// if counter has done one complete cycle and will be set to a value it already had
-    	if (airFrameId == -1){
+    	if (airFrameId == -1) {
     		// print a warning
     		ev << "WARNING: AirFrameId-Counter has done one complete cycle."
     		<< " AirFrameIds are repeating now and may not be unique anymore." << endl;

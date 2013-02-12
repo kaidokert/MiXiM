@@ -18,7 +18,6 @@
  * part of:     framework implementation developed by tkn
  **************************************************************************/
 
-
 #ifndef BASE_MODULE_H
 #define BASE_MODULE_H
 
@@ -156,7 +155,7 @@ private:
      */
     const cModule* getNode() const {
     	return findHost();
-    };
+    }
 
     /**
      * @brief Called by the signaling mechanism whenever a change of a category occurs

@@ -640,7 +640,6 @@ void LMacLayer::handleLowerControl(cMessage *msg)
 
 }
 
-
 /**
  * Try to find a new slot after collision. If not possible, set own slot to -1 (not able to send anything)
  */

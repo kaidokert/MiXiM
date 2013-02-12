@@ -11,7 +11,8 @@
  * @ingroup phyLayer
  * @ingroup macLayer
  */
-class MIXIM_API MacToPhyControlInfo: public cObject {
+class MIXIM_API MacToPhyControlInfo: public cObject
+{
 protected:
 	/** @brief A pointer to the signal representing the transmission.*/
 	Signal* signal;
@@ -76,41 +77,44 @@ public:
 		return tmp;
 	}
 
-    /**
-     * @brief Attaches a "control info" structure (object) to the message pMsg.
-     *
-     * This is most useful when passing packets between protocol layers
-     * of a protocol stack, the control info will contain the signal.
-     *
-     * The "control info" object will be deleted when the message is deleted.
-     * Only one "control info" structure can be attached (the second
-     * setL3ToL2ControlInfo() call throws an error).
-     *
-     * @param pMsg		The message where the "control info" shall be attached.
-     * @param pSignal	The signal which should be send.
-     */
-    static cObject* setControlInfo(cMessage *const pMsg, Signal *const pSignal) {
-    	MacToPhyControlInfo *const cCtrlInfo = new MacToPhyControlInfo(pSignal);
-    	pMsg->setControlInfo(cCtrlInfo);
+        /**
+         * @brief Attaches a "control info" structure (object) to the message pMsg.
+         *
+         * This is most useful when passing packets between protocol layers
+         * of a protocol stack, the control info will contain the signal.
+         *
+         * The "control info" object will be deleted when the message is deleted.
+         * Only one "control info" structure can be attached (the second
+         * setL3ToL2ControlInfo() call throws an error).
+         *
+         * @param pMsg		The message where the "control info" shall be attached.
+         * @param pSignal	The signal which should be send.
+         */
+        static cObject* setControlInfo(cMessage * const pMsg, Signal * const pSignal)
+        {
+            MacToPhyControlInfo * const cCtrlInfo = new MacToPhyControlInfo(pSignal);
+            pMsg->setControlInfo(cCtrlInfo);
 
-    	return cCtrlInfo;
-    }
-    /**
-     * @brief extracts the signal from message "control info".
-     */
-    static Signal* getSignal(cMessage *const pMsg) {
-    	return getSignalFromControlInfo(pMsg->getControlInfo());
-    }
-    /**
-     * @brief extracts the signal from "control info".
-     */
-    static Signal* getSignalFromControlInfo(cObject *const pCtrlInfo) {
-    	MacToPhyControlInfo *const cCtrlInfo = dynamic_cast<MacToPhyControlInfo *const>(pCtrlInfo);
+            return cCtrlInfo;
+        }
+        /**
+         * @brief extracts the signal from message "control info".
+         */
+        static Signal* getSignal(cMessage * const pMsg)
+        {
+            return getSignalFromControlInfo(pMsg->getControlInfo());
+        }
+        /**
+         * @brief extracts the signal from "control info".
+         */
+        static Signal* getSignalFromControlInfo(cObject * const pCtrlInfo)
+        {
+            MacToPhyControlInfo * const cCtrlInfo = dynamic_cast<MacToPhyControlInfo * const >(pCtrlInfo);
 
-    	if (cCtrlInfo)
-    		return cCtrlInfo->retrieveSignal();
-    	return NULL;
-    }
+            if (cCtrlInfo)
+                return cCtrlInfo->retrieveSignal();
+            return NULL;
+        }
 };
 
 #endif /*MACTOPHYCONTROLINFO_H_*/

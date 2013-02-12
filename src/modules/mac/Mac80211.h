@@ -17,7 +17,6 @@
  * part of:     framework implementation developed by tkn
  **************************************************************************/
 
-
 #ifndef MAC_80211_H
 #define MAC_80211_H
 

@@ -71,7 +71,7 @@ public:
      */
     virtual void handleMessage( cMessage* ){
         error("ARP module cannot receive messages!");
-    };
+    }
 
     /** @brief returns a L2 address to a given L3 address.*/
     virtual LAddress::L2Type getMacAddr(const LAddress::L3Type& netwAddr) const;

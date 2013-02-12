@@ -24,7 +24,6 @@
 
 #include "NicEntry.h"
 
-
 /**
  * @brief NicEntry is used by ConnectionManager to store the necessary
  * information for each nic
@@ -38,7 +37,7 @@ class NicEntryDirect: public NicEntry
   public:
     /** @brief Constructor, initializes all members
      */
-    NicEntryDirect(bool debug) : NicEntry(debug) {};
+    NicEntryDirect(bool debug) : NicEntry(debug) {}
 
     /**
      * @brief Destructor -- needs to be there...

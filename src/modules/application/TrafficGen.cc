@@ -66,7 +66,6 @@ void TrafficGen::handleSelfMsg(cMessage *msg)
 	case SEND_PACKET_TIMER:
 		assert(msg == delayTimer);
 
-
 		sendBroadcast();
 
 		remainingBurst--;
@@ -86,7 +85,6 @@ void TrafficGen::handleSelfMsg(cMessage *msg)
 	}
 }
 
-
 void TrafficGen::handleLowerMsg(cMessage *msg)
 {
 	cPacket* pkt = static_cast<cPacket*>(msg);
@@ -96,7 +94,6 @@ void TrafficGen::handleLowerMsg(cMessage *msg)
 	delete msg;
 	msg = 0;
 }
-
 
 void TrafficGen::sendBroadcast()
 {

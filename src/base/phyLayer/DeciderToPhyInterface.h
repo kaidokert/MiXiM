@@ -39,8 +39,8 @@ class DeciderResult;
 class MIXIM_API DeciderToPhyInterface
 {
 public:
-    typedef MiximAirFrame airframe_t;
-    typedef airframe_t*   airframe_ptr_t;
+	typedef MiximAirFrame airframe_t;
+	typedef airframe_t*   airframe_ptr_t;
 	/**
 	 * @brief Type for container of AirFrames.
 	 *

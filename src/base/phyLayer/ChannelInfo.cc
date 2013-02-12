@@ -28,8 +28,8 @@ void ChannelInfo::addAirFrame(airframe_ptr_t frame, simtime_t_cref startTime)
 }
 
 void ChannelInfo::addToInactives(airframe_ptr_t frame,
-								 simtime_t_cref startTime,
-								 simtime_t_cref endTime)
+                                 simtime_t_cref startTime,
+                                 simtime_t_cref endTime)
 {
 	// At first, check if some inactive AirFrames can be removed because the
 	// AirFrame to in-activate was the last one they intersected with.

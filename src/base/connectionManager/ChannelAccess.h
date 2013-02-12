@@ -20,7 +20,6 @@
  *                from this class and use the sendToChannel() function!!
  **************************************************************************/
 
-
 #ifndef CHANNEL_ACCESS_H
 #define CHANNEL_ACCESS_H
 

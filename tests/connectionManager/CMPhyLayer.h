@@ -32,7 +32,7 @@ class MacPkt;
 class CMPhyLayer : public ChannelAccess
 {
 public:
-    typedef MacPkt* macpkt_ptr_t;
+	typedef MacPkt* macpkt_ptr_t;
 
 protected:
 
@@ -41,7 +41,7 @@ protected:
 	};
 
 	void sendDown(const LAddress::L2Type& destAddr) {
-	    macpkt_ptr_t m = new MacPkt;
+		macpkt_ptr_t m = new MacPkt;
 		m->setDestAddr(destAddr);
 		m->setSrcAddr(myAddr());
 		sendToChannel(m);

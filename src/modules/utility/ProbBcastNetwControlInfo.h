@@ -24,49 +24,50 @@
 class MIXIM_API ProbBcastNetwControlInfo : public NetwControlInfo
 {
 protected:
-    /** @brief netw address of the sending or receiving node*/
-    simtime_t ttl;
-    double criticality;
-    unsigned int id;
+	/** @brief netw address of the sending or receiving node*/
+	simtime_t ttl;
+	double criticality;
+	unsigned int id;
 
 public:
-    /** @brief Default constructor*/
+	/** @brief Default constructor*/
 	ProbBcastNetwControlInfo(const LAddress::L3Type& addr = LAddress::L3NULL, simtime_t_cref vttl = 0, double vcriticality = 0.0, unsigned int vid = 0) :
 		NetwControlInfo(addr),
-		ttl(vttl), criticality(vcriticality), id(vid) {};
+		ttl(vttl), criticality(vcriticality), id(vid)
+	{}
 
-    /** @brief Destructor*/
-    virtual ~ProbBcastNetwControlInfo(){};
+	/** @brief Destructor*/
+	virtual ~ProbBcastNetwControlInfo(){};
 
-    /** @brief Getter method*/
-    virtual simtime_t_cref getTtl() const {
-    	return ttl;
-    };
+	/** @brief Getter method*/
+	virtual simtime_t_cref getTtl() const {
+		return ttl;
+	}
 
-    /** @brief Setter method*/
-    virtual void setTtl(simtime_t_cref vttl){
-    	ttl = vttl;
-    };
+	/** @brief Setter method*/
+	virtual void setTtl(simtime_t_cref vttl){
+		ttl = vttl;
+	}
 
-    /** @brief Getter method*/
+	/** @brief Getter method*/
 	virtual double getCriticality() const {
 		return criticality;
-	};
+	}
 
 	/** @brief Setter method*/
 	virtual void setCriticality(const double vcriticality){
 		criticality = vcriticality;
-	};
+	}
 
-    /** @brief Getter method*/
+	/** @brief Getter method*/
 	virtual unsigned int getId() const {
 		return id;
-	};
+	}
 
 	/** @brief Setter method*/
 	virtual void setId(const unsigned int vid){
 		id = vid;
-	};
+	}
 };
 
 

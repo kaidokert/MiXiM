@@ -8,7 +8,6 @@
 #include "ChannelState.h"
 #include "PhyUtils.h"
 
-
 /**
  * @brief Defines the methods provided by the phy to the mac layer.
  *

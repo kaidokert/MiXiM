@@ -30,16 +30,19 @@ protected:
 	double radioRange;
 
 public:
-	UnitDisk()
-		: ConnectionManager()
-		, radioRange(0)
-	{}
+        UnitDisk() :
+                ConnectionManager(), radioRange(0)
+        {
+        }
 
 	/** @brief Called by Omnet++ during initialisation.*/
 	void initialize(int stage);
 
 	/** @brief Returns a constant value as maximum interference range.*/
-	virtual double calcInterfDist() { return par("radioRange").doubleValue(); }
+        virtual double calcInterfDist()
+        {
+            return par("radioRange").doubleValue();
+        }
 };
 
 #endif

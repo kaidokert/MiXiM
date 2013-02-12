@@ -13,7 +13,6 @@
 #include "SimpleAddress.h"
 #include "DeciderUWBIRED.h"
 
-class AirFrame;
 class Signal;
 class PhyLayerUWBIR;
 

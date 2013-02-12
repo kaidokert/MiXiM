@@ -19,7 +19,6 @@
  *              subclass to create your own network layer
  ***************************************************************************/
 
-
 #include "BaseNetwLayer.h"
 
 #include <cassert>
@@ -47,8 +46,7 @@ void BaseNetwLayer::initialize(int stage)
     else if(stage == 1) {
     	// see if there is an addressing module available
     	// otherwise use module id as network address
-        AddressingInterface* addrScheme = FindModule<AddressingInterface*>
-													::findSubModule(findHost());
+        AddressingInterface* addrScheme = FindModule<AddressingInterface*>::findSubModule(findHost());
         if(addrScheme) {
         	myNetwAddr = addrScheme->myNetwAddr(this);
         } else {

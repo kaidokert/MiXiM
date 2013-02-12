@@ -1,4 +1,3 @@
-
 #ifndef CONSTANTS_802_11
 #define CONSTANTS_802_11
 
@@ -28,7 +27,6 @@ const double CENTER_FREQUENCIES[] = {
     2.472e9,	// 13
     2.484e9,	// 14
 };
-
 
 /** @brief duration of the PHY header
  *

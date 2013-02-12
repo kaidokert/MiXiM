@@ -206,8 +206,6 @@ void BMacLayer::sendMacAck()
 	//endSimulation();
 }
 
-
-
 /**
  * Handle own messages:
  * BMAC_WAKEUP: wake up the node, check the channel for some time.

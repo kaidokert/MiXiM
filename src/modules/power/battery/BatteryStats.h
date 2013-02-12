@@ -13,7 +13,6 @@
 #ifndef BATTERYSTATS_H
 #define BATTERYSTATS_H
 
-
 #include <omnetpp.h>
 
 #include "MiXiMDefs.h"

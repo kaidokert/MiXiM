@@ -6,7 +6,6 @@
  *              Jaquet-Droz 1, CH-2002 Neuchatel, Switzerland.
  */
 
-
 #ifndef UWBIRRADIO_H_
 #define UWBIRRADIO_H_
 

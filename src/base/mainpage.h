@@ -44,5 +44,3 @@ The best place to get started with is <b>Modules</b> --> @ref base.
 
 */
 
-
-

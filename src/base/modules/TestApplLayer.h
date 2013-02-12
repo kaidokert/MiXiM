@@ -18,7 +18,6 @@
  * description: application layer: test class for the application layer
  **************************************************************************/
 
-
 #ifndef TEST_APPL_LAYER_H
 #define TEST_APPL_LAYER_H
 
@@ -47,7 +46,7 @@ class MIXIM_API TestApplLayer : public BaseApplLayer
     virtual void initialize(int);
 
     /** @brief Message kinds used by this layer.*/
-    enum TestApplMessageKinds{
+    enum TestApplMessageKinds {
 		SEND_BROADCAST_TIMER = LAST_BASE_APPL_MESSAGE_KIND,
 		BROADCAST_MESSAGE,
 		BROADCAST_REPLY_MESSAGE,

@@ -19,7 +19,6 @@
  *               messages
  **************************************************************************/
 
-
 #include "BurstApplLayer.h"
 
 #include "ApplPkt_m.h"
@@ -44,7 +43,6 @@ void BurstApplLayer::initialize(int stage)
         	bSendReply = true;
     }
 }
-
 
 void BurstApplLayer::handleSelfMsg(cMessage *msg)
 {

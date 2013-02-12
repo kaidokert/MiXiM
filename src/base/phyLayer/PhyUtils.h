@@ -171,13 +171,8 @@ public:
 	 */
 	void writeRecvEntry(simtime_t_cref time, Argument::mapped_type_cref value);
 
-
-
-
-}; // end class RadioStateAnalogueModel
-
-
-
+};
+// end class RadioStateAnalogueModel
 
 /**
  * @brief The class that represents the Radio as a state machine.
@@ -235,7 +230,6 @@ protected:
 	/** @brief The state the radio is currently switching to.*/
 	int nextState;
 
-
 	/** @brief The number of radio states this Radio can be in.*/
 	const int numRadioStates;
 	/** @brief Array for storing switch-times between states.*/
@@ -280,16 +274,16 @@ public:
 	 * define a factory method like this instead of an public constructor.
 	 */
 	static Radio* createNewRadio(bool recordStats = false,
-								 int initialState = RX,
-								 Argument::mapped_type_cref minAtt = Argument::MappedOne,
-								 Argument::mapped_type_cref maxAtt = Argument::MappedZero,
-								 int currentChannel=0, int nbChannels=1)
+                                     int initialState = RX,
+                                     Argument::mapped_type_cref minAtt = Argument::MappedOne,
+                                     Argument::mapped_type_cref maxAtt = Argument::MappedZero,
+                                     int currentChannel=0, int nbChannels=1)
 	{
 		return new Radio(NUM_RADIO_STATES,
-						 recordStats,
-						 initialState,
-						 minAtt, maxAtt,
-						 currentChannel, nbChannels);
+                                 recordStats,
+                                 initialState,
+                                 minAtt, maxAtt,
+                                 currentChannel, nbChannels);
 	}
 
 	/**
@@ -321,8 +315,6 @@ public:
 	virtual int getCurrentState() const {
 		return state;
 	}
-
-
 
 	/**
 	 * @brief called by PhyLayer when duration-time for the
@@ -428,13 +420,12 @@ protected:
 		if (state == RX) {
 			return minAtt;
 		}
-		else{
+		else {
 			return maxAtt;
 		}
 	}
-}; // end class Radio
-
-
+};
+// end class Radio
 
 /**
  * @brief ConstMapingIterator implementation for a RSAM
@@ -515,7 +506,6 @@ public:
 	 */
 	virtual void iterateTo(const Argument& pos);
 
-
 	/**
 	 * @brief Iterates to the next position of the function.
 	 *
@@ -568,7 +558,6 @@ public:
 	virtual void iterateToOverZeroSwitches(simtime_t_cref t);
 
 }; // end class RSAMConstMappingIterator
-
 
 /**
  * @brief This class represents the corresponding mapping

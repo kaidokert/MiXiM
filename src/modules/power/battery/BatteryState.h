@@ -45,7 +45,7 @@ public:
      */
 	BatteryState(double n=-1) :
 		cObject(), nominal(n), absolute(0)
-	{};
+	{}
 
 	/** @brief Residual capacity of battery (relative to nominal capacity). */
 	double getRel() const {

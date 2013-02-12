@@ -47,10 +47,15 @@ public:
 	 * Besides using Dimension::time() is more typo resistant since the
 	 * compiler can check if the static member actually exists.
 	 */
-	RandomFreqTimeModel()
-	    : frequency("frequency")
-	    , dimensions(Dimension::time, frequency)
-	{ }
+	RandomFreqTimeModel(int seed = 23):
+		frequency("frequency"),
+		dimensions(Dimension::time, frequency) {
+
+		//sets the seed for random number generation. The PhyLayer
+		//(which created the analogue models) gets the seed from the
+		//configuration parameters inside the xml-config
+		srand(seed);
+	}
 
 	/** @brief Initialize the analog model from XML map data.
 	 *

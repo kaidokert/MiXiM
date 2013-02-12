@@ -19,7 +19,6 @@
  *              subclass to create your own network layer
  **************************************************************************/
 
-
 #ifndef SIMPLE_NETW_LAYER_H
 #define SIMPLE_NETW_LAYER_H
 
@@ -121,7 +120,7 @@ public:
     /** @brief Handle self messages */
     virtual void handleSelfMsg(cMessage* /*msg*/){
 	error("BaseNetwLayer does not handle self messages");
-    };
+    }
 
     /** @brief Handle control messages from lower layer */
     virtual void handleLowerControl(cMessage* msg);
@@ -129,7 +128,7 @@ public:
     /** @brief Handle control messages from lower layer */
     virtual void handleUpperControl(cMessage* /*msg*/){
         error("BaseNetwLayer does not handle control messages");
-    };
+    }
 
     /*@}*/
 

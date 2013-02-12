@@ -51,7 +51,7 @@ class MIXIM_API NetwToMacControlInfo : public cObject
       : cObject()
       , nextHopMac(addr)
     {
-    };
+    }
 
     /** @brief Destructor*/
     virtual ~NetwToMacControlInfo() {};
@@ -59,18 +59,18 @@ class MIXIM_API NetwToMacControlInfo : public cObject
     /** @brief Getter method */
     virtual const LAddress::L2Type& getNextHopMac() const {
     	return nextHopMac;
-    };
+    }
     virtual const LAddress::L2Type& getDest() const {
     	return nextHopMac;
-    };
+    }
 
     /** @brief Setter method */
     virtual void setNextHopMac(const LAddress::L2Type& addr) {
     	nextHopMac = addr;
-    };
+    }
     virtual void setDest(const LAddress::L2Type& addr) {
     	nextHopMac = addr;
-    };
+    }
 
     /**
      * @brief Attaches a "control info" structure (object) to the message pMsg.

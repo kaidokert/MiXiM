@@ -12,7 +12,7 @@ class MacPkt;
 class TestMacLayer:public BaseModule, public TestModule
 {
 public:
-    typedef MacPkt* macpkt_ptr_t;
+	typedef MacPkt* macpkt_ptr_t;
 private:
 	/** @brief Copy constructor is not allowed.
 	 */

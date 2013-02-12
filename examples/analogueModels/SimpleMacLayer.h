@@ -21,7 +21,7 @@ class MacToPhyInterface;
  */
 class SimpleMacLayer:public BaseModule {
 public:
-    typedef MacPkt* macpkt_ptr_t;
+	typedef MacPkt* macpkt_ptr_t;
 private:
 	/** @brief Copy constructor is not allowed.
 	 */

@@ -18,7 +18,6 @@
  * description: application layer: test class for the application layer
  ***************************************************************************/
 
-
 #include "TestApplLayer.h"
 
 #include "NetwControlInfo.h"
@@ -63,7 +62,7 @@ void TestApplLayer::initialize(int stage)
 void TestApplLayer::handleLowerMsg( cMessage* msg )
 {
     ApplPkt *m;
-    switch( msg->getKind() ){
+    switch( msg->getKind() ) {
     case BROADCAST_MESSAGE:
         m = static_cast<ApplPkt *>(msg);
         coreEV << "Received a broadcast packet from host["<<m->getSrcAddr()<<"] -> sending reply" << endl;
@@ -90,7 +89,7 @@ void TestApplLayer::handleLowerMsg( cMessage* msg )
  * @sa sendBroadcast
  **/
 void TestApplLayer::handleSelfMsg(cMessage *msg) {
-    switch( msg->getKind() ){
+    switch( msg->getKind() ) {
     case SEND_BROADCAST_TIMER:
         sendBroadcast();
 		delete msg;

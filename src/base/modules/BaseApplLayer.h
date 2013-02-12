@@ -19,7 +19,6 @@
  *              subclass to create your own application layer
  **************************************************************************/
 
-
 #ifndef BASE_APPL_LAYER_H
 #define BASE_APPL_LAYER_H
 
@@ -105,7 +104,7 @@ protected:
 	virtual void handleSelfMsg(cMessage* msg) {
 		EV << "BaseApplLayer: handleSelfMsg not redefined; delete msg\n";
 		delete msg;
-	};
+	}
 
 	/**
 	 * @brief Handle messages from lower layer
@@ -119,7 +118,7 @@ protected:
 	virtual void handleLowerMsg(cMessage* msg) {
 		EV << "BaseApplLayer: handleLowerMsg not redefined; delete msg\n";
 		delete msg;
-	};
+	}
 
 	/**
 	 * @brief Handle control messages from lower layer
@@ -130,7 +129,7 @@ protected:
 	virtual void handleLowerControl(cMessage* msg) {
 		EV << "BaseApplLayer: handleLowerControl not redefined; delete msg\n";
 		delete msg;
-	};
+	}
 
 	/** @brief Handle messages from upper layer
 	 *
@@ -162,7 +161,7 @@ protected:
 	 **/
 	virtual LAddress::L3Type myApplAddr() const {
 		return LAddress::L3Type( getNode()->getIndex() );
-	};
+	}
 
 };
 

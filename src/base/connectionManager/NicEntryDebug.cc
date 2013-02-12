@@ -32,7 +32,8 @@
 
 using std::endl;
 
-void NicEntryDebug::connectTo(NicEntry* other) {
+void NicEntryDebug::connectTo(NicEntry* other)
+{
 	nicEV<<"connecting nic #"<<nicId<< " and #"<<other->nicId<<endl;
 
 	NicEntryDebug* otherNic = (NicEntryDebug*) other;
@@ -42,8 +43,8 @@ void NicEntryDebug::connectTo(NicEntry* other) {
 	outConns[other] = localoutgate->getPathStartGate();
 }
 
-
-void NicEntryDebug::disconnectFrom(NicEntry* other) {
+void NicEntryDebug::disconnectFrom(NicEntry* other)
+{
 	nicEV<<"disconnecting nic #"<<nicId<< " and #"<<other->nicId<<endl;
 
 	NicEntryDebug* otherNic = (NicEntryDebug*) other;
@@ -103,15 +104,14 @@ void NicEntryDebug::collectFreeGates()
 	inCnt = collectGates("in%d-%d", freeInGates);
 	nicEV << "found " << inCnt << " already existing usable in-gates." << endl;
 
-
 	outCnt = collectGates("out%d-%d", freeOutGates);
 	nicEV << "found " << inCnt << " already existing usable out-gates." << endl;
 
 	checkFreeGates = false;
 }
 
-
-cGate* NicEntryDebug::requestInGate(void) {
+cGate* NicEntryDebug::requestInGate(void)
+{
 	collectFreeGates();
 
 	// gate of the host
@@ -166,7 +166,8 @@ cGate* NicEntryDebug::requestInGate(void) {
 	return hostGate;
 }
 
-cGate* NicEntryDebug::requestOutGate(void) {
+cGate* NicEntryDebug::requestOutGate(void)
+{
 	collectFreeGates();
 
 	// gate of the host

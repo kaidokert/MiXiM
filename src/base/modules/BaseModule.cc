@@ -100,7 +100,6 @@ const cModule* BaseModule::findHost(void) const
 	return FindModule<>::findHost(this);
 }
 
-
 /**
  * This function returns the logging name of the module with the
  * specified id. It can be used for logging messages to simplify
@@ -126,8 +125,6 @@ const cModule* BaseModule::findHost(void) const
 //    }
 //    return lname;
 //};
-
-
 std::string BaseModule::logName(void) const
 {
 	std::ostringstream ost;

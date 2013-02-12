@@ -19,7 +19,6 @@
  *              ConnectionManager module
  **************************************************************************/
 
-
 #include "NicEntryDirect.h"
 #include "connectionManager/ChannelAccess.h"
 
@@ -41,7 +40,6 @@ void NicEntryDirect::connectTo(NicEntry* other)
 
     outConns[other] = radioGate->getPathStartGate();
 }
-
 
 void NicEntryDirect::disconnectFrom(NicEntry* other)
 {

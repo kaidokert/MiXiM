@@ -30,7 +30,6 @@
 
 class ChannelAccess;
 
-
 /**
  * @brief NicEntry is used by ConnectionManager to store the necessary
  * information for each nic
@@ -152,7 +151,7 @@ class MIXIM_API NicEntry : public cObject
     /** @brief Checks if this nic is connected to the "other" nic*/
     bool isConnected(const NicEntry* other) {
         return (outConns.find(other) != outConns.end());
-    };
+    }
 
     /**
      * Called by P2PPhyLayer. Needed to send a packet directly to a
@@ -162,10 +161,9 @@ class MIXIM_API NicEntry : public cObject
      *
      * @param to pointer to the NicEntry to which the packet is about to be sent
      */
-    const cGate* getOutGateTo(const NicEntry* to) const
-    {
+    const cGate* getOutGateTo(const NicEntry* to) const {
     	return outConns.at(to);
-    };
+    }
 
 };
 

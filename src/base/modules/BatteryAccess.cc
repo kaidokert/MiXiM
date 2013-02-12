@@ -23,7 +23,8 @@ BatteryAccess::BatteryAccess(unsigned stacksize):
 	deviceID(-1)
 {}
 
-void BatteryAccess::registerWithBattery(const std::string& name, int numAccounts) {
+void BatteryAccess::registerWithBattery(const std::string& name, int numAccounts)
+{
 	battery = FindModule<BaseBattery*>::findSubModule(findHost());
 
 	if(!battery) {
@@ -33,14 +34,16 @@ void BatteryAccess::registerWithBattery(const std::string& name, int numAccounts
 	}
 }
 
-void BatteryAccess::draw(DrawAmount& amount, int account) {
+void BatteryAccess::draw(DrawAmount& amount, int account)
+{
 	if(!battery)
 		return;
 
 	battery->draw(deviceID, amount, account);
 }
 
-void BatteryAccess::drawCurrent(double amount, int account) {
+void BatteryAccess::drawCurrent(double amount, int account)
+{
 	if(!battery)
 		return;
 
@@ -48,7 +51,8 @@ void BatteryAccess::drawCurrent(double amount, int account) {
 	battery->draw(deviceID, val, account);
 }
 
-void BatteryAccess::drawEnergy(double amount, int account) {
+void BatteryAccess::drawEnergy(double amount, int account)
+{
 	if(!battery)
 		return;
 

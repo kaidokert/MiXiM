@@ -50,19 +50,19 @@ class MIXIM_API NetwControlInfo : public cObject
 
   public:
     /** @brief Default constructor*/
-    NetwControlInfo(const LAddress::L3Type& addr = LAddress::L3NULL) : netwAddr(addr) {};
+    NetwControlInfo(const LAddress::L3Type& addr = LAddress::L3NULL) : netwAddr(addr) {}
     /** @brief Destructor*/
-    virtual ~NetwControlInfo(){};
+    virtual ~NetwControlInfo() {}
 
     /** @brief Getter method*/
     virtual const LAddress::L3Type& getNetwAddr() const {
         return netwAddr;
-    };
+    }
 
     /** @brief Setter method*/
     virtual void setNetwAddr(const LAddress::L3Type& addr){
         netwAddr = addr;
-    };
+    }
 
 
     /**

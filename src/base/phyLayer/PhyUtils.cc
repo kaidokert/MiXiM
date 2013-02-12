@@ -25,7 +25,6 @@ void RadioStateAnalogueModel::cleanUpUntil(simtime_t_cref t)
 		return;
 	}
 
-
 	// CASE: t is greater than the timepoint of the last element
 	// ==> clear complete list except the last element, return
 	if ( t > radioStateAttenuation.back().getTime() )
@@ -46,7 +45,6 @@ void RadioStateAnalogueModel::cleanUpUntil(simtime_t_cref t)
 	// get an iterator and set it to the first timepoint >= t
 	std::list<ListEntry>::iterator it;
 	it = lower_bound(radioStateAttenuation.begin(), radioStateAttenuation.end(), t);
-
 
 	// CASE: list contains an element with exactly the given key
 	if ( it->getTime() == t )
@@ -155,7 +153,6 @@ simtime_t Radio::switchTo(int newState, simtime_t_cref now)
 
 	/* REGULAR CASE */
 
-
 	// set the nextState to the newState and the current state to SWITCHING
 	nextState = newState;
 	int lastState = state;
@@ -178,7 +175,6 @@ void Radio::setSwitchTime(int from, int to, simtime_t_cref time)
 
 	// it shall not be possible to set times to/from SWITCHING
 	assert(from != SWITCHING && to != SWITCHING);
-
 
 	swTimes[from][to] = time;
 	return;

@@ -25,7 +25,6 @@
 
 Define_Module(CSMA802154);
 
-
 void CSMA802154::initialize(int stage)
 {
 	csma::initialize(stage);

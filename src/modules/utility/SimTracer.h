@@ -97,7 +97,7 @@ public:
   double getSinkPowerConsumption() const;
 
 protected:
-   std::ofstream namFile, radioEnergyFile, treeFile;;
+   std::ofstream namFile, radioEnergyFile, treeFile;
    std::vector < std::string > packetsColors;
    cOutVector goodputVec;
    cOutVector pSinkVec;

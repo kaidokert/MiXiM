@@ -20,7 +20,8 @@
  * @ingroup baseModules
  * @author Karl Wessel
  */
-class MIXIM_API BatteryAccess: public BaseModule {
+class MIXIM_API BatteryAccess: public BaseModule
+{
 protected:
 	/** @brief Stores pointer to the battery module. */
 	BaseBattery* battery;

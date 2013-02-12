@@ -43,7 +43,7 @@ BaseConnectionManager* ChannelAccess::getConnectionManager(const cModule* nic)
 	std::string cmName = nic->hasPar("connectionManagerName")
 						 ? nic->par("connectionManagerName").stringValue()
 						 : "";
-	if (cmName != ""){
+	if (cmName != "") {
 		cModule* ccModule = simulation.getModuleByPath(cmName.c_str());
 
 		return dynamic_cast<BaseConnectionManager *>(ccModule);
@@ -139,7 +139,8 @@ simtime_t ChannelAccess::calculatePropagationDelay(const NicEntry* nic) {
 	ChannelAccess *const receiverModule = nic->chAccess;
 	//const simtime_t_cref sStart         = simTime();
 
-	assert(senderModule); assert(receiverModule);
+	assert(senderModule);
+	assert(receiverModule);
 
 	/** claim the Move pattern of the sender from the Signal */
 	Coord           sendersPos  = senderModule->getMobilityModule()->getCurrentPosition(/*sStart*/);

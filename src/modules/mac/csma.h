@@ -24,10 +24,8 @@
  * part of:    Modifications to the MF-2 framework by CSEM
  **************************************************************************/
 
-
 #ifndef csma_H
 #define csma_H
-
 
 #include <string>
 #include <sstream>
@@ -298,7 +296,6 @@ class MIXIM_API csma : public BaseMacLayer
 
     /** @brief The bit length of the ACK packet.*/
     int ackLength;
-
 
 protected:
 	// FSM functions

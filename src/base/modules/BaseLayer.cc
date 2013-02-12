@@ -23,7 +23,6 @@
  *              by:              $Author: koepke $
  **************************************************************************/
 
-
 #include "BaseLayer.h"
 
 #include <assert.h>
@@ -41,7 +40,7 @@ const simsignalwrap_t BaseLayer::catDroppedPacketSignal = simsignalwrap_t(MIXIM_
 void BaseLayer::initialize(int stage)
 {
     BatteryAccess::initialize(stage);
-    if(stage==0){
+    if(stage==0) {
         passedMsg = NULL;
         if (hasPar("stats") && par("stats").boolValue()) {
             passedMsg = new PassedMessage();
@@ -78,7 +77,7 @@ void BaseLayer::initialize(int stage)
  **/
 void BaseLayer::handleMessage(cMessage* msg)
 {
-    if (msg->isSelfMessage()){
+    if (msg->isSelfMessage()) {
         handleSelfMsg(msg);
     } else if(msg->getArrivalGateId()==upperLayerIn) {
         recordPacket(PassedMessage::INCOMING,PassedMessage::UPPER_DATA,msg);
@@ -111,17 +110,20 @@ void BaseLayer::handleMessage(cMessage* msg)
     }
 }
 
-void BaseLayer::sendDown(cMessage *msg) {
+void BaseLayer::sendDown(cMessage *msg)
+{
     recordPacket(PassedMessage::OUTGOING,PassedMessage::LOWER_DATA,msg);
     send(msg, lowerLayerOut);
 }
 
-void BaseLayer::sendUp(cMessage *msg) {
+void BaseLayer::sendUp(cMessage *msg)
+{
     recordPacket(PassedMessage::OUTGOING,PassedMessage::UPPER_DATA,msg);
     send(msg, upperLayerOut);
 }
 
-void BaseLayer::sendControlUp(cMessage *msg) {
+void BaseLayer::sendControlUp(cMessage *msg)
+{
     recordPacket(PassedMessage::OUTGOING,PassedMessage::UPPER_CONTROL,msg);
     if (gate(upperControlOut)->isPathOK())
         send(msg, upperControlOut);
@@ -131,7 +133,8 @@ void BaseLayer::sendControlUp(cMessage *msg) {
     }
 }
 
-void BaseLayer::sendControlDown(cMessage *msg) {
+void BaseLayer::sendControlDown(cMessage *msg)
+{
     recordPacket(PassedMessage::OUTGOING,PassedMessage::LOWER_CONTROL,msg);
     if (gate(lowerControlOut)->isPathOK())
         send(msg, lowerControlOut);
@@ -143,7 +146,8 @@ void BaseLayer::sendControlDown(cMessage *msg) {
 
 void BaseLayer::recordPacket(PassedMessage::direction_t dir,
                              PassedMessage::gates_t     gate,
-                             const cMessage*            msg) {
+                             const cMessage*            msg)
+{
     if (passedMsg == NULL)
         return;
     passedMsg->direction = dir;
@@ -153,7 +157,8 @@ void BaseLayer::recordPacket(PassedMessage::direction_t dir,
     emit(catPassedMsgSignal, passedMsg);
 }
 
-void BaseLayer::finish() {
+void BaseLayer::finish()
+{
 
 }
 

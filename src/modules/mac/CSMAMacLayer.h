@@ -6,7 +6,6 @@
 #include "MiXiMDefs.h"
 #include "BaseMacLayer.h"
 
-
 /**
  * @class CSMAMacLayer
  * @brief MAC module which provides non-persistent CSMA

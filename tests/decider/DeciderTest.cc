@@ -8,7 +8,7 @@ DeciderTest::DeciderTest()
 	: DeciderToPhyInterface()
 	, SimpleTest()
 	, decider(NULL)
-    , processedAF(NULL)
+	, processedAF(NULL)
 {
 	// initializing members for testing
 	world = new TestWorld();

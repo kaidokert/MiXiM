@@ -48,7 +48,6 @@ public:
 
 };
 
-
 /**
  * @brief The basic Decider class
  *

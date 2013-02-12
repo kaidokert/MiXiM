@@ -21,7 +21,6 @@ protected:
 //	/** @brief Model to use for distances larger than the breakpoint distance */
 //	SimplePathlossModel farRangeModel;
 
-
     /** @brief initial path loss in dB */
     double PL01, PL02;
     /** @brief initial path loss */

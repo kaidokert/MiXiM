@@ -215,12 +215,12 @@ public:
 	           , int                    myIndex
 	           , bool                   debug )
 		: Decider(phy)
-	    , nbFramesWithInterference(0)
-	    , nbFramesWithoutInterference(0)
-	    , nbFramesWithInterferencePartial(0)
-	    , nbFramesWithoutInterferencePartial(0)
-	    , nbFramesWithInterferenceDropped(0)
-	    , nbFramesWithoutInterferenceDropped(0)
+		, nbFramesWithInterference(0)
+		, nbFramesWithoutInterference(0)
+		, nbFramesWithInterferencePartial(0)
+		, nbFramesWithoutInterferencePartial(0)
+		, nbFramesWithInterferenceDropped(0)
+		, nbFramesWithoutInterferenceDropped(0)
 		, sensitivity(sensitivity)
 		, currentSignal(NULL, NEW)
 		, currentChannelSenseRequest()
@@ -270,23 +270,23 @@ public:
 	 */
 	virtual simtime_t handleChannelSenseRequest(ChannelSenseRequest* request);
 
-    /**
-     * @brief Called by phy layer to indicate that the channel this radio
-     * currently listens to has changed.
-     *
-     * Sub-classing deciders which support multiple channels should override
-     * this method to handle the effects of channel changes on ongoing
-     * receptions.
-     *
-     * @param newChannel The new channel the radio has changed to.
-     */
-    virtual void channelChanged(int newChannel);
+	/**
+	 * @brief Called by phy layer to indicate that the channel this radio
+	 * currently listens to has changed.
+	 *
+	 * Sub-classing deciders which support multiple channels should override
+	 * this method to handle the effects of channel changes on ongoing
+	 * receptions.
+	 *
+	 * @param newChannel The new channel the radio has changed to.
+	 */
+	virtual void channelChanged(int newChannel);
 
-    /**
-     * @brief Method to be called by an OMNeT-module during its own finish(),
-     * to enable a decider to do some things.
-     */
-    virtual void finish();
+	/**
+	 * @brief Method to be called by an OMNeT-module during its own finish(),
+	 * to enable a decider to do some things.
+	 */
+	virtual void finish();
 
 protected:
 	/**
@@ -312,13 +312,13 @@ protected:
 	    return NEW;
 	}
 
-    /**
-     * @brief Returns the next handle time for scheduler.
-     *
-     * @param frame The current frame which is in processing.
-     * @return The next scheduler handle time.
-     */
-    virtual simtime_t getNextSignalHandleTime(const airframe_ptr_t frame) const;
+	/**
+	 * @brief Returns the next handle time for scheduler.
+	 *
+	 * @param frame The current frame which is in processing.
+	 * @return The next scheduler handle time.
+	 */
+	virtual simtime_t getNextSignalHandleTime(const airframe_ptr_t frame) const;
 
 	/**
 	 * @brief Processes a new Signal. Returns the time it wants to
@@ -348,7 +348,7 @@ protected:
 	 * @param frame The processed frame.
 	 * @return The result for frame.
 	 */
-    virtual DeciderResult* createResult(const airframe_ptr_t frame) const;
+	virtual DeciderResult* createResult(const airframe_ptr_t frame) const;
 
 	/**
 	 * @brief Processes the end of a received Signal.
@@ -375,7 +375,7 @@ protected:
 	 * "NEW".
 	 */
 	virtual eSignalState getSignalState(const airframe_ptr_t frame) const;
-    virtual eSignalState setSignalState(const airframe_ptr_t frame, eSignalState newState);
+	virtual eSignalState setSignalState(const airframe_ptr_t frame, eSignalState newState);
 
 	/**
 	 * @brief Handles a new incoming ChannelSenseRequest and returns the next
@@ -443,7 +443,7 @@ protected:
 	 * AirFrames for their own criteria.
 	 *
 	 * @param[in]  start The start of the interval to collect AirFrames from.
-     * @param[in]  end   The end of the interval to collect AirFrames from.
+	 * @param[in]  end   The end of the interval to collect AirFrames from.
 	 * @param[out] out   The output vector in which to put the AirFrames.
 	 */
 	virtual void getChannelInfo(simtime_t_cref start, simtime_t_cref end, AirFrameVector& out) const;
@@ -463,12 +463,12 @@ protected:
 	 */
 	virtual Mapping* calculateSnrMapping(const airframe_ptr_t frame) const;
 
-    /** @brief Return type of BaseDecider::calculateRSSIMapping function.
-     *
-     *  The pair consists in first part the RSSI map pointer and in second part
-     *  the maximum reception time of all air frames in requested range.
-     */
-    typedef std::pair<Mapping*, channel_sense_rssi_t::second_type> rssi_mapping_t;
+	/** @brief Return type of BaseDecider::calculateRSSIMapping function.
+	 *
+	 *  The pair consists in first part the RSSI map pointer and in second part
+	 *  the maximum reception time of all air frames in requested range.
+	 */
+	typedef std::pair<Mapping*, channel_sense_rssi_t::second_type> rssi_mapping_t;
 
 	/**
 	 * @brief Calculates a RSSI-Mapping (or Noise-Strength-Mapping) for a
