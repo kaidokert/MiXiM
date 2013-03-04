@@ -26,14 +26,14 @@
  * @ingroup phyLayer
  */
 
-class MIXIM_API RadioUWBIR: public Radio {
+class MIXIM_API RadioUWBIR: public MiximRadio {
 	friend class PhyLayerUWBIR;
 
 public:
 
 	enum UWBIRRadioStates {
 		/* receiving state*/
-		 SYNC = Radio::NUM_RADIO_STATES,
+		 SYNC = MiximRadio::NUM_RADIO_STATES,
 		 UWBIR_NUM_RADIO_STATES
 	};
 
@@ -48,7 +48,6 @@ public:
 						 initialState,
 						 minAtt, maxAtt);
 	}
-
 
 	/**
 	 * @brief This switchTo method only accepts three states to switch to:
@@ -85,7 +84,7 @@ public:
 protected:
 
 	RadioUWBIR(int numRadioStates,bool recordStats, int initialState, Argument::mapped_type_cref minAtt = Argument::MappedOne, Argument::mapped_type_cref maxAtt = Argument::MappedZero)
-	:Radio(numRadioStates, recordStats, initialState, minAtt, maxAtt) {	}
+	:MiximRadio(numRadioStates, recordStats, initialState, minAtt, maxAtt) {	}
 
 	virtual Argument::mapped_type_cref mapStateToAtt(int state)
 	{

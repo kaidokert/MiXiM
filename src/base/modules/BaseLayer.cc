@@ -39,7 +39,7 @@ const simsignalwrap_t BaseLayer::catDroppedPacketSignal = simsignalwrap_t(MIXIM_
  **/
 void BaseLayer::initialize(int stage)
 {
-    BatteryAccess::initialize(stage);
+    MiximBatteryAccess::initialize(stage);
     if(stage==0) {
         passedMsg = NULL;
         if (hasPar("stats") && par("stats").boolValue()) {
@@ -62,7 +62,6 @@ void BaseLayer::initialize(int stage)
         catDroppedPacketSignal.initialize();
     }
 }
-
 
 /**
  * The basic handle message function.

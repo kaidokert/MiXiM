@@ -1,29 +1,29 @@
 /*
- * BatteryAccess.cc
+ * MiximBatteryAccess.cc
  *
  *  Created on: Aug 26, 2009
  *      Author: Karl Wessel
  */
 
-#include "BatteryAccess.h"
+#include "MiximBatteryAccess.h"
 
 #include <cassert>
 
 #include "FindModule.h"
 
-BatteryAccess::BatteryAccess():
+MiximBatteryAccess::MiximBatteryAccess():
 	BaseModule(),
 	battery(NULL),
 	deviceID(-1)
 {}
 
-BatteryAccess::BatteryAccess(unsigned stacksize):
+MiximBatteryAccess::MiximBatteryAccess(unsigned stacksize):
 	BaseModule(stacksize),
 	battery(NULL),
 	deviceID(-1)
 {}
 
-void BatteryAccess::registerWithBattery(const std::string& name, int numAccounts)
+void MiximBatteryAccess::registerWithBattery(const std::string& name, int numAccounts)
 {
 	battery = FindModule<BaseBattery*>::findSubModule(findHost());
 
@@ -34,7 +34,7 @@ void BatteryAccess::registerWithBattery(const std::string& name, int numAccounts
 	}
 }
 
-void BatteryAccess::draw(DrawAmount& amount, int account)
+void MiximBatteryAccess::draw(DrawAmount& amount, int account)
 {
 	if(!battery)
 		return;
@@ -42,7 +42,7 @@ void BatteryAccess::draw(DrawAmount& amount, int account)
 	battery->draw(deviceID, amount, account);
 }
 
-void BatteryAccess::drawCurrent(double amount, int account)
+void MiximBatteryAccess::drawCurrent(double amount, int account)
 {
 	if(!battery)
 		return;
@@ -51,7 +51,7 @@ void BatteryAccess::drawCurrent(double amount, int account)
 	battery->draw(deviceID, val, account);
 }
 
-void BatteryAccess::drawEnergy(double amount, int account)
+void MiximBatteryAccess::drawEnergy(double amount, int account)
 {
 	if(!battery)
 		return;

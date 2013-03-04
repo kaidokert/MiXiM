@@ -28,7 +28,7 @@ Define_Module(DeviceDutySimple)
 ;
 
 void DeviceDutySimple::initialize(int stage) {
-	BatteryAccess::initialize(stage);
+	MiximBatteryAccess::initialize(stage);
 
 	if (stage == 0) {
 
@@ -38,7 +38,7 @@ void DeviceDutySimple::initialize(int stage) {
 		}
 		period = par("period");
 
-		EV<< "dutyCycle = " << dutyCycle*100 << "%, period =" << period
+		EV<< "dutyCycle = " << dutyCycle*100 << "%, period = " << period
 		<< "s" << endl;
 
 		current = par("current");

@@ -303,9 +303,9 @@ void BaseConnectionManager::updateNicConnections(NicEntries& nmap, BaseConnectio
     }
 }
 
-bool BaseConnectionManager::registerNic(cModule*       nic,
-                                        ChannelAccess* chAccess,
-                                        const Coord*   nicPos)
+bool BaseConnectionManager::registerNic(cModule*                 nic,
+                                        ConnectionManagerAccess* chAccess,
+                                        const Coord*             nicPos)
 {
 	assert(nic != NULL);
 
@@ -324,7 +324,7 @@ bool BaseConnectionManager::registerNic(cModule*       nic,
 	// fill nicEntry
 	nicEntry->nicPtr = nic;
 	nicEntry->nicId = nicID;
-	nicEntry->hostId   = pHostModule ? pHostModule->getId() : NULL;
+	nicEntry->hostId   = pHostModule ? pHostModule->getId() : 0;
 	nicEntry->pos      = *nicPos;
 	nicEntry->chAccess = chAccess;
 

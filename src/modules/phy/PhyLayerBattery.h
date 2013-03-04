@@ -160,7 +160,7 @@ public:
 	 *
 	 * Note: This method should only be used by the Decider to
 	 * draw power. The phy layer itself should call instead its
-	 * protected method BatteryAccess::drawCurrent()!
+	 * protected method MiximBatteryAccess::drawCurrent()!
 	 */
 	virtual void drawCurrent(double amount, int activity);
 

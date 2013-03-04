@@ -24,7 +24,7 @@
 #define BASE_MOBILITY_H
 
 #include "MiXiMDefs.h"
-#include "BatteryAccess.h"
+#include "MiximBatteryAccess.h"
 #include "Coord.h"
 #include "Move.h"
 #include "BaseWorldUtility.h"
@@ -58,7 +58,7 @@
  * @ingroup baseModules
  * @author Daniel Willkomm, Andras Varga
  */
-class MIXIM_API BaseMobility : public BatteryAccess
+class MIXIM_API BaseMobility : public MiximBatteryAccess
 {
   public:
     /**

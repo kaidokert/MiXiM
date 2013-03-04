@@ -63,7 +63,7 @@ protected:
 		virtual ~ListEntry() {}
 
 		/** @brief Returns the time of the entry.*/
-		simtime_t getTime() const {
+		simtime_t_cref getTime() const {
 			return basicTimestamp.first;
 		}
 
@@ -73,7 +73,7 @@ protected:
 		}
 
 		/** @brief Returns the value of the entry.*/
-		Argument::mapped_type getValue() const {
+		Argument::mapped_type_cref getValue() const {
 			return basicTimestamp.second;
 		}
 
@@ -113,8 +113,11 @@ protected:
 	 */
 	bool currentlyTracking;
 
-	/**  @brief Data structure to track the Radios attenuation over time.*/
-	std::list<ListEntry> radioStateAttenuation;
+public:
+	/** @brief The type to hold the attenuation's over time. */
+	typedef std::list<ListEntry> time_attenuation_collection_type;
+	/** @brief Data structure to track the Radios attenuation over time.*/
+	time_attenuation_collection_type radioStateAttenuation;
 
 public:
 
@@ -190,7 +193,7 @@ public:
  *
  * @ingroup phyLayer
  */
-class MIXIM_API Radio
+class MIXIM_API MiximRadio
 {
 public:
 	/**
@@ -256,10 +259,10 @@ protected:
 private:
 	/** @brief Copy constructor is not allowed.
 	 */
-	Radio(const Radio&);
+	MiximRadio(const MiximRadio&);
 	/** @brief Assignment operator is not allowed.
 	 */
-	Radio& operator=(const Radio&);
+	MiximRadio& operator=(const MiximRadio&);
 
 public:
 
@@ -273,13 +276,13 @@ public:
 	 * correct number of radio states. Sub classing Radios should also
 	 * define a factory method like this instead of an public constructor.
 	 */
-	static Radio* createNewRadio(bool recordStats = false,
+	static MiximRadio* createNewRadio(bool recordStats = false,
                                      int initialState = RX,
                                      Argument::mapped_type_cref minAtt = Argument::MappedOne,
                                      Argument::mapped_type_cref maxAtt = Argument::MappedZero,
                                      int currentChannel=0, int nbChannels=1)
 	{
-		return new Radio(NUM_RADIO_STATES,
+		return new MiximRadio(NUM_RADIO_STATES,
                                  recordStats,
                                  initialState,
                                  minAtt, maxAtt,
@@ -289,7 +292,7 @@ public:
 	/**
 	 * @brief Destructor for the Radio class
 	 */
-	virtual ~Radio();
+	virtual ~MiximRadio();
 
 	/**
 	 * @brief A function called by the Physical Layer to start the switching process to a new RadioState
@@ -397,7 +400,7 @@ protected:
 	 * Therefore sub classing Radios which could be sub-classed further should
 	 * also do it this way.
 	 */
-	Radio(int numRadioStates,
+	MiximRadio(int numRadioStates,
 		  bool recordStats,
 		  int initialState = RX,
 		  Argument::mapped_type_cref minAtt = Argument::MappedOne, Argument::mapped_type_cref maxAtt = Argument::MappedZero,
@@ -425,7 +428,7 @@ protected:
 		}
 	}
 };
-// end class Radio
+// end class MiximRadio
 
 /**
  * @brief ConstMapingIterator implementation for a RSAM
@@ -439,10 +442,8 @@ protected:
 	/** @brief Pointer to the RSAM module.*/
 	const RadioStateAnalogueModel* rsam;
 
-	/** @brief Type for the list of attenuation entries.*/
-	typedef std::list<RadioStateAnalogueModel::ListEntry> CurrList;
 	/** @brief List iterator pointing to the current position.*/
-	CurrList::const_iterator it;
+	RadioStateAnalogueModel::time_attenuation_collection_type::const_iterator it;
 
 	/** @brief The current position of this iterator.*/
 	Argument position;
@@ -549,7 +550,6 @@ public:
 	virtual argument_value_t getValue() const {
 		return it->getValue();
 	}
-
 
 	/**
 	 * @brief Iterates to valid entry for timepoint t over all zero-time switches

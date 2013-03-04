@@ -35,7 +35,7 @@
 #include "FindModule.h"
 #include "WiseRoutePkt_m.h"
 #include "SimTracer.h"
-#include "connectionManager/ChannelAccess.h"
+#include "connectionManager/ConnectionManagerAccess.h"
 
 using std::make_pair;
 
@@ -57,7 +57,8 @@ void WiseRoute::initialize(int stage)
 
 		sinkAddress = LAddress::L3Type( par("sinkAddress").longValue() ); // 0
 		headerLength = par ("headerLength");
-		rssiThreshold = par("rssiThreshold");
+		rssiThreshold = par("rssiThreshold").doubleValue();
+		rssiThreshold = FWMath::dBm2mW(rssiThreshold);
 		routeFloodsInterval = par("routeFloodsInterval");
 
 		stats = par("stats");

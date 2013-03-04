@@ -21,8 +21,10 @@ for lP in '../../../src' \
 done
 PATH="${PATH}:${lPATH}" #needed for windows
 LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${lPATH}"
-NEDPATH="../../../src:../.."
-[ -d "$lINETPath" ] && NEDPATH="${NEDPATH}:$lINETPath"
+NEDPATH="../../../src/base:../../../src/modules:../.."
+if [ -n "`grep KINET_PROJ ../../Makefile`" ]; then
+  NEDPATH="${NEDPATH}:$lINETPath"
+fi
 export PATH
 export NEDPATH
 export LD_LIBRARY_PATH

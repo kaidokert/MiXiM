@@ -1,5 +1,5 @@
 /* -*- mode:c++ -*- ********************************************************
- * file:        ChannelAccess.h
+ * file:        ConnectionManagerAccess.h
  *
  * author:      Marc Loebbers
  *
@@ -20,8 +20,8 @@
  *                from this class and use the sendToChannel() function!!
  **************************************************************************/
 
-#ifndef CHANNEL_ACCESS_H
-#define CHANNEL_ACCESS_H
+#ifndef CONNECTION_MANAGER_ACCESS_H
+#define CONNECTION_MANAGER_ACCESS_H
 
 #include <omnetpp.h>
 #include <vector>
@@ -33,7 +33,7 @@ typedef IMobility*     ChannelMobilityPtrType;
 #endif
 
 #include "MiXiMDefs.h"
-#include "BatteryAccess.h"
+#include "../modules/MiximBatteryAccess.h"
 
 #ifndef MIXIM_INET
 #include "FindModule.h"
@@ -60,7 +60,7 @@ class BaseConnectionManager;
  * @ingroup phyLayer
  * @ingroup baseModules
  **/
-class MIXIM_API ChannelAccess : public BatteryAccess, protected ChannelMobilityAccessType
+class MIXIM_API ConnectionManagerAccess : public MiximBatteryAccess, protected ChannelMobilityAccessType
 {
 protected:
 	/** @brief A signal used to subscribe to mobility state changes. */
@@ -109,14 +109,14 @@ protected:
 private:
 	/** @brief Copy constructor is not allowed.
 	 */
-	ChannelAccess(const ChannelAccess&);
+        ConnectionManagerAccess(const ConnectionManagerAccess&);
 	/** @brief Assignment operator is not allowed.
 	 */
-	ChannelAccess& operator=(const ChannelAccess&);
+        ConnectionManagerAccess& operator=(const ConnectionManagerAccess&);
 
 public:
-	ChannelAccess()
-		: BatteryAccess()
+	ConnectionManagerAccess()
+		: MiximBatteryAccess()
 		, ChannelMobilityAccessType()
 		, useSendDirect(false)
 		, cc(NULL)
@@ -124,8 +124,8 @@ public:
 		, usePropagationDelay(false)
 		, isRegistered(false)
 	{}
-	ChannelAccess(unsigned sz)
-		: BatteryAccess(sz)
+	ConnectionManagerAccess(unsigned sz)
+		: MiximBatteryAccess(sz)
 		, ChannelMobilityAccessType()
 		, useSendDirect(false)
 		, cc(NULL)
@@ -133,7 +133,7 @@ public:
 		, usePropagationDelay(false)
 		, isRegistered(false)
 	{}
-	virtual ~ChannelAccess() {}
+	virtual ~ConnectionManagerAccess() {}
 
 	/**
 	 * @brief Returns a pointer to the ConnectionManager responsible for the
@@ -147,7 +147,7 @@ public:
 
 	/** @brief Register with ConnectionManager.
 	 *
-	 * Upon initialization ChannelAccess registers the nic parent module
+         * Upon initialization ConnectionManagerAccess registers the nic parent module
 	 * to have all its connections handeled by ConnectionManager
 	 **/
 	virtual void initialize(int stage);
@@ -155,7 +155,7 @@ public:
 	/**
 	 * @brief Called by the signalling mechanism to inform of changes.
 	 *
-	 * ChannelAccess is subscribed to position changes and informs the
+         * ConnectionManagerAccess is subscribed to position changes and informs the
 	 * ConnectionManager.
 	 */
 	virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj);
@@ -163,7 +163,10 @@ public:
 	/**
 	 * @brief Returns the host's mobility module.
 	 */
-	virtual ChannelMobilityPtrType getMobilityModule() { return ChannelMobilityAccessType::get(this); }
+        virtual ChannelMobilityPtrType getMobilityModule()
+        {
+            return ChannelMobilityAccessType::get(this);
+        }
 };
 
 #endif

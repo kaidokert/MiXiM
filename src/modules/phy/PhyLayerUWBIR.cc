@@ -29,7 +29,7 @@ void PhyLayerUWBIR::initialize(int stage) {
 	}
 }
 
-Radio* PhyLayerUWBIR::initializeRadio() const {
+MiximRadio* PhyLayerUWBIR::initializeRadio() const {
 	int    initialRadioState = par("initialRadioState"); //readPar("initalRadioState", (int) RadioUWBIR::SYNC);
 	double radioMinAtt       = readPar("radioMinAtt", 1.0);
 	double radioMaxAtt       = readPar("radioMaxAtt", 0.0);
@@ -126,13 +126,13 @@ void PhyLayerUWBIR::setSwitchingCurrent(int from, int to) {
 	    return;
 	}
 
-	BatteryAccess::drawCurrent(current, act);
+	MiximBatteryAccess::drawCurrent(current, act);
 }
 
 void PhyLayerUWBIR::setRadioCurrent(int rs) {
 	switch(rs) {
         case RadioUWBIR::SYNC:
-            BatteryAccess::drawCurrent(syncCurrent, SYNC_ACCT);
+            MiximBatteryAccess::drawCurrent(syncCurrent, SYNC_ACCT);
             break;
         case RadioUWBIR::SWITCHING:
             // do nothing here

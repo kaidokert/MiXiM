@@ -41,7 +41,7 @@ static inline bool isFiniteNumber(register _Tp value) {
 }
 
 BaseMobility::BaseMobility()
-	: BatteryAccess()
+	: MiximBatteryAccess()
 	, world(NULL)
 	, move()
 	, constraintAreaMin(Coord::ZERO)
@@ -58,7 +58,7 @@ BaseMobility::BaseMobility()
 {}
 
 BaseMobility::BaseMobility(unsigned stacksize)
-	: BatteryAccess(stacksize)
+	: MiximBatteryAccess(stacksize)
 	, world(NULL)
 	, move()
 	, constraintAreaMin()
